@@ -58,7 +58,7 @@ def r_table(b):
     cols = ""
     if b["widths"]:
         cols = "<colgroup>" + "".join(f'<col style="width:{w}%">' for w in b["widths"]) + "</colgroup>"
-    head = "".join(f"<th>{inline(h)}</th>" for h in b["head"])
+    head = "".join(f'<th class="{"ctr" if i in b["center"] else ""}">{inline(h)}</th>' for i, h in enumerate(b["head"]))
     rows = []
     for row in b["rows"]:
         tds = "".join(

@@ -53,6 +53,7 @@ h2 { font-size: 13pt; font-weight: 800; margin: 22px 0 9px; padding-left: 10px; 
 .cap { font-size: 8.5pt; font-weight: 700; color: var(--c); margin-bottom: 4px; }
 .cap::before { content: "■ "; }
 table { width: 100%; border-collapse: collapse; font-size: 9pt; border-top: 2px solid var(--c); }
+th.ctr { text-align: center; }
 th { background: var(--tint); color: var(--ink); font-weight: 700; padding: 6px 8px; text-align: left;
      border-bottom: 1px solid var(--c); }
 td { padding: 5.5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -115,7 +116,8 @@ h2 + p { break-after: avoid; }
 .why::before { content: "→ "; }
 
 /* ---------- check-up ---------- */
-.check { margin-top: 26px; break-before: page; }
+.check { margin-top: 30px; }
+.check-head, .step { break-after: avoid; }
 .check-head { display: flex; align-items: baseline; gap: 10px; background: var(--c); color: #fff; padding: 8px 14px; border-radius: 8px; }
 .check-head span { font-size: 14pt; font-weight: 800; letter-spacing: .04em; }
 .check-head em { font-style: normal; font-size: 9pt; opacity: .9; }
@@ -195,15 +197,17 @@ h2 + p { break-after: avoid; }
 .blank { display: inline-block; border-bottom: 1.3px solid var(--ink); height: 1.15em; vertical-align: -3px; margin: 0 2px; }
 .blank.fill { color: #D64545; font-weight: 700; padding: 0 4px; height: auto; vertical-align: baseline; border-bottom-color: #D64545; }
 
-.pilgi { position: relative; margin: 12px 0 16px; padding: 10px 14px 10px 30px; border-radius: 6px; break-inside: avoid;
-  background: #FFFDF6 repeating-linear-gradient(transparent 0 23px, #E6E1D2 23px 24px);
-  border: 1px solid #E6DFC8; line-height: 24px; }
-.pilgi::before { content: ""; position: absolute; left: 20px; top: 0; bottom: 0; border-left: 1.5px solid #F1A9A9; }
-.pilgi-head { font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 6px; }
-.pilgi-head .pen { color: var(--c); font-size: 12pt; }
-.pilgi-head em { font-style: normal; font-size: 7pt; font-weight: 700; color: var(--mute); border: 1px solid var(--line); border-radius: 10px; padding: 0 6px; line-height: 15px; background: #fff; }
+.pilgi { position: relative; margin: 12px 0 16px; padding: 6px 14px 6px 36px; border-radius: 6px; break-inside: avoid;
+  background-color: #FFFDF6; background-image: repeating-linear-gradient(transparent 0 23px, #E6E1D2 23px 24px);
+  background-position: 0 6px; border: 1px solid #E6DFC8; line-height: 24px; }
+.pilgi::before { content: ""; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1.5px solid #F1A9A9; }
+.pilgi-head { font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 6px; height: 24px; line-height: 24px; }
+.pilgi-head .pen { color: var(--c); font-size: 11pt; line-height: 24px; }
+.pilgi-head em { font-style: normal; font-size: 7pt; font-weight: 700; color: var(--mute); border: 1px solid var(--line); border-radius: 10px; padding: 0 6px; line-height: 14px; background: #fff; }
 .pilgi ul { margin: 0; padding-left: 14px; }
-.pilgi li { margin: 0; }
+.pilgi li { margin: 0; line-height: 24px; }
+.pilgi .blank:not(.fill) { height: 1em; vertical-align: -2px; }
+.pilgi .blank.fill { line-height: 20px; }
 
 .quick { margin: 12px 0 16px; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--c); break-inside: avoid; }
 .quick-head { background: var(--c); color: #fff; font-weight: 800; padding: 5px 12px; font-size: 9.5pt; }

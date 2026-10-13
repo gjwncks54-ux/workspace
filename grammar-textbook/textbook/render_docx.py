@@ -242,7 +242,7 @@ class Writer:
             c = t.cell(0, i)
             cell_shade(c, self.tint)
             cell_borders(c, top=(16, self.color), bottom=(8, self.color))
-            self.cell_text(c, h, 9, True)
+            self.cell_text(c, h, 9, True, align=WD_ALIGN_PARAGRAPH.CENTER if i in b["center"] else None)
         for ri, row in enumerate(b["rows"], 1):
             last = ri == len(b["rows"])
             for ci, v in enumerate(row):
