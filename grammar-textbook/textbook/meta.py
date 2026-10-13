@@ -33,3 +33,12 @@ UNITS = [
     ("u14", 5, "도치구문", "Inversion", 2),
     ("u15", 5, "가정법", "The Subjunctive Mood", 3),
 ]
+
+# 워터마크 사양 (현재 미적용: 선생님이 직접 삽입함. 필요 시 enabled=True로 빌드에 적용)
+WATERMARK = {
+    "enabled": False,
+    "image": "assets/del-logo.png",   # DEL · Dennis English Laboratory 로고 (투명 배경 유지)
+    "position": "center",             # 모든 페이지 중앙
+    "width_pt": 420,                  # 가로 420pt, 원본 비율 유지
+    "opacity": 0.08,                  # 불투명도 8%
+}

@@ -19,3 +19,8 @@ python3 build.py 1 2 3    # 일부 단원만
 
 ## 단원 구성
 원본 판서 표 → 필기 포인트(빈칸) → 한 문장 변형하기 → 바로 구별하는 법 → 단원 연결 → STEP UP 심화 → CHECK-UP
+
+## 워터마크 (기억용, 현재 미적용)
+- `assets/del-logo.png` (DEL · Dennis English Laboratory) 로고, 투명 배경 유지
+- 모든 페이지 중앙, 가로 420pt(비율 유지), 불투명도 8%
+- 사양: `textbook/meta.py`의 `WATERMARK`. 현재는 선생님이 직접 삽입하므로 `enabled: False`
