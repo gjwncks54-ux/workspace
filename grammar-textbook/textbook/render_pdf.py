@@ -63,7 +63,7 @@ def number_pages(reader, start_index, first_no):
     return writer
 
 
-def build_pdf(units, out_path: Path):
+def build_pdf(units, out_path: Path, appendix=None):
     with sync_playwright() as pw:
         br = pw.chromium.launch(executable_path=CHROMIUM)
         pg = br.new_page()
@@ -73,6 +73,8 @@ def build_pdf(units, out_path: Path):
             pno, pname, _, color, _ = PARTS[u["part"]]
             head = header(f'{BOOK["series"]} · {pno} {pname}', f'Unit {u["no"]:02d}  {u["title"]}', color)
             sections.append((u["key"], _pdf(pg, R.unit_html(u), head)))
+        if appendix:
+            sections.append(("appendix", _pdf(pg, R.appendix_html(appendix), header(BOOK["series"], "부록", "#1E2433"))))
         ans_head = header(BOOK["series"], "정답 및 해설", "#1E2433")
         sections.append(("answers", _pdf(pg, R.answers_html(units), ans_head)))
 

@@ -157,13 +157,13 @@ h2 + p { break-after: avoid; }
 .toc-head, .ans-head { margin-bottom: 18px; border-bottom: 2.5px solid var(--ink); padding-bottom: 8px; }
 .toc-head span, .ans-head span { font-size: 9pt; font-weight: 800; letter-spacing: .3em; color: #2B59C3; }
 .toc-head h1, .ans-head h1 { margin: 2px 0 0; font-size: 24pt; font-weight: 800; }
-.toc-part { margin-bottom: 12px; }
+.toc-part { margin-bottom: 9px; }
 .tp-head { display: flex; align-items: baseline; gap: 10px; background: var(--tint); border-left: 5px solid var(--c);
            padding: 5px 12px; border-radius: 0 6px 6px 0; margin-bottom: 4px; }
 .tp-head b { color: var(--c); font-size: 8.5pt; letter-spacing: .08em; }
 .tp-head span { font-weight: 800; font-size: 11pt; }
 .tp-head em { font-style: normal; color: var(--mute); font-size: 8.5pt; }
-.tu { display: flex; align-items: baseline; gap: 10px; padding: 5px 12px; }
+.tu { display: flex; align-items: baseline; gap: 10px; padding: 2.5px 12px; }
 .tu-no { font-weight: 800; color: var(--c); width: 20px; }
 .tu-t { font-weight: 600; font-size: 10.5pt; }
 .tu-t small { font-weight: 400; color: var(--mute); font-size: 8pt; margin-left: 8px; }
@@ -171,7 +171,7 @@ h2 + p { break-after: avoid; }
 .dots { flex: 1; border-bottom: 1.5px dotted #C3C9D4; transform: translateY(-3px); }
 .tu-pg { font-weight: 700; min-width: 20px; text-align: right; }
 .toc-ans { --c: var(--ink); border-top: 1px solid var(--line); padding-top: 6px; }
-.toc-guide { margin-top: 18px; background: var(--soft); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; font-size: 8.6pt; color: var(--sub); }
+.toc-guide { margin-top: 12px; background: var(--soft); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; font-size: 8.6pt; color: var(--sub); }
 .toc-guide b { color: var(--ink); }
 
 /* ---------- answers ---------- */
@@ -184,3 +184,9 @@ h2 + p { break-after: avoid; }
 .ans .qn { font-size: 8.6pt; min-width: 16px; }
 .ans b { color: var(--ink); }
 .exp { color: var(--sub); }
+
+/* ---------- appendix: dense tables ---------- */
+.appendix .tbl { break-inside: auto; }
+.appendix td { padding: 2.5px 8px; font-size: 8.8pt; }
+.appendix th { padding: 4px 8px; }
+.appendix tr { break-inside: avoid; }

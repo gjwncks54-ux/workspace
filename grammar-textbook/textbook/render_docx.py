@@ -388,7 +388,36 @@ class Writer:
                 r._element.append(it)
 
 
-def build_docx(units, out_path: Path):
+def render_blocks(w, blocks, unit_no):
+    d = w.doc
+    for b in blocks:
+        t = b["t"]
+        if t == "h":
+            w.h(b["text"])
+        elif t == "p":
+            w.para(b["text"], after=6)
+        elif t == "table":
+            w.tbl(b)
+        elif t == "ex":
+            w.ex(b)
+        elif t == "parse":
+            w.parse(b)
+        elif t == "formula":
+            w.formula(b)
+        elif t == "tip":
+            w.box("TIP", b["title"], b["lines"], "FFF9E6", "F2DC9B", "E2A400")
+        elif t in ("note", "list"):
+            w.box("보충" if t == "note" else "정리", b["title"] or "", b.get("lines") or b.get("items"),
+                  "F5F7FA", LINE, SUB)
+        elif t == "warn":
+            w.warn(b)
+        elif t == "check":
+            w.check(b, unit_no)
+        elif t == "pb":
+            d.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+
+
+def build_docx(units, out_path: Path, appendix=None):
     w = Writer()
     d = w.doc
 
@@ -469,31 +498,16 @@ def build_docx(units, out_path: Path):
         w.para(u["intro"], 9.5, color=SUB, before=6, after=6)
         w.box("목표", "학습 목표", [f"{i}. {g}" for i, g in enumerate(u["goals"], 1)], tint, tint, color)
 
-        for b in u["blocks"]:
-            t = b["t"]
-            if t == "h":
-                w.h(b["text"])
-            elif t == "p":
-                w.para(b["text"], after=6)
-            elif t == "table":
-                w.tbl(b)
-            elif t == "ex":
-                w.ex(b)
-            elif t == "parse":
-                w.parse(b)
-            elif t == "formula":
-                w.formula(b)
-            elif t == "tip":
-                w.box("TIP", b["title"], b["lines"], "FFF9E6", "F2DC9B", "E2A400")
-            elif t in ("note", "list"):
-                w.box("보충" if t == "note" else "정리", b["title"] or "", b.get("lines") or b.get("items"),
-                      "F5F7FA", LINE, SUB)
-            elif t == "warn":
-                w.warn(b)
-            elif t == "check":
-                w.check(b, u["no"])
-            elif t == "pb":
-                d.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+        render_blocks(w, u["blocks"], u["no"])
+
+    # 부록
+    if appendix:
+        w.color, w.tint = INK, "F0F2F6"
+        w.new_section(BOOK["series"], "부록", INK)
+        w.para("APPENDIX", 9, True, "2B59C3", after=0)
+        p = w.para("부록", 24, True, after=10)
+        para_border_bottom(p, INK, 18)
+        render_blocks(w, appendix, 0)
 
     # 정답
     w.color = INK

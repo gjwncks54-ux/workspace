@@ -35,9 +35,10 @@ def main():
 
     from textbook.render_pdf import build_pdf
     from textbook.render_docx import build_docx
-    pages = build_pdf(units, dist / "기초영어문법.pdf")
+    from textbook.content.appendix import BLOCKS as appendix
+    pages = build_pdf(units, dist / "기초영어문법.pdf", appendix)
     print("PDF 완료, 시작 쪽:", pages)
-    build_docx(units, dist / "기초영어문법.docx")
+    build_docx(units, dist / "기초영어문법.docx", appendix)
     print("DOCX 완료")
 
 

@@ -193,9 +193,14 @@ def toc_html(units, pages):
                        f'<small>{escape(u["en"])}</small></span><span class="tu-lv">{stars(u["level"])}</span>'
                        f'<span class="dots"></span><span class="tu-pg">{pg}</span></div>')
         out.append("</div>")
-    if "answers" in pages:
-        out.append(f'<div class="toc-part toc-ans"><div class="tu"><span class="tu-no">+</span><span class="tu-t">정답 및 해설</span>'
-                   f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages["answers"]}</span></div></div>')
+    extras = [(k, t) for k, t in (("appendix", "부록 <small>불규칙 동사표 · 문법 용어 사전</small>"),
+                                  ("answers", "정답 및 해설")) if k in pages]
+    if extras:
+        out.append('<div class="toc-part toc-ans">')
+        for k, t in extras:
+            out.append(f'<div class="tu"><span class="tu-no">+</span><span class="tu-t">{t}</span>'
+                       f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages[k]}</span></div>')
+        out.append('</div>')
     out.append('<div class="toc-guide"><b>교재 구성</b><span>학습 목표 → 개념·표 → 예문 분석 → 흔한 실수 → CHECK-UP (STEP 1 기본 · STEP 2 어법 · STEP 3 서술형)</span>'
                '<span>난이도 ★☆☆ 기초 · ★★☆ 핵심 · ★★★ 심화</span></div></div>')
     return page("".join(out), cls="toc-page")
@@ -219,3 +224,8 @@ def answers_html(units):
         out.append("</div>")
     out.append("</div></div>")
     return page("".join(out), cls="ans-page")
+
+
+def appendix_html(blocks):
+    head = '<div class="ans-head"><span>APPENDIX</span><h1>부록</h1></div>'
+    return page(head + render_blocks(blocks, 0), "#1E2433", "#F0F2F6", "unit appendix")
