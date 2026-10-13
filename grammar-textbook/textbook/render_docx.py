@@ -388,6 +388,25 @@ class Writer:
             add_inline(q, sent, self.color, 10)
         self.gap(6)
 
+    def anchor(self, b):
+        t = self.table(1, 1, [1])
+        c = t.cell(0, 0)
+        cell_shade(c, self.tint)
+        e = (18, self.color)
+        cell_borders(c, top=e, bottom=e, left=e, right=e)
+        cell_margins(c, 140, 140, 200, 200)
+        p = c.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        add_inline(p, "이 단원의 기준 문장", self.color, 8, True, self.color)
+        for txt, size, col, bold in ((b["s"], 15, INK, True), (b["ko"], 9, SUB, False), (b.get("note") or "", 8, MUTE, False)):
+            if not txt:
+                continue
+            q = c.add_paragraph()
+            q.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            spacing(q, 2, 0)
+            add_inline(q, txt, self.color, size, bold, col)
+        self.gap(8)
+
     def link(self, b):
         p = self.para(after=6)
         r = p.add_run(f" ↔ Unit {b['unit']:02d} ")
@@ -463,6 +482,11 @@ def render_blocks(w, blocks, unit_no):
             w.warn(b)
         elif t == "check":
             w.check(b, unit_no)
+        elif t == "tnote":
+            if MODE["teacher"]:
+                w.box("교사 메모", b["title"], b["lines"], "FFF5F5", "F4CACA", RED)
+        elif t == "anchor":
+            w.anchor(b)
         elif t == "pilgi":
             w.box("✎", b["title"], b["lines"], "FFFDF6", "E6DFC8", w.color)
         elif t == "quick":

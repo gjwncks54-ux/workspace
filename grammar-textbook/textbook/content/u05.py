@@ -9,6 +9,7 @@ GOALS = [
 INTRO = "시제는 **기본 의미부터** 확실히. 완료 시제는 **기준점이 언제인지**만 잡으면 끝납니다."
 
 BLOCKS = [
+    ANCHOR("I have just eaten lunch.", "나는 방금 점심을 먹었다.", "eat lunch 하나로 현재 → 과거 → 완료 → 과거완료 → 미래완료를 따라갑니다."),
     TABLE(
         ["시제", "핵심 의미", "필기 메모"],
         [
@@ -81,7 +82,10 @@ BLOCKS = [
               options=["I have known her since childhood.", "I have met him two years ago.",
                        "Have you ever tried Thai food?", "He has just left the office."]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
+            Q("괄호 안의 표현을 넣어 시제를 바꿔 쓰시오.  I eat lunch. (an hour ago)", "I ate lunch an hour ago.", "", lines=1),
+            Q("괄호 안의 표현을 넣어 시제를 바꿔 쓰시오.  I eat lunch. (already, 현재완료)", "I have already eaten lunch.", "", lines=1),
+            Q("괄호 안의 표현을 넣어 시제를 바꿔 쓰시오.  I eat lunch. (By 1 p.m., 미래완료)", "By 1 p.m., I will have eaten lunch.", "", lines=1),
             Q("어법상 틀린 부분을 고치시오.  When I was young, I have lived in Daegu.", "have lived → lived",
               "when I was young = 특정 과거시점", lines=1),
             Q("우리말과 같도록 영작하시오.  내가 극장에 도착했을 때, 영화는 이미 시작했었다.",

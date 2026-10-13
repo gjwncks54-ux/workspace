@@ -9,12 +9,13 @@ GOALS = [
 INTRO = "세 구문 모두 **뜻 없는 it** 을 앞에 세우고 진짜 내용을 뒤로 보냅니다. it은 **해석하지 않습니다.**"
 
 BLOCKS = [
+    ANCHOR("Jimin sent you the invitation yesterday.", "지민이 어제 너에게 초대장을 보냈다.", "It is ~ that으로 주어·목적어·부사를 하나씩 강조해 봅니다."),
     TABLE(
         ["구문", "형태", "예문"],
         [
             ["**가주어**", "It + be + 형용사 + for/of + 의미상 주어 + to V", "It is impossible for me to try it once more."],
             ["**가목적어**", "동사 + it + 형용사 + to V", "I found it difficult to finish the work."],
-            ["**강조구문**", "It is/was + 강조대상 + that + 나머지", "It was I that sent you an invitation."],
+            ["**강조구문**", "It is/was + 강조대상 + that + 나머지", "It was Jimin that sent you the invitation."],
         ],
         widths=[14, 42, 44],
     ),
@@ -32,11 +33,12 @@ BLOCKS = [
         ("가목적어", "I found **it** difficult **to finish the work**.", "목적어 자리에 it, to V는 뒤로"),
     ], title="가목적어"),
     CHAIN([
-        ("원래", "I sent you an invitation.", None),
-        ("주어 강조", "It was **I** that sent you an invitation.", "초대장을 보낸 건 바로 나"),
-        ("목적어 강조", "It was **you** that I sent an invitation (to).", "내가 초대장을 보낸 건 바로 너"),
-        ("목적어 강조", "It was **an invitation** that I sent you.", "내가 보낸 건 바로 초대장"),
-    ], title="I sent you an invitation 강조하기"),
+        ("원래", "Jimin sent you the invitation yesterday.", None),
+        ("주어 강조", "It was **Jimin** that(who) sent you the invitation yesterday.", "초대장을 보낸 건 바로 지민"),
+        ("목적어 강조", "It was **the invitation** that Jimin sent you yesterday.", "지민이 보낸 건 바로 그 초대장"),
+        ("부사 강조", "It was **yesterday** that Jimin sent you the invitation.", "보낸 건 바로 어제"),
+    ], title="Jimin sent you the invitation 강조하기"),
+    TNOTE("예문 교체 이유", ["It was I that sent… 는 문법상 맞지만 딱딱한 문어체입니다. 회화에서는 It was me who… 가 더 자연스러워, 주어를 이름(Jimin)으로 바꿨습니다."]),
     QUICK([
         "It is/was와 that을 지웠을 때 문장이 **완전** → 강조구문",
         "남는 게 **불완전**(형용사만 덩그러니) → 가주어 구문",
@@ -71,11 +73,15 @@ BLOCKS = [
             Q("다음 문장에서 강조된 부분을 쓰시오.  It was in the park that I lost my phone.", "in the park", ""),
             Q("다음 중 밑줄 친 It의 쓰임이 나머지와 다른 것은?", "④", "④는 강조구문",
               options=["==It== is fun to play soccer.", "==It== is strange that he is late.",
-                       "==It== is impossible for me to try it once more.", "==It== was I that sent you an invitation."]),
+                       "==It== is impossible for me to try it once more.", "==It== was Jimin that sent you the invitation."]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("밑줄 친 부분을 강조하시오.  I met ==Jenny== at the library.", "It was Jenny that(who) I met at the library.",
               "", lines=1),
+            Q("밑줄 친 부분을 강조하시오.  Jimin sent you the invitation ==yesterday==.",
+              "It was yesterday that Jimin sent you the invitation.", "", lines=1),
+            Q("가목적어 it을 이용해 바꾸시오.  I found that finishing the work was difficult. (found it)",
+              "I found it difficult to finish the work.", "", lines=1),
             Q("우리말과 같도록 영작하시오.  나는 매일 일기를 쓰는 것이 어렵다는 것을 알았다. (find, hard)",
               "I found it hard to keep a diary every day.", "", lines=1),
         ]),

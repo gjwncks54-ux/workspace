@@ -126,7 +126,7 @@ def r_check(b, unit_no):
 def r_pilgi(b):
     lis = "".join(f"<li>{inline(l)}</li>" for l in b["lines"])
     return (f'<div class="pilgi"><div class="pilgi-head"><span class="pen">✎</span>{escape(b["title"])}'
-            f'<em>원본 필기</em></div><ul>{lis}</ul></div>')
+            f'<em>수업 필기</em></div><ul>{lis}</ul></div>')
 
 
 def r_quick(b):
@@ -174,6 +174,13 @@ def render_blocks(blocks, unit_no):
             out.append(r_warn(b))
         elif t == "check":
             out.append(r_check(b, unit_no))
+        elif t == "tnote":
+            if MODE["teacher"]:
+                out.append(r_box("note tnote", "교사 메모", b["title"], b["lines"]))
+        elif t == "anchor":
+            note = f'<div class="an-note">{inline(b["note"])}</div>' if b["note"] else ""
+            out.append(f'<div class="anchor"><div class="an-label">이 단원의 기준 문장</div>'
+                       f'<div class="an-s">{inline(b["s"])}</div><div class="an-ko">{inline(b["ko"])}</div>{note}</div>')
         elif t == "pilgi":
             out.append(r_pilgi(b))
         elif t == "quick":

@@ -84,6 +84,16 @@ def STEPUP(text="여기부터는 내신·수능 대비 확장 내용입니다.")
     return {"t": "stepup", "text": text}
 
 
+def TNOTE(title, lines):
+    """교사용에만 보이는 메모"""
+    return {"t": "tnote", "title": title, "lines": lines}
+
+
+def ANCHOR(sentence, ko, note=None):
+    """단원 기준 문장: 이 문장 하나를 단원 끝까지 변형한다"""
+    return {"t": "anchor", "s": sentence, "ko": ko, "note": note}
+
+
 def PAGEBREAK():
     return {"t": "pb"}
 

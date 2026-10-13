@@ -8,6 +8,7 @@ GOALS = [
 INTRO = "품사는 **단어의 이름표**, 문장성분은 **단어가 문장에서 맡은 자리**입니다. 이 단원에서는 이름표만 확실히 붙이고, 자리는 Unit 2에서 배웁니다."
 
 BLOCKS = [
+    ANCHOR("I made him sad.", "나는 그를 슬프게 했다.", "품사(Unit 1) → 문장성분(Unit 2) → 5형식(Unit 3)까지 이 문장 하나로 이어집니다."),
     TABLE(
         ["품사", "핵심 역할", "대표 예시"],
         [
@@ -79,9 +80,13 @@ BLOCKS = [
               options=["She looks ==like== her mother.", "It sounds ==like== a good idea.",
                        "Do you ==like== spicy food?", "He swims ==like== a fish."]),
         ]),
-        ("STEP 3", "서술형", [
-            Q("다음 문장의 각 단어 아래에 품사를 쓰시오.  Wow, my teacher speaks English very fluently.",
-              "감탄사, 대명사(소유격), 명사, 동사, 명사, 부사, 부사", "my는 대명사의 소유격", lines=1),
+        ("STEP 3", "바꿔 쓰기", [
+            Q("부사 really를 알맞은 자리에 넣어 다시 쓰시오.  I made him sad.", "I really made him sad.",
+              "부사는 동사 앞에서 동사를 꾸밈", lines=1),
+            Q("밑줄 친 형용사를 부사로 바꿔 같은 뜻의 문장을 완성하시오.  She is a ==careful== driver. → She drives ______.",
+              "carefully", "명사를 꾸미던 형용사 → 동사를 꾸미는 부사", lines=1),
+            Q("밑줄 친 전치사를 접속사로 바꿔 다시 쓰시오.  I stayed home ==because of== the rain. (it, rain)",
+              "I stayed home because it rained.", "접속사 뒤에는 주어 + 동사", lines=1),
             Q("어법상 틀린 부분을 찾아 고쳐 쓰시오.  She smiled friendly at me.", "friendly → in a friendly way",
               "friendly는 형용사", lines=1),
         ]),

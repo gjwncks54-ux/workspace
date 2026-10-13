@@ -9,6 +9,7 @@ GOALS = [
 INTRO = "분사는 동사를 **형용사처럼** 쓰는 것. 기준은 하나, 꾸밈받는 명사가 **하는가(-ing) 당하는가(p.p.)**."
 
 BLOCKS = [
+    ANCHOR("Look at the baby sleeping in the bed.", "침대에서 자고 있는 아기를 봐.", "a sleeping baby → a baby sleeping in the bed → a baby who is sleeping: 분사 위치와 관계사를 한 번에."),
     TABLE(
         ["종류", "핵심 의미", "예시"],
         [
@@ -27,15 +28,16 @@ BLOCKS = [
     ),
     PILGI([
         "분사 위치",
-        "- 꾸며주는 말이 짧으면 {{전치수식}}: a tall tree",
+        "- 꾸며주는 말이 짧으면 {{전치수식}}: a sleeping baby",
         "- 꾸며주는 말이 길면 {{후치수식}}: a tree standing on the hill",
         "감정 동사는 원래 '감정을 {{일으키다}}'라는 뜻 → 일으키면 -ing, 느끼면 p.p.",
     ]),
     CHAIN([
-        ("전치수식", "a **standing** tree", "짧으면 명사 앞"),
-        ("후치수식", "a tree **standing on the hill**", "길어지면 명사 뒤"),
-        ("관계사절", "a tree **which is standing** on the hill", "후치수식 분사 = 관계대명사 + be 생략"),
-    ], title="a tree standing on the hill"),
+        ("전치수식", "a **sleeping** baby", "짧으면 명사 앞"),
+        ("후치수식", "a baby **sleeping in the bed**", "길어지면 명사 뒤"),
+        ("관계사절", "a baby **who is sleeping** in the bed", "후치수식 분사 = 관계대명사 + be 생략"),
+    ], title="a sleeping baby → a baby sleeping in the bed"),
+    TNOTE("예문 교체 이유", ["분사 위치 예시의 a tall tree의 tall은 분사가 아니라 일반 형용사입니다. → a sleeping baby로 교체했습니다."]),
     CHAIN([
         ("p.p.", "a **broken** window", "창문이 깨진 (수동)"),
         ("p.p. 후치", "a window **broken by the kids**", None),
@@ -87,9 +89,10 @@ BLOCKS = [
               options=["The story was very touching.", "There's a man waiting outside.",
                        "The students were interesting in science.", "I had my watch fixed."]),
         ]),
-        ("STEP 3", "서술형", [
-            Q("관계대명사를 생략하여 분사구로 바꾸시오.  The man who is talking to Sue is my uncle.",
-              "The man talking to Sue is my uncle.", "", lines=1),
+        ("STEP 3", "바꿔 쓰기", [
+            Q("분사를 이용해 바꾸시오.  Look at the baby who is sleeping in the bed.", "Look at the baby sleeping in the bed.", "", lines=1),
+            Q("분사를 명사 앞에 두어 바꾸시오.  The window was broken. Don't touch it. → Don't touch the ______.",
+              "broken window", "", lines=1),
             Q("어법상 틀린 부분을 고치시오.  The lecture was bored, so I fell asleep.", "bored → boring", "", lines=1),
         ]),
     ]),

@@ -9,11 +9,12 @@ GOALS = [
 INTRO = "Unit 1의 품사가 문장 안에서 **어떤 자리(문장성분)** 를 맡는지 연결하는 단원입니다."
 
 BLOCKS = [
+    ANCHOR("My English teacher loves music.", "우리 영어 선생님은 음악을 좋아하신다.", "구(my English teacher)에 동사가 붙어 절이 되는 과정을 따라갑니다."),
     TABLE(
         ["구분", "정의", "예시"],
         [
-            ["**구** (phrase)", "2단어 이상이지만 동사가 없음", "my English teacher"],
-            ["**절** (clause)", "2단어 이상이며 동사가 있음", "I ran."],
+            ["**구** (phrase)", "2단어 이상이지만 주어 + 동사가 없음", "my English teacher / to study hard"],
+            ["**절** (clause)", "2단어 이상이며 주어 + 동사가 있음", "I ran. / when I was young"],
         ],
         widths=[20, 44, 36],
     ),
@@ -28,8 +29,8 @@ BLOCKS = [
         widths=[22, 38, 40], center=[1],
     ),
     QUICK([
-        "동사가 없으면 → **구**",
-        "동사가 있으면 → **절**",
+        "주어 + 동사가 없으면 → **구**  (to study hard처럼 동사 모양이 있어도 주어가 없으면 구)",
+        "주어 + 동사가 있으면 → **절**",
         "보어는 **설명**, 목적어는 **동작의 대상**",
     ]),
     PILGI([
@@ -80,7 +81,9 @@ BLOCKS = [
             Q("다음 문장에서 수식어(M)를 모두 고른 것은?  ⓐ Yesterday ⓑ my sister ⓒ found ⓓ a wallet ⓔ on the street.",
               "②", "시간 부사·장소 전치사구는 수식어", options=["ⓐ, ⓑ", "ⓐ, ⓔ", "ⓑ, ⓓ", "ⓒ, ⓔ"]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
+            Q("구 my English teacher를 주어로 하여 2형식 문장을 쓰시오. (kind)", "My English teacher is kind.", "", lines=1),
+            Q("위 문장을 3형식으로 바꾸시오. (love, music)", "My English teacher loves music.", "보어 → 목적어", lines=1),
             Q("S / V / O / C / M 으로 끊어 표시하시오.  The girl with the red hat looked tired after the long trip.",
               "The girl with the red hat (S) / looked (V) / tired (C) / after the long trip (M)", "", lines=2),
             Q("어법상 틀린 부분을 찾아 고쳐 쓰시오.  The number of tourists visiting Jeju have increased.",

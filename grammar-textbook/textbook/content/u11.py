@@ -8,6 +8,7 @@ GOALS = [
 INTRO = "분사구문은 **부사절을 짧게 줄인 것**. 만드는 순서 3단계만 기억하면 됩니다."
 
 BLOCKS = [
+    ANCHOR("When he broke the window, he ran away.", "그는 창문을 깨고 도망쳤다.", "Breaking → Having broken → Broken: 한 문장으로 분사구문의 세 모양을."),
     TABLE(
         ["만드는 순서", "설명"],
         [
@@ -32,7 +33,7 @@ BLOCKS = [
         ("② 주어 X", "~~he~~ broke the window, he ran away.", "주절 주어 he와 같음"),
         ("③ V-ing", "**Breaking** the window, he ran away.", None),
         ("먼저 일어남", "**Having broken** the window, he ran away.", "깬 것 → 도망 (순서 강조)"),
-        ("수동", "**(Being) Broken**, the window was replaced.", "창문이 '깨진' 것 → p.p."),
+        ("수동", "**Broken** by the kids, the window had to be replaced.", "주절 주어 the window가 '깨진' 것 → p.p."),
     ], title="When he broke the window, he ran away."),
     QUICK([
         "주절의 주어를 분사 앞에 넣어 본다 → **주어가 하면 V-ing, 당하면 p.p.**",
@@ -77,9 +78,11 @@ BLOCKS = [
               options=["Because you turn to the right", "If you turn to the right",
                        "Although you turn to the right", "After you turned to the right"]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("부사절로 바꾸시오.  Having read the book before, I know the story.",
               "Because(As) I have read the book before, I know the story.", "", lines=1),
+            Q("분사구문으로 바꾸시오.  After he had broken the window, he ran away.",
+              "Having broken the window, he ran away.", "먼저 일어난 일 → having p.p.", lines=1),
             Q("with를 활용하여 영작하시오.  그는 TV를 켜 둔 채로 잠이 들었다.", "He fell asleep with the TV turned on.", "",
               lines=1),
         ]),

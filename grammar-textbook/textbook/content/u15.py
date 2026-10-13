@@ -8,6 +8,7 @@ GOALS = [
 INTRO = "가정법의 원리는 하나. **실제보다 한 시제 과거로.** 현재 반대는 과거형, 과거 반대는 had p.p."
 
 BLOCKS = [
+    ANCHOR("If I were you, I wouldn't do that.", "내가 너라면 그렇게 하지 않을 텐데.", "If I were you → Were I you / If I had known → Had I known."),
     TABLE(
         ["형태", "의미"],
         [
@@ -87,7 +88,7 @@ BLOCKS = [
               "If it were not for는 현재 가정",
               options=["Without", "But for", "Had it not been for", "If it were not for"]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("if를 생략하여 다시 쓰시오.  If I were you, I would accept the offer.", "Were I you, I would accept the offer.",
               "", lines=1),
             Q("가정법으로 바꾸시오.  As he didn't tell me the truth, I got angry.",

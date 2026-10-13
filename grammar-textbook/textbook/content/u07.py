@@ -8,6 +8,7 @@ GOALS = [
 INTRO = "준동사는 **동사에서 출발했지만 문장 안에서는 명사·형용사·부사처럼** 쓰입니다. Unit 8~10과 Unit 13 분사구문의 지도 역할을 하는 단원입니다."
 
 BLOCKS = [
+    ANCHOR("Having eaten lunch, I'm full now.", "점심을 먹어서 지금 배부르다.", "부사절 → 분사구문 → 부정형까지, 준동사의 공통 성질을 이 문장으로 확인합니다."),
     TABLE(
         ["종류", "형태", "문장 안 역할"],
         [
@@ -69,9 +70,11 @@ BLOCKS = [
             Q("괄호 안에서 알맞은 것을 고르시오.  She decided (not to go / to not go).", "not to go", "not은 준동사 앞"),
             Q("괄호 안에서 알맞은 것을 고르시오.  It is very nice (for / of) you to say so.", "of", "성격 형용사"),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("분사구문으로 바꾸시오.  Because I have finished my homework, I can watch TV now.",
               "Having finished my homework, I can watch TV now.", "", lines=1),
+            Q("분사구문으로 바꾸시오.  Because I didn't eat lunch, I'm hungry now.",
+              "Not having eaten lunch, I'm hungry now.", "부정 + 완료", lines=1),
             Q("같은 뜻이 되도록 완성하시오.  It seems that she was a singer. = She seems ______ a singer.",
               "to have been", "", lines=1),
         ]),

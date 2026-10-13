@@ -231,3 +231,12 @@ h2 + p { break-after: avoid; }
 .cv-ed { margin-top: 10px; display: inline-block; align-self: flex-start; font-weight: 800; font-size: 10pt; color: #fff; background: #1E2433; padding: 3px 12px; border-radius: 4px; }
 .ans-blanks { color: var(--sub); margin-bottom: 4px; }
 .ans-blanks b { color: var(--c); }
+
+.anchor { margin: 4px 0 18px; padding: 14px 18px 12px; text-align: center; border-radius: 10px; background: var(--tint);
+  border: 2px solid var(--c); break-inside: avoid; position: relative; }
+.an-label { font-size: 7.5pt; font-weight: 800; letter-spacing: .12em; color: var(--c); }
+.an-s { font-size: 17pt; font-weight: 800; letter-spacing: -.3px; margin: 4px 0 2px; line-height: 1.3; }
+.an-ko { color: var(--sub); font-size: 9.5pt; }
+.an-note { margin-top: 6px; font-size: 8pt; color: var(--mute); }
+.tnote { background: #FFF5F5; border: 1px dashed #E8A0A0; }
+.tnote .badge { background: #D64545; }

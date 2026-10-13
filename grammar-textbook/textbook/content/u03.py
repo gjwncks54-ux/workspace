@@ -9,6 +9,7 @@ GOALS = [
 INTRO = "5형식은 **대표 예문 5개**만 확실히 외우면 됩니다. 나머지 문장은 전부 이 다섯 틀 중 하나입니다."
 
 BLOCKS = [
+    ANCHOR("I made him a cake.", "나는 그에게 케이크를 만들어 주었다.", "make 하나로 3형식 · 4형식 · 5형식을 오갑니다."),
     TABLE(
         ["구분", "핵심 포인트", "대표 동사"],
         [
@@ -91,8 +92,10 @@ BLOCKS = [
               options=["Let's discuss about the issue.", "He looks sadly today.",
                        "She explained me the answer.", "I gave a book to him."]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("3형식으로 바꿔 쓰시오.  I gave him a book.", "I gave a book to him.", "give는 to", lines=1),
+            Q("3형식으로 바꾸시오.  Mom made me a cake.", "Mom made a cake for me.", "make는 for", lines=1),
+            Q("3형식으로 바꾸시오.  Can I ask you a question?", "Can I ask a question of you?", "ask는 of", lines=1),
             Q("밑줄 친 made의 문장 형식을 각각 쓰시오.  ⓐ Mom ==made== me a sandwich. ⓑ The news ==made== me happy.",
               "ⓐ 4형식 ⓑ 5형식", "me ≠ a sandwich / me = happy", lines=1),
         ]),

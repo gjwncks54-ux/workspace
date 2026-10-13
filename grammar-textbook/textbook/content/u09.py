@@ -8,6 +8,7 @@ GOALS = [
 INTRO = "동명사 단원의 핵심은 표 하나. **to V는 앞으로 할 일(미래), V-ing는 이미 한 일(과거)** 입니다."
 
 BLOCKS = [
+    ANCHOR("I remember calling her last night.", "나는 어젯밤 그녀에게 전화했던 것을 기억한다.", "remember to call ↔ remember calling — to V와 V-ing를 바꾸면 시간이 바뀝니다."),
     TABLE(
         ["동사", "to V", "V-ing"],
         [
@@ -78,9 +79,12 @@ BLOCKS = [
               options=["I gave up trying to convince him.", "I finished to do my homework.",
                        "She avoided answering the question.", "They began singing together."]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
+            Q("한 문장으로 바꾸시오.  I called her last night. I remember it. (remember)",
+              "I remember calling her last night.", "이미 한 일 → V-ing", lines=1),
+            Q("한 문장으로 바꾸시오.  I must call her tonight. Don't forget it. (forget)",
+              "Don't forget to call her tonight.", "앞으로 할 일 → to V", lines=1),
             Q("어법상 틀린 부분을 고치시오.  I'm looking forward to hear from you.", "hear → hearing", "to는 전치사", lines=1),
-            Q("우리말과 같도록 영작하시오.  나는 그에게 전화했던 것을 기억한다. (remember)", "I remember calling him.", "", lines=1),
         ]),
     ]),
 ]

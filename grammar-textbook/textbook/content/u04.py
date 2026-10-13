@@ -9,6 +9,7 @@ GOALS = [
 INTRO = "5형식 심화의 핵심은 **동사가 O.C의 모양을 정한다**는 것. 아래 표 한 장이 이 단원의 전부입니다."
 
 BLOCKS = [
+    ANCHOR("I made her clean the room.", "나는 그녀가 방을 청소하게 했다.", "사역 → have/get 바꿔 쓰기 → 수동태(Unit 6)까지 이어집니다."),
     TABLE(
         ["유형", "주요 동사", "O.C 형태", "예문"],
         [
@@ -76,10 +77,14 @@ BLOCKS = [
             Q("다음 빈칸에 들어갈 말로 알맞지 않은 것은?  I ______ you to do your homework first.", "②",
               "make는 to V가 아니라 동사원형", options=["want", "make", "ask", "tell"]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("수동태로 바꾸시오.  I made her clean the room.", "She was made to clean the room by me.", "", lines=1),
             Q("수동태로 바꾸시오.  People saw a man run down the street.", "A man was seen to run down the street (by people).",
               "", lines=1),
+            Q("have를 이용하여 바꿔 쓰시오.  I made her clean the room. (have)", "I had her clean the room.",
+              "have도 사역 → 동사원형", lines=1),
+            Q("get을 이용하여 바꿔 쓰시오.  I made her clean the room. (get)", "I got her to clean the room.",
+              "get은 to V", lines=1),
             Q("우리말과 같도록 영작하시오.  나는 어제 머리를 잘랐다. (have, cut)", "I had my hair cut yesterday.",
               "머리가 잘리는 것 → p.p.", lines=1),
         ]),

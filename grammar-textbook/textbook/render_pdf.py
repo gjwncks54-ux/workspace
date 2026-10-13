@@ -100,6 +100,7 @@ def build_pdf(units, out_path: Path, appendix=None):
     merged.write(buf)
     buf.seek(0)
     final = number_pages(PdfReader(buf), front, 1)
+    final.compress_identical_objects(remove_identicals=True, remove_orphans=True)
     final.add_metadata({"/Title": f'{BOOK["title"]} - {BOOK["en"]}', "/Author": BOOK["series"]})
     with open(out_path, "wb") as f:
         final.write(f)

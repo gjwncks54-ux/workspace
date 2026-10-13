@@ -8,6 +8,7 @@ GOALS = [
 INTRO = "관계사는 **두 가지만 확인**합니다. ① 앞에 선행사가 있나? ② 뒤의 절이 완전한가, 불완전한가?"
 
 BLOCKS = [
+    ANCHOR("I bought a house that I had wanted to live in.", "나는 살고 싶었던 집을 샀다.", "that → which → in which → where → what: 한 문장으로 관계사 전부."),
     FORMULA("관계대명사 = 선행사 + 관계대명사 + 불완전한 절",
             "관계부사 = 선행사를 설명하는 완전한 절을 이끎 (where / when / how / why)"),
     TABLE(
@@ -94,7 +95,7 @@ BLOCKS = [
               options=["Tell me the way how you did it.", "Seoul is the city where I want to visit.",
                        "The girl whose is singing is my sister.", "I don't understand what you mean."]),
         ]),
-        ("STEP 3", "서술형", [
+        ("STEP 3", "바꿔 쓰기", [
             Q("세 가지 방법으로 한 문장으로 쓰시오.  This is the chair. My grandfather used to sit on it.",
               "This is the chair which(that) my grandfather used to sit on. / … on which my grandfather used to sit. / … (생략) my grandfather used to sit on.",
               "", lines=3),
