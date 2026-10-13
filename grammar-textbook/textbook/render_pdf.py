@@ -8,7 +8,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
 from textbook import render_html as R
-from textbook.meta import BOOK, PARTS
+from textbook.meta import BOOK, PARTS, WATERMARK
 
 CHROMIUM = "/opt/pw-browsers/chromium"
 MARGIN = {"top": "19mm", "bottom": "17mm", "left": "17mm", "right": "17mm"}
@@ -30,11 +30,37 @@ def _pdf(pg, html, head=None, margin=MARGIN):
     return pg.pdf(**kw)
 
 
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def watermark_page():
+    """WATERMARK 사양대로 로고 한 장짜리 PDF 페이지 생성 (투명 배경 유지, 알파에 불투명도 곱함)"""
+    if not WATERMARK.get("enabled"):
+        return None
+    from PIL import Image
+    from reportlab.lib.utils import ImageReader
+    im = Image.open(ROOT / WATERMARK["image"]).convert("RGBA")
+    alpha = im.getchannel("A").point(lambda a: round(a * WATERMARK["opacity"]))
+    im.putalpha(alpha)
+    w, h = A4
+    iw = WATERMARK["width_pt"]
+    ih = iw * im.height / im.width
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=A4)
+    c.drawImage(ImageReader(im), (w - iw) / 2, (h - ih) / 2, iw, ih, mask="auto")
+    c.save()
+    buf.seek(0)
+    return PdfReader(buf).pages[0]
+
+
 def number_pages(reader, start_index, first_no):
     """start_index 페이지부터 쪽번호(바깥쪽 아래) 찍기"""
     w, h = A4
     writer = PdfWriter()
+    wm = watermark_page()
     for i, p in enumerate(reader.pages):
+        if wm is not None:
+            p.merge_page(wm)
         if i >= start_index:
             no = first_no + i - start_index
             buf = io.BytesIO()
