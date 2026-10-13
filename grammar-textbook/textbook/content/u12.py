@@ -1,144 +1,105 @@
 from textbook.blocks import *
 
 GOALS = [
-    "관계대명사(who·which·that·whose·what)를 선행사와 격에 맞게 고른다.",
-    "관계대명사와 관계부사를 '뒤 절의 완전성'으로 구분한다.",
-    "전치사 + 관계대명사, 계속적 용법, 복합관계사를 이해한다.",
+    "선행사 유무 + 뒤 절의 완전성으로 that / what / 접속사 that을 구별한다.",
+    "같은 문장을 which / in which / where로 바꿔 쓴다.",
 ]
 
-INTRO = "관계사는 **두 문장을 하나로 묶으면서, 앞의 명사(선행사)를 뒤에서 꾸며 주는 말**입니다. 판단 기준은 딱 두 가지, **선행사의 종류**와 **뒤에 오는 절이 완전한지 불완전한지**입니다."
+INTRO = "관계사는 **두 가지만 확인**합니다. ① 앞에 선행사가 있나? ② 뒤의 절이 완전한가, 불완전한가?"
 
 BLOCKS = [
-    FORMULA("관계대명사 + 불완전한 절   /   관계부사 + 완전한 절",
-            "불완전한 절: 주어나 목적어(또는 전치사의 목적어)가 빠진 절"),
+    FORMULA("관계대명사 = 선행사 + 관계대명사 + 불완전한 절",
+            "관계부사 = 선행사를 설명하는 완전한 절을 이끎 (where / when / how / why)"),
+    TABLE(
+        ["형태", "선행사", "뒤 절의 완전성", "예문"],
+        [
+            ["**that** (관계대명사)", "O", "불완전", "I bought a house that I had wanted to live in."],
+            ["**what**", "X", "불완전", "You are what you eat."],
+            ["**that** (접속사)", "X", "완전", "I know that he is honest."],
+        ],
+        widths=[20, 12, 18, 50], center=[1, 2],
+    ),
+    TABLE(
+        ["표현", "설명"],
+        [
+            ["I bought a house **which** I had wanted to live in.", "불완전한 절 / 관계대명사 / that 가능"],
+            ["I bought a house **in which** I had wanted to live.", "전치사 + 관계대명사 / that 불가"],
+            ["I bought a house **where** I had wanted to live.", "완전한 절 / 관계부사"],
+        ],
+        widths=[58, 42],
+    ),
+    PILGI([
+        "선행사 O + 불완전 → {{관계대명사}} (that 가능)",
+        "선행사 X + 불완전 → {{what}}",
+        "선행사 X + 완전 → {{접속사 that}}",
+        "전치사 + 관계대명사 뒤는 {{완전한}} 절, that {{불가}}.",
+    ]),
+    CHAIN([
+        ("두 문장", "I bought a house. I had wanted to live **in it**.", None),
+        ("which", "I bought a house **which** I had wanted to live **in**.", "it → which, 전치사 in은 끝에 남음"),
+        ("in which", "I bought a house **in which** I had wanted to live.", "전치사를 앞으로 → 뒤가 완전해짐"),
+        ("where", "I bought a house **where** I had wanted to live.", "in which = where (관계부사)"),
+        ("생략", "I bought a house (that) I had wanted to live in.", "목적격은 생략 가능"),
+        ("what", "This house is **what** I had wanted.", "선행사(the thing)를 품으면 what"),
+    ], title="I bought a house that I had wanted to live in"),
+    QUICK([
+        "뒤 절에서 주어나 목적어(전치사의 목적어 포함)가 빠졌나? → **빠졌으면 관계대명사, 다 있으면 관계부사·접속사**",
+        "콤마 뒤, 전치사 뒤 → **that 금지**",
+    ]),
+    LINK(2, "관계사절 = 형용사절 / that절 = 명사절"),
 
-    H("1. 관계대명사의 종류"),
+    STEPUP(),
     TABLE(
         ["선행사", "주격", "소유격", "목적격"],
         [
             ["사람", "who / that", "whose", "who(m) / that"],
-            ["사물·동물", "which / that", "whose (of which)", "which / that"],
-            ["선행사 포함", "what", "–", "what"],
+            ["사물·동물", "which / that", "whose", "which / that"],
         ],
-        widths=[22, 26, 26, 26], center=[1, 2, 3],
+        widths=[22, 26, 26, 26], center=[1, 2, 3], caption="관계대명사 격",
     ),
-    PARSE([("I have a friend", None), ("who", "S"), ("lives in Canada", "V")],
-          "나는 캐나다에 사는 친구가 있다. (주격: who 뒤에 주어가 없음)"),
-    PARSE([("This is the book", None), ("which", "O"), ("I", "S"), ("bought yesterday", "V")],
-          "이것은 내가 어제 산 책이다. (목적격: bought 뒤에 목적어가 없음)"),
-    PARSE([("I met a girl", None), ("whose", None), ("father", "S"), ("is a pilot", "V")],
-          "나는 아버지가 조종사인 소녀를 만났다. (소유격: whose + 명사)"),
-    TIP("관계대명사 고르기", [
-        "① 선행사가 사람인가 사물인가?  ② 뒤 절에서 빠진 것이 주어인가 목적어인가?",
-        "주격 관계대명사 뒤 동사의 수는 **선행사**에 맞춘다: the boys who **are** …",
-        "목적격 관계대명사는 생략 가능: the book (which) I bought",
-    ]),
-
-    H("2. that만 쓰는 경우 / that을 못 쓰는 경우"),
     TABLE(
-        ["that을 주로 쓰는 경우", "that을 쓸 수 없는 경우"],
+        ["관계부사", "선행사", "= 전치사 + which"],
         [
-            ["선행사가 사람 + 사물 (a boy and his dog **that** …)", "**전치사 바로 뒤** (~~in that~~ → in which)"],
-            ["선행사에 최상급, 서수, the only, the very, all, every, -thing (the best movie **that** …)", "**계속적 용법** (콤마 뒤) (~~, that~~ → , which)"],
+            ["when", "시간", "at / on / in which"],
+            ["where", "장소", "at / on / in which"],
+            ["why", "이유 (the reason)", "for which"],
+            ["how", "방법 (the way) — 둘 중 하나만", "in which"],
         ],
-        widths=[55, 45],
-    ),
-
-    H("3. 관계대명사 what"),
-    P("what은 선행사를 **포함**한 관계대명사(= the thing(s) which)로, '**~하는 것**'으로 해석합니다. what절은 명사절로 주어·목적어·보어 역할을 합니다."),
-    EX([
-        ("**What** he said is true.", "그가 말한 것은 사실이다. (주어)"),
-        ("You are **what** you eat.", "당신이 먹는 것이 곧 당신이다. (보어)"),
-        ("Show me **what** you bought.", "네가 산 것을 보여 줘. (목적어)"),
-    ]),
-    TABLE(
-        ["", "선행사", "뒤 절", "예문"],
-        [
-            ["**that** (관계대명사)", "O", "불완전", "I bought a house **that** I had wanted to live in."],
-            ["**what** (관계대명사)", "X", "불완전", "You are **what** you eat."],
-            ["**that** (접속사)", "X", "완전", "I know **that** he is honest."],
-        ],
-        widths=[22, 12, 14, 52], center=[1, 2], caption="that / what / 접속사 that 비교",
-    ),
-
-    H("4. 전치사 + 관계대명사"),
-    P("관계대명사가 전치사의 목적어일 때, 전치사는 **절 끝**에 두거나 **관계대명사 앞**으로 옮길 수 있습니다. 전치사를 앞으로 옮기면 뒤 절은 **완전한 절**이 됩니다."),
-    TABLE(
-        ["표현", "구조"],
-        [
-            ["I bought a house **which** I had wanted to live **in**.", "불완전한 절 / which·that 가능 / 생략 가능"],
-            ["I bought a house **in which** I had wanted to live.", "전치사 + 관계대명사 / that 불가 / 생략 불가"],
-            ["I bought a house **where** I had wanted to live.", "관계부사 + 완전한 절"],
-        ],
-        widths=[55, 45],
-    ),
-
-    H("5. 관계부사"),
-    TABLE(
-        ["관계부사", "선행사", "= 전치사 + which", "예문"],
-        [
-            ["**when**", "시간 (the day, the time…)", "at/on/in which", "I remember the day **when** we first met."],
-            ["**where**", "장소 (the place, the city…)", "at/on/in which", "This is the town **where** I grew up."],
-            ["**why**", "이유 (the reason)", "for which", "Tell me the reason **why** you were late."],
-            ["**how**", "방법 (the way)", "in which", "This is **how** I solved it."],
-        ],
-        widths=[12, 28, 20, 40],
+        widths=[20, 44, 36],
     ),
     WARN([
-        ("This is ~~the way how~~ I solved it.", "This is ++the way++ I solved it. / This is ++how++ I solved it.",
-         "the way와 how는 함께 쓰지 않는다"),
-        ("This is the town ~~where~~ I visited last year.", "This is the town ++which(that)++ I visited last year.",
-         "visited 뒤 목적어가 빠진 불완전한 절 → 관계대명사"),
+        ("This is ~~the way how~~ I solved it.", "This is ++the way++ (또는 ++how++) I solved it.", "the way와 how는 같이 X"),
+        ("This is the town ~~where~~ I visited.", "This is the town ++which++ I visited.", "visited 뒤 목적어 빠짐 → 불완전"),
     ]),
-
-    H("6. 계속적 용법  , which / , who"),
-    P("콤마(,) 뒤의 관계사는 선행사에 대해 **추가 정보**를 줍니다. 앞에서부터 '그리고 그것은/그 사람은'으로 해석합니다. **which는 앞 문장 전체**를 받을 수도 있습니다."),
     EX([
-        ("I have two sons, **who** became doctors.", "나는 아들이 둘 있는데, 그들은 의사가 되었다. (아들이 둘뿐)"),
-        ("I have two sons **who** became doctors.", "나는 의사가 된 아들이 둘 있다. (다른 아들이 더 있을 수도)"),
-        ("He passed the exam, **which** surprised everyone.", "그는 시험에 합격했는데, 그것은 모두를 놀라게 했다. (앞 문장 전체)"),
+        ("I have two sons, **who** became doctors.", "계속적 용법: 아들이 둘뿐, 그들은 의사가 됨"),
+        ("He passed the exam, **which** surprised everyone.", "which가 앞 문장 전체를 받음"),
+        ("**Whatever** you do, I'll support you. / **However** hard you try, …", "복합관계사"),
     ]),
-
-    H("7. 복합관계사  -ever"),
-    TABLE(
-        ["복합관계사", "명사절 / 부사절 의미", "예문"],
-        [
-            ["**whoever**", "~하는 누구든지 / 누가 ~하더라도", "**Whoever** comes first will win."],
-            ["**whatever**", "~하는 무엇이든지 / 무엇을 ~하더라도", "You can eat **whatever** you want."],
-            ["**whenever**", "~할 때마다 / 언제 ~하더라도", "**Whenever** I see this photo, I smile."],
-            ["**wherever**", "~하는 곳은 어디든지", "I'll follow you **wherever** you go."],
-            ["**however**", "아무리 ~하더라도 (+ 형/부 + S + V)", "**However** hard you try, you can't beat him."],
-        ],
-        widths=[16, 40, 44],
-    ),
 
     CHECK([
         ("STEP 1", "기본 확인", [
-            Q("괄호 안에서 알맞은 것을 고르시오.  The man (who / which) called you is my uncle.", "who", "선행사가 사람 + 주격"),
-            Q("괄호 안에서 알맞은 것을 고르시오.  I have a friend (who / whose) brother is a singer.", "whose", "뒤에 명사 brother → 소유격"),
-            Q("괄호 안에서 알맞은 것을 고르시오.  (That / What) I need is your help.", "What", "선행사 없음 + 불완전한 절"),
-            Q("괄호 안에서 알맞은 것을 고르시오.  This is the hospital (which / where) I was born.", "where", "was born 뒤 완전한 절 → 관계부사"),
+            Q("괄호 안에서 알맞은 것을 고르시오.  You are (that / what) you eat.", "what", "선행사 X + 불완전"),
+            Q("괄호 안에서 알맞은 것을 고르시오.  I know (that / what) he is honest.", "that", "선행사 X + 완전 → 접속사"),
+            Q("괄호 안에서 알맞은 것을 고르시오.  This is the hospital (which / where) I was born.", "where", "완전한 절"),
+            Q("괄호 안에서 알맞은 것을 고르시오.  I have a friend (who / whose) brother is a singer.", "whose", ""),
         ]),
         ("STEP 2", "어법 선택", [
-            Q("괄호 안에서 알맞은 것을 고르시오.  The students who (study / studies) hard will pass.", "study",
-              "선행사 The students (복수)에 수일치"),
-            Q("괄호 안에서 알맞은 것을 고르시오.  This is the house in (that / which) Mozart lived.", "which", "전치사 뒤 that 불가"),
-            Q("다음 중 빈칸에 that을 쓸 수 없는 것은?", "③",
-              "③ 계속적 용법(콤마 뒤)에는 that을 쓸 수 없다 → which",
+            Q("괄호 안에서 알맞은 것을 고르시오.  I bought a house in (that / which) I had wanted to live.", "which",
+              "전치사 뒤 that 불가"),
+            Q("다음 중 빈칸에 that을 쓸 수 없는 것은?", "③", "계속적 용법",
               options=["He is the tallest boy ______ I know.", "I know ______ she is right.",
-                       "I read the book, ______ was very boring.", "Look at the man and the dog ______ are running."]),
-            Q("다음 중 어법상 올바른 문장은?", "④",
-              "① the way how → the way 또는 how  ② where → which  ③ whose → who",
+                       "I read the book, ______ was very boring.", "This is the house ______ I bought."]),
+            Q("다음 중 어법상 올바른 문장은?", "④", "① the way how ② where → which ③ whose → who",
               options=["Tell me the way how you did it.", "Seoul is the city where I want to visit.",
                        "The girl whose is singing is my sister.", "I don't understand what you mean."]),
         ]),
         ("STEP 3", "서술형", [
-            Q("두 문장을 관계대명사를 이용하여 한 문장으로 쓰시오.  I know a girl. Her mother is a famous actress.",
-              "I know a girl whose mother is a famous actress.", "Her → whose", lines=1),
-            Q("두 문장을 '전치사 + 관계대명사'를 이용하여 한 문장으로 쓰시오.  This is the chair. My grandfather used to sit on it.",
-              "This is the chair on which my grandfather used to sit.", "on it → on which", lines=1),
-            Q("어법상 틀린 부분을 찾아 고쳐 쓰시오.  Whatever hard you try, you can't finish it in a day.",
-              "Whatever → However", "However + 형/부 + S + V: 아무리 ~하더라도", lines=1),
+            Q("세 가지 방법으로 한 문장으로 쓰시오.  This is the chair. My grandfather used to sit on it.",
+              "This is the chair which(that) my grandfather used to sit on. / … on which my grandfather used to sit. / … (생략) my grandfather used to sit on.",
+              "", lines=3),
+            Q("관계대명사로 한 문장을 만드시오.  I know a girl. Her mother is a famous actress.",
+              "I know a girl whose mother is a famous actress.", "", lines=1),
         ]),
     ]),
 ]

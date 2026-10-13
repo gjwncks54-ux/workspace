@@ -6,6 +6,7 @@
   ~~틀림~~      → 틀린 표현 (빨간 취소선)
   ++맞음++      → 고친 표현 (초록)
   [[S]]          → 문장성분 라벨 칩 (S, V, O, C, I.O, D.O, O.C, M ...)
+  {{정답}}      → 필기 빈칸 (학생용: 빈칸 / 교사용: 정답 표시)
 """
 import re
 
@@ -60,6 +61,29 @@ def LIST(items, title=None):
     return {"t": "list", "items": items, "title": title}
 
 
+def PILGI(lines, title="필기 포인트"):
+    """원본 교재의 필기 포인트. {{ }} 로 빈칸"""
+    return {"t": "pilgi", "title": title, "lines": lines}
+
+
+def QUICK(lines, title="바로 구별하는 법"):
+    return {"t": "quick", "title": title, "lines": lines}
+
+
+def CHAIN(steps, title="한 문장 변형하기"):
+    """[(라벨, 문장, 변형 메모), ...] 한 문장이 바뀌어 가는 줄기"""
+    return {"t": "chain", "title": title, "steps": steps}
+
+
+def LINK(unit_no, text):
+    """다른 단원과 연결"""
+    return {"t": "link", "unit": unit_no, "text": text}
+
+
+def STEPUP(text="여기부터는 내신·수능 대비 확장 내용입니다."):
+    return {"t": "stepup", "text": text}
+
+
 def PAGEBREAK():
     return {"t": "pb"}
 
@@ -79,7 +103,7 @@ def Q(prompt, answer, explain=None, options=None, lines=0):
 
 # ---------- 인라인 마크업 ----------
 
-_TOKEN = re.compile(r"(\*\*.+?\*\*|==.+?==|~~.+?~~|\+\+.+?\+\+|\[\[.+?\]\])")
+_TOKEN = re.compile(r"(\*\*.+?\*\*|==.+?==|~~.+?~~|\+\+.+?\+\+|\[\[.+?\]\]|\{\{.+?\}\})")
 
 
 def tokens(text):
@@ -96,6 +120,8 @@ def tokens(text):
             out.append(("x", part[2:-2]))
         elif part.startswith("++"):
             out.append(("o", part[2:-2]))
+        elif part.startswith("{{"):
+            out.append(("blank", part[2:-2]))
         elif part.startswith("[["):
             out.append(("tag", part[2:-2]))
         else:
@@ -105,3 +131,7 @@ def tokens(text):
 
 def plain(text):
     return "".join(s for _, s in tokens(text))
+
+
+def blanks(text):
+    return [s for st, s in tokens(text) if st == "blank"]

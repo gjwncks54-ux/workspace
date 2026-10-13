@@ -1,7 +1,7 @@
 BOOK = {
     "title": "기초 영어 문법",
     "en": "Essential English Grammar",
-    "sub": "중·고등 내신 대비 핵심 문법 15",
+    "sub": "수업용 필기 노트 · 중·고등 핵심 문법 15",
     "series": "GRAMMAR CORE",
 }
 
@@ -14,7 +14,7 @@ PARTS = {
     5: ("PART 5", "특수 구문", "Special Structures", "#C93A5A", "#FCEEF1"),
 }
 
-# 단원 순서 (원본 교재 순서를 학습 흐름에 맞게 재배치)
+# 단원 순서 = 원본 교재의 수업 순서
 # (모듈명, 파트, 단원명, 영문, 난이도 1~3)
 UNITS = [
     ("u01", 1, "8품사", "Parts of Speech", 1),
@@ -27,9 +27,9 @@ UNITS = [
     ("u08", 3, "to부정사", "To-infinitives", 3),
     ("u09", 3, "동명사", "Gerunds", 2),
     ("u10", 3, "분사", "Participles", 2),
-    ("u11", 3, "분사구문", "Participle Clauses", 3),
     ("u12", 4, "관계사", "Relatives", 3),
     ("u13", 4, "가주어·가목적어 / 강조구문", "Dummy It & Cleft Sentences", 2),
+    ("u11", 4, "분사구문", "Participle Clauses", 3),
     ("u14", 5, "도치구문", "Inversion", 2),
     ("u15", 5, "가정법", "The Subjunctive Mood", 3),
 ]

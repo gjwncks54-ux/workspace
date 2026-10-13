@@ -9,7 +9,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Mm, Pt, RGBColor
 
-from textbook.blocks import tokens
+from textbook.blocks import blanks, tokens
 from textbook.meta import BOOK, PARTS
 
 FONT = "맑은 고딕"
@@ -18,6 +18,7 @@ RED, GREEN, LINE = "D64545", "1F9254", "DCE1E9"
 TAG_COLOR = {"S": "2B59C3", "V": "C93A5A", "O": "0E8A7E", "I.O": "0E8A7E", "D.O": "2C9C6A",
              "C": "D9701A", "O.C": "D9701A", "M": "8A93A6"}
 CIRCLED = "①②③④⑤"
+MODE = {"teacher": False}
 
 
 def rgb(h):
@@ -118,6 +119,15 @@ def spacing(p, before=0, after=4, line=1.25):
 
 def add_inline(p, text, color, size=9.5, base_bold=False, base_color=INK):
     for style, s in tokens(str(text)):
+        if style == "blank":
+            if MODE["teacher"]:
+                r = p.add_run(f" {s} ")
+                set_font(r, size, True, RED)
+            else:
+                r = p.add_run("\u00a0" * max(6, int(len(s) * 2.6)))
+                set_font(r, size)
+            r.font.underline = True
+            continue
         if style == "tag":
             r = p.add_run(f" {s} ")
             set_font(r, size - 2, True, "FFFFFF")
@@ -355,6 +365,46 @@ class Writer:
                 para_border_bottom(last)
                 n += 1
 
+    def chain(self, b):
+        t = self.table(1, 1, [1])
+        c = t.cell(0, 0)
+        e = (6, self.color)
+        cell_borders(c, top=e, bottom=e, left=e, right=e)
+        cell_margins(c, 100, 100, 160, 160)
+        p = c.paragraphs[0]
+        add_inline(p, "⟲ " + b["title"], self.color, 9.5, True, self.color)
+        for i, (label, sent, note) in enumerate(b["steps"]):
+            if i:
+                q = c.add_paragraph()
+                spacing(q, 0, 0)
+                q.paragraph_format.left_indent = Mm(6)
+                add_inline(q, "↓  " + (note or ""), self.color, 8, False, SUB)
+            q = c.add_paragraph()
+            spacing(q, 1, 1)
+            r = q.add_run(f" {label} ")
+            set_font(r, 8, True, self.color)
+            run_shade(r, self.tint)
+            q.add_run("  ")
+            add_inline(q, sent, self.color, 10)
+        self.gap(6)
+
+    def link(self, b):
+        p = self.para(after=6)
+        r = p.add_run(f" ↔ Unit {b['unit']:02d} ")
+        set_font(r, 7.5, True, "FFFFFF")
+        run_shade(r, SUB)
+        add_inline(p, "  " + b["text"], self.color, 8.5, False, SUB)
+
+    def stepup(self, b):
+        p = self.para(before=14, after=6)
+        para_border_bottom(p, LINE, 8)
+        r = p.add_run(" STEP UP ")
+        set_font(r, 9, True, "FFFFFF")
+        run_shade(r, INK)
+        r = p.add_run("  심화   ")
+        set_font(r, 10, True, INK)
+        add_inline(p, b["text"], self.color, 8.5, False, MUTE)
+
     # ---------- 섹션 ----------
     def new_section(self, head_left, head_right, color):
         sec = self.doc.add_section(WD_SECTION.NEW_PAGE)
@@ -413,6 +463,16 @@ def render_blocks(w, blocks, unit_no):
             w.warn(b)
         elif t == "check":
             w.check(b, unit_no)
+        elif t == "pilgi":
+            w.box("✎", b["title"], b["lines"], "FFFDF6", "E6DFC8", w.color)
+        elif t == "quick":
+            w.box("⚡", b["title"], b["lines"], w.tint, w.color, w.color)
+        elif t == "chain":
+            w.chain(b)
+        elif t == "link":
+            w.link(b)
+        elif t == "stepup":
+            w.stepup(b)
         elif t == "pb":
             d.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
@@ -433,7 +493,8 @@ def build_docx(units, out_path: Path, appendix=None):
         p.add_run(" ")
     w.para(BOOK["title"], 44, True, INK, after=2)
     w.para(BOOK["en"], 16, False, MUTE, after=10)
-    w.para(BOOK["sub"], 12, True, SUB, after=90)
+    w.para(BOOK["sub"], 12, True, SUB, after=6)
+    w.para("교사용 · 필기 정답 포함" if MODE["teacher"] else "학생용", 10, True, INK, after=80)
     t = w.table(len(PARTS), 3, [18, 28, 54])
     for i, (pid, (pno, pname, pen, color, tint)) in enumerate(PARTS.items()):
         names = " · ".join(u["title"] for u in units if u["part"] == pid)
@@ -520,6 +581,10 @@ def build_docx(units, out_path: Path, appendix=None):
         w.color = color
         p = w.para(f'Unit {u["no"]:02d}  {u["title"]}', 11, True, color, before=10, after=4)
         para_border_left(p, color)
+        bl = [x for b in u["blocks"] if b["t"] == "pilgi" for l in b["lines"] for x in blanks(l)]
+        if bl:
+            w.para("필기 포인트 빈칸", 8.5, True, color, before=4, after=1)
+            w.para("  ·  ".join(f"{i}) {x}" for i, x in enumerate(bl, 1)), 8.5, color=SUB, after=2)
         n = 1
         for b in u["blocks"]:
             if b["t"] != "check":

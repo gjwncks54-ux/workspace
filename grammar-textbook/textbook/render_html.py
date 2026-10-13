@@ -2,7 +2,7 @@
 from html import escape
 from pathlib import Path
 
-from textbook.blocks import tokens
+from textbook.blocks import blanks, tokens
 from textbook.meta import BOOK, PARTS
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -10,6 +10,11 @@ CSS = (ROOT / "assets" / "style.css").read_text(encoding="utf-8")
 FONT_DIR = (ROOT / "assets" / "fonts").as_uri()
 
 CIRCLED = "①②③④⑤"
+MODE = {"teacher": False}  # 학생용/교사용
+
+
+def blank_len(s):
+    return max(3.0, sum(1.0 if ord(ch) > 0x2000 else 0.55 for ch in s) + 1.5)
 
 TAG_CLASS = {"S": "s", "V": "v", "O": "o", "C": "c", "I.O": "o", "D.O": "o2",
              "O.C": "c", "M": "m", "S'": "s", "V'": "v"}
@@ -29,12 +34,19 @@ def inline(text):
             out.append(f'<span class="ok">{s}</span>')
         elif style == "tag":
             out.append(f'<span class="tag t-{TAG_CLASS.get(s, "m")}">{s}</span>')
+        elif style == "blank":
+            if MODE["teacher"]:
+                out.append(f'<span class="blank fill">{s}</span>')
+            else:
+                out.append(f'<span class="blank" style="width:{blank_len(s):.1f}em"></span>')
         else:
             out.append(s)
     return "".join(out)
 
 
 def page(body, part_color="#2B59C3", tint="#EEF3FC", cls=""):
+    if MODE["teacher"]:
+        cls += " teacher"
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <style>{CSS.replace("FONT_DIR", FONT_DIR)}</style></head>
 <body class="{cls}" style="--c:{part_color};--tint:{tint}">{body}</body></html>"""
@@ -111,6 +123,30 @@ def r_check(b, unit_no):
     return "".join(html)
 
 
+def r_pilgi(b):
+    lis = "".join(f"<li>{inline(l)}</li>" for l in b["lines"])
+    return (f'<div class="pilgi"><div class="pilgi-head"><span class="pen">✎</span>{escape(b["title"])}'
+            f'<em>원본 필기</em></div><ul>{lis}</ul></div>')
+
+
+def r_quick(b):
+    lis = "".join(f"<li>{inline(l)}</li>" for l in b["lines"])
+    return f'<div class="quick"><div class="quick-head">⚡ {escape(b["title"])}</div><ul>{lis}</ul></div>'
+
+
+def r_chain(b):
+    rows = []
+    for i, (label, sent, note) in enumerate(b["steps"]):
+        if i:
+            rows.append(f'<div class="ch-arrow"><span>↓</span>{inline(note) if note else ""}</div>')
+        rows.append(f'<div class="ch-row"><span class="ch-tag">{inline(label)}</span><span class="ch-s">{inline(sent)}</span></div>')
+    return f'<div class="chain"><div class="chain-head">⟲ {escape(b["title"])}</div>{"".join(rows)}</div>'
+
+
+def r_link(b):
+    return f'<div class="link"><span class="link-u">Unit {b["unit"]:02d}</span>{inline(b["text"])}</div>'
+
+
 def render_blocks(blocks, unit_no):
     out = []
     for b in blocks:
@@ -138,6 +174,16 @@ def render_blocks(blocks, unit_no):
             out.append(r_warn(b))
         elif t == "check":
             out.append(r_check(b, unit_no))
+        elif t == "pilgi":
+            out.append(r_pilgi(b))
+        elif t == "quick":
+            out.append(r_quick(b))
+        elif t == "chain":
+            out.append(r_chain(b))
+        elif t == "link":
+            out.append(r_link(b))
+        elif t == "stepup":
+            out.append(f'<div class="stepup"><span>STEP UP</span><em>심화</em><i>{inline(b["text"])}</i></div>')
         elif t == "pb":
             out.append('<div class="pb"></div>')
     return "\n".join(out)
@@ -173,6 +219,7 @@ def cover_html(units):
   <h1 class="cv-title">{BOOK['title']}</h1>
   <div class="cv-en">{BOOK['en']}</div>
   <div class="cv-sub">{BOOK['sub']}</div>
+  <div class="cv-ed">{'교사용 · 필기 정답 포함' if MODE['teacher'] else '학생용'}</div>
   <div class="cv-parts">{''.join(parts)}</div>
   <div class="cv-foot"><span>개념 정리</span><span>예문 분석</span><span>흔한 실수</span><span>CHECK-UP</span><span>정답·해설</span></div>
 </div>"""
@@ -201,7 +248,7 @@ def toc_html(units, pages):
             out.append(f'<div class="tu"><span class="tu-no">+</span><span class="tu-t">{t}</span>'
                        f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages[k]}</span></div>')
         out.append('</div>')
-    out.append('<div class="toc-guide"><b>교재 구성</b><span>학습 목표 → 개념·표 → 예문 분석 → 흔한 실수 → CHECK-UP (STEP 1 기본 · STEP 2 어법 · STEP 3 서술형)</span>'
+    out.append('<div class="toc-guide"><b>교재 구성</b><span>판서 표 → ✎ 필기 포인트 → ⟲ 한 문장 변형하기 → ⚡ 바로 구별하는 법 → STEP UP 심화 → CHECK-UP</span>'
                '<span>난이도 ★☆☆ 기초 · ★★☆ 핵심 · ★★★ 심화</span></div></div>')
     return page("".join(out), cls="toc-page")
 
@@ -211,6 +258,14 @@ def answers_html(units):
     for u in units:
         color = PARTS[u["part"]][3]
         out.append(f'<div class="ans-unit" style="--c:{color}"><h3>Unit {u["no"]:02d} {escape(u["title"])}</h3>')
+        bl = []
+        for b in u["blocks"]:
+            if b["t"] == "pilgi":
+                for l in b["lines"]:
+                    bl += blanks(l)
+        if bl:
+            out.append('<div class="ans-step">필기 포인트 빈칸</div><div class="ans-blanks">'
+                       + " · ".join(f"<b>{i}</b> {escape(x)}" for i, x in enumerate(bl, 1)) + "</div>")
         n = 1
         for b in u["blocks"]:
             if b["t"] != "check":
