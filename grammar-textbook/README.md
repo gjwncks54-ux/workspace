@@ -24,3 +24,10 @@ python3 build.py 1 2 3    # 일부 단원만
 - `assets/del-logo.png` (DEL · Dennis English Laboratory) 로고, 투명 배경 유지
 - 모든 페이지 중앙, 가로 420pt(비율 유지), 불투명도 8%
 - 사양: `textbook/meta.py`의 `WATERMARK`. 끄려면 `enabled: False`
+
+## 인쇄(제본) 파일
+`dist/인쇄용/`
+- `*_본문.pdf`: 표지 제외 본문. 목차(1면) → 빈 면 → 본문 1쪽이 오른쪽(홀수 면)에서 시작, 전체 짝수 면
+- `*_표지_도련3mm.pdf`: 표지 216 × 303mm (재단 여유 사방 3mm)
+- 글꼴은 모두 TrueType으로 임베드 (Pretendard TTF를 시스템 글꼴로 설치해 사용 — 웹폰트로 넣으면 Type 3로 저장됨)
+- 좌우 여백 20mm (제본 여백 포함)

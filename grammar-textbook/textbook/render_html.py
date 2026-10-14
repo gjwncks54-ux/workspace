@@ -1,4 +1,5 @@
 """콘텐츠 → HTML 문자열"""
+import re
 from html import escape
 from pathlib import Path
 
@@ -10,6 +11,7 @@ CSS = (ROOT / "assets" / "style.css").read_text(encoding="utf-8")
 FONT_DIR = (ROOT / "assets" / "fonts").as_uri()
 
 CIRCLED = "①②③④⑤"
+CIRC_RE = re.compile("[\u24d0-\u24e9]")  # ⓐ~ⓩ: 본문 글꼴에 없어 CSS 원문자로 그린다
 MODE = {"teacher": False}  # 학생용/교사용
 
 
@@ -24,6 +26,7 @@ def inline(text):
     out = []
     for style, s in tokens(str(text)):
         s = escape(s).replace("\n", "<br>")
+        s = CIRC_RE.sub(lambda m: f'<span class="circ">{chr(ord(m.group()) - 0x24D0 + 97)}</span>', s)
         if style == "b":
             out.append(f"<b>{s}</b>")
         elif style == "hl":
@@ -125,13 +128,13 @@ def r_check(b, unit_no):
 
 def r_pilgi(b):
     lis = "".join(f"<li>{inline(l)}</li>" for l in b["lines"])
-    return (f'<div class="pilgi"><div class="pilgi-head"><span class="pen">✎</span>{escape(b["title"])}'
+    return (f'<div class="pilgi"><div class="pilgi-head"><span class="pen">✓</span>{escape(b["title"])}'
             f'<em>수업 필기</em></div><ul>{lis}</ul></div>')
 
 
 def r_quick(b):
     lis = "".join(f"<li>{inline(l)}</li>" for l in b["lines"])
-    return f'<div class="quick"><div class="quick-head">⚡ {escape(b["title"])}</div><ul>{lis}</ul></div>'
+    return f'<div class="quick"><div class="quick-head">▶ {escape(b["title"])}</div><ul>{lis}</ul></div>'
 
 
 def r_chain(b):
@@ -140,7 +143,7 @@ def r_chain(b):
         if i:
             rows.append(f'<div class="ch-arrow"><span>↓</span>{inline(note) if note else ""}</div>')
         rows.append(f'<div class="ch-row"><span class="ch-tag">{inline(label)}</span><span class="ch-s">{inline(sent)}</span></div>')
-    return f'<div class="chain"><div class="chain-head">⟲ {escape(b["title"])}</div>{"".join(rows)}</div>'
+    return f'<div class="chain"><div class="chain-head">↻ {escape(b["title"])}</div>{"".join(rows)}</div>'
 
 
 def r_link(b):
@@ -262,7 +265,7 @@ def toc_html(units, pages):
             out.append(f'<div class="tu"><span class="tu-no">+</span><span class="tu-t">{t}</span>'
                        f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages[k]}</span></div>')
         out.append('</div>')
-    out.append('<div class="toc-guide"><b>교재 구성</b><span>기준 문장 → 판서 표 → ✎ 필기 포인트 → ⟲ 한 문장 변형하기 → ⚡ 바로 구별하는 법 → STEP UP 심화 → CHECK-UP → 실전 TEST</span>'
+    out.append('<div class="toc-guide"><b>교재 구성</b><span>기준 문장 → 판서 표 → ✓ 필기 포인트 → ↻ 한 문장 변형하기 → ▶ 바로 구별하는 법 → STEP UP 심화 → CHECK-UP → 실전 TEST</span>'
                '<span>난이도 ★☆☆ 기초 · ★★☆ 핵심 · ★★★ 심화</span></div></div>')
     return page("".join(out), cls="toc-page")
 

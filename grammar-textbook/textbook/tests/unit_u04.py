@@ -25,7 +25,7 @@ TEST = {
            ["I got my sister wash the dishes.", "The teacher made us to write an essay.",
             "I'll have the mechanic check the engine.", "She heard her name calling.", "My boss let me to leave early."],
            3, "① to wash ② write ④ 이름은 '불리는' 대상 → called ⑤ leave"),
-        MC("두 문장의 뜻이 같도록 할 때 빈칸에 알맞은 것은?  I made her clean the room. ≒ I got her ______ the room.",
+        MC("두 문장의 뜻이 같도록 할 때 빈칸에 알맞은 것은?  I made her clean the room. = I got her ______ the room.",
            ["cleaned", "to clean", "clean", "cleaning", "to cleaning"],
            2, "make는 동사원형, get은 to V"),
         MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",

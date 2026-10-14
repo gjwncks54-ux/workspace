@@ -372,7 +372,7 @@ class Writer:
         cell_borders(c, top=e, bottom=e, left=e, right=e)
         cell_margins(c, 100, 100, 160, 160)
         p = c.paragraphs[0]
-        add_inline(p, "⟲ " + b["title"], self.color, 9.5, True, self.color)
+        add_inline(p, "↻ " + b["title"], self.color, 9.5, True, self.color)
         for i, (label, sent, note) in enumerate(b["steps"]):
             if i:
                 q = c.add_paragraph()
@@ -544,9 +544,9 @@ def render_blocks(w, blocks, unit_no):
         elif t == "anchor":
             w.anchor(b)
         elif t == "pilgi":
-            w.box("✎", b["title"], b["lines"], "FFFDF6", "E6DFC8", w.color)
+            w.box("✓", b["title"], b["lines"], "FFFDF6", "E6DFC8", w.color)
         elif t == "quick":
-            w.box("⚡", b["title"], b["lines"], w.tint, w.color, w.color)
+            w.box("▶", b["title"], b["lines"], w.tint, w.color, w.color)
         elif t == "chain":
             w.chain(b)
         elif t == "link":

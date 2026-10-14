@@ -11,11 +11,11 @@ from textbook import render_html as R
 from textbook.meta import BOOK, PARTS, WATERMARK
 
 CHROMIUM = "/opt/pw-browsers/chromium"
-MARGIN = {"top": "19mm", "bottom": "17mm", "left": "17mm", "right": "17mm"}
+MARGIN = {"top": "19mm", "bottom": "17mm", "left": "20mm", "right": "20mm"}  # 제본 여백 20mm
 
 
 def header(left, right, color):
-    return (f'<div style="width:100%;font-family:Pretendard,sans-serif;font-size:7.5px;padding:0 17mm;'
+    return (f'<div style="width:100%;font-family:Pretendard,sans-serif;font-size:7.5px;padding:0 20mm;'
             f'display:flex;justify-content:space-between;color:#8A93A6;-webkit-print-color-adjust:exact">'
             f'<span style="letter-spacing:.06em">{left}</span>'
             f'<span style="color:{color};font-weight:700">{right}</span></div>')
@@ -31,6 +31,29 @@ def _pdf(pg, html, head=None, margin=MARGIN):
 
 
 ROOT = Path(__file__).resolve().parent.parent
+FONTS = ROOT / "assets" / "fonts"
+
+
+def ensure_fonts():
+    """Pretendard TTF를 시스템 글꼴로 설치 (웹폰트로 넣으면 Chromium이 Type 3로 저장해 인쇄 품질이 떨어짐)"""
+    import shutil
+    import subprocess
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    dest = Path.home() / ".fonts"
+    dest.mkdir(exist_ok=True)
+    new = False
+    for f in FONTS.glob("Pretendard-*.ttf"):
+        if not (dest / f.name).exists():
+            shutil.copy(f, dest / f.name)
+            new = True
+    if new:
+        subprocess.run(["fc-cache", "-f"], check=False)
+    pdfmetrics.registerFont(TTFont("PretR", str(FONTS / "Pretendard-Regular.ttf")))
+    pdfmetrics.registerFont(TTFont("PretB", str(FONTS / "Pretendard-Bold.ttf")))
+
+
+ensure_fonts()
 
 
 def watermark_page():
@@ -46,7 +69,7 @@ def watermark_page():
     iw = WATERMARK["width_pt"]
     ih = iw * im.height / im.width
     buf = io.BytesIO()
-    c = canvas.Canvas(buf, pagesize=A4)
+    c = canvas.Canvas(buf, pagesize=A4, initialFontName="PretR")
     c.drawImage(ImageReader(im), (w - iw) / 2, (h - ih) / 2, iw, ih, mask="auto")
     c.save()
     buf.seek(0)
@@ -59,29 +82,29 @@ def number_pages(reader, start_index, first_no):
     writer = PdfWriter()
     wm = watermark_page()
     for i, p in enumerate(reader.pages):
-        if wm is not None:
+        if wm is not None and p.get_contents() is not None:  # 빈 면에는 워터마크 X
             p.merge_page(wm)
         if i >= start_index:
             no = first_no + i - start_index
             buf = io.BytesIO()
-            c = canvas.Canvas(buf, pagesize=A4)
+            c = canvas.Canvas(buf, pagesize=A4, initialFontName="PretR")
             c.setFillColorRGB(0.54, 0.58, 0.65)
-            c.setFont("Helvetica", 6.5)
+            c.setFont("PretR", 6.5)
             label = BOOK["series"]
             if no % 2:  # 홀수쪽 오른쪽
-                c.setFont("Helvetica-Bold", 9)
+                c.setFont("PretB", 9)
                 c.setFillColorRGB(0.12, 0.14, 0.2)
-                c.drawRightString(w - 17 * 2.835, 9 * 2.835, str(no))
-                c.setFont("Helvetica", 6.5)
+                c.drawRightString(w - 20 * 2.835, 9 * 2.835, str(no))
+                c.setFont("PretR", 6.5)
                 c.setFillColorRGB(0.54, 0.58, 0.65)
-                c.drawRightString(w - 17 * 2.835 - 16, 9 * 2.835 + 1, label)
+                c.drawRightString(w - 20 * 2.835 - 16, 9 * 2.835 + 1, label)
             else:
-                c.setFont("Helvetica-Bold", 9)
+                c.setFont("PretB", 9)
                 c.setFillColorRGB(0.12, 0.14, 0.2)
-                c.drawString(17 * 2.835, 9 * 2.835, str(no))
-                c.setFont("Helvetica", 6.5)
+                c.drawString(20 * 2.835, 9 * 2.835, str(no))
+                c.setFont("PretR", 6.5)
                 c.setFillColorRGB(0.54, 0.58, 0.65)
-                c.drawString(17 * 2.835 + 16, 9 * 2.835 + 1, label)
+                c.drawString(20 * 2.835 + 16, 9 * 2.835 + 1, label)
             c.save()
             buf.seek(0)
             p.merge_page(PdfReader(buf).pages[0])
@@ -121,6 +144,11 @@ def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None,
             cur += len(PdfReader(io.BytesIO(data)).pages)
 
         cover = _pdf(pg, R.cover_html(units), margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+        # 인쇄용 표지: 재단 여유(도련) 사방 3mm → 216 × 303mm
+        pg.set_content(R.cover_html(units).replace("</style>", BLEED_CSS + "</style>"), wait_until="load")
+        pg.evaluate("document.fonts.ready")
+        cover_bleed = pg.pdf(width="216mm", height="303mm", print_background=True,
+                             margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
         toc = _pdf(pg, R.toc_html(units, pages), margin={"top": "22mm", "bottom": "18mm", "left": "20mm", "right": "20mm"})
         br.close()
 
@@ -140,7 +168,39 @@ def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None,
     final.add_metadata({"/Title": f'{BOOK["title"]} - {BOOK["en"]}', "/Author": BOOK["series"]})
     with open(out_path, "wb") as f:
         final.write(f)
+
+    # ---- 인쇄소용: 본문(표지 제외) + 표지(도련 3mm) ----
+    pdir = out_path.parent / "인쇄용"
+    pdir.mkdir(exist_ok=True)
+    stem = out_path.stem
+    toc_r = PdfReader(io.BytesIO(toc))
+    body = PdfWriter()
+    for p in toc_r.pages:
+        body.add_page(p)
+    if len(toc_r.pages) % 2:            # 본문 1쪽이 오른쪽(홀수 면)에서 시작하도록 빈 면 삽입
+        body.add_blank_page(*A4)
+    lead = len(body.pages)
+    for _, d in sections:
+        for p in PdfReader(io.BytesIO(d)).pages:
+            body.add_page(p)
+    if len(body.pages) % 2:             # 전체 면수를 짝수로
+        body.add_blank_page(*A4)
+    buf = io.BytesIO()
+    body.write(buf)
+    buf.seek(0)
+    pbody = number_pages(PdfReader(buf), lead, 1)
+    pbody.add_metadata({"/Title": f'{BOOK["title"]} - 본문(인쇄용)', "/Author": BOOK["series"]})
+    with open(pdir / f"{stem}_본문.pdf", "wb") as f:
+        pbody.write(f)
+    with open(pdir / f"{stem}_표지_도련3mm.pdf", "wb") as f:
+        f.write(cover_bleed)
     return pages
+
+
+BLEED_CSS = """
+@page { size: 216mm 303mm; margin: 0; }
+.cover { width: 216mm; height: 303mm; padding: 29mm 25mm 23mm; }
+"""
 
 
 def build_booklet(units, part_tests, mocks, out_path: Path):
@@ -151,6 +211,8 @@ def build_booklet(units, part_tests, mocks, out_path: Path):
         data = _pdf(pg, R.booklet_html(units, part_tests, mocks), header(BOOK["series"], "정답 및 해설 (별책)", "#1E2433"))
         br.close()
     final = number_pages(PdfReader(io.BytesIO(data)), 0, 1)
+    if len(final.pages) % 2:
+        final.add_blank_page(*A4)
     final.add_metadata({"/Title": f'{BOOK["title"]} - 정답 및 해설', "/Author": BOOK["series"]})
     with open(out_path, "wb") as f:
         final.write(f)

@@ -1,8 +1,3 @@
-@font-face { font-family: "Pretendard"; font-weight: 400; src: url("FONT_DIR/Pretendard-Regular.woff2") format("woff2"); }
-@font-face { font-family: "Pretendard"; font-weight: 500; src: url("FONT_DIR/Pretendard-Medium.woff2") format("woff2"); }
-@font-face { font-family: "Pretendard"; font-weight: 600; src: url("FONT_DIR/Pretendard-SemiBold.woff2") format("woff2"); }
-@font-face { font-family: "Pretendard"; font-weight: 700; src: url("FONT_DIR/Pretendard-Bold.woff2") format("woff2"); }
-@font-face { font-family: "Pretendard"; font-weight: 800; src: url("FONT_DIR/Pretendard-ExtraBold.woff2") format("woff2"); }
 
 :root {
   --ink: #1E2433; --sub: #5B6475; --mute: #8A93A6; --line: #DCE1E9; --soft: #F5F7FA;
@@ -285,3 +280,7 @@ h2 + p { break-after: avoid; }
 .toc-page .tp-head { padding: 3px 12px; margin-bottom: 2px; }
 .toc-page .tu-test .tu-t { font-size: 8.8pt; color: var(--c); font-weight: 700; }
 .toc-page .toc-guide { margin-top: 8px; padding: 7px 12px; }
+
+/* ⓐ~ⓔ 원문자 (본문 글꼴에 없는 글자를 CSS로 그림) */
+.circ { display: inline-block; width: 1.15em; height: 1.15em; line-height: 1.05em; border: 1px solid currentColor;
+  border-radius: 50%; text-align: center; font-size: .78em; font-weight: 600; vertical-align: .08em; margin: 0 1px; }
