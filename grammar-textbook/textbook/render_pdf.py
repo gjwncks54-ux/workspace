@@ -89,20 +89,30 @@ def number_pages(reader, start_index, first_no):
     return writer
 
 
-def build_pdf(units, out_path: Path, appendix=None):
+def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None, with_answers=True):
+    part_tests, mocks = part_tests or {}, mocks or []
     with sync_playwright() as pw:
         br = pw.chromium.launch(executable_path=CHROMIUM)
         pg = br.new_page()
 
         sections = []  # (key, pdf bytes)
-        for u in units:
-            pno, pname, _, color, _ = PARTS[u["part"]]
+        for i, u in enumerate(units):
+            pno, pname, _, color, tint = PARTS[u["part"]]
             head = header(f'{BOOK["series"]} · {pno} {pname}', f'Unit {u["no"]:02d}  {u["title"]}', color)
             sections.append((u["key"], _pdf(pg, R.unit_html(u), head)))
+            last_of_part = i == len(units) - 1 or units[i + 1]["part"] != u["part"]
+            if last_of_part and u["part"] in part_tests:
+                sections.append((f'part{u["part"]}', _pdf(pg, R.test_page_html(
+                    part_tests[u["part"]], f"{pno} 종합 TEST", pname, color, tint),
+                    header(f'{BOOK["series"]} · {pno} {pname}', f"{pno} 종합 TEST", color))))
+        for k, t in enumerate(mocks, 1):
+            sections.append((f"mock{k}", _pdf(pg, R.test_page_html(t, f"실전 모의고사 {k}회", "전 범위"),
+                                              header(BOOK["series"], f"실전 모의고사 {k}회", "#1E2433"))))
         if appendix:
             sections.append(("appendix", _pdf(pg, R.appendix_html(appendix), header(BOOK["series"], "부록", "#1E2433"))))
-        ans_head = header(BOOK["series"], "정답 및 해설", "#1E2433")
-        sections.append(("answers", _pdf(pg, R.answers_html(units), ans_head)))
+        if with_answers:
+            ans_head = header(BOOK["series"], "정답 및 해설", "#1E2433")
+            sections.append(("answers", _pdf(pg, R.answers_html(units), ans_head)))
 
         # 쪽번호 계산 (본문 첫 쪽 = 1)
         pages, cur = {}, 1
@@ -131,3 +141,16 @@ def build_pdf(units, out_path: Path, appendix=None):
     with open(out_path, "wb") as f:
         final.write(f)
     return pages
+
+
+def build_booklet(units, part_tests, mocks, out_path: Path):
+    """정답·해설 별책"""
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM)
+        pg = br.new_page()
+        data = _pdf(pg, R.booklet_html(units, part_tests, mocks), header(BOOK["series"], "정답 및 해설 (별책)", "#1E2433"))
+        br.close()
+    final = number_pages(PdfReader(io.BytesIO(data)), 0, 1)
+    final.add_metadata({"/Title": f'{BOOK["title"]} - 정답 및 해설', "/Author": BOOK["series"]})
+    with open(out_path, "wb") as f:
+        final.write(f)

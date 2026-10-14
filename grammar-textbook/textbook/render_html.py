@@ -211,7 +211,10 @@ def unit_html(u):
   <p class="intro">{inline(u['intro'])}</p>
   <div class="goals"><div class="goals-title">학습 목표</div><ol>{goals}</ol></div>
 </header>"""
-    return page(opener + render_blocks(u["blocks"], u["no"]), color, tint, "unit")
+    test = ""
+    if u.get("test"):
+        test = '<div class="pb"></div>' + test_html(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}')
+    return page(opener + render_blocks(u["blocks"], u["no"]) + test, color, tint, "unit")
 
 
 def cover_html(units):
@@ -246,8 +249,12 @@ def toc_html(units, pages):
             out.append(f'<div class="tu"><span class="tu-no">{u["no"]:02d}</span><span class="tu-t">{escape(u["title"])}'
                        f'<small>{escape(u["en"])}</small></span><span class="tu-lv">{stars(u["level"])}</span>'
                        f'<span class="dots"></span><span class="tu-pg">{pg}</span></div>')
+        if f"part{pid}" in pages:
+            out.append(f'<div class="tu tu-test"><span class="tu-no">✓</span><span class="tu-t">{pno} 종합 TEST</span>'
+                       f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages[f"part{pid}"]}</span></div>')
         out.append("</div>")
-    extras = [(k, t) for k, t in (("appendix", "부록 <small>불규칙 동사표 · 문법 용어 사전</small>"),
+    extras = [(k, t) for k, t in (("mock1", "실전 모의고사 1회"), ("mock2", "실전 모의고사 2회"),
+                                  ("appendix", "부록 <small>불규칙 동사표 · 문법 용어 사전</small>"),
                                   ("answers", "정답 및 해설")) if k in pages]
     if extras:
         out.append('<div class="toc-part toc-ans">')
@@ -255,7 +262,7 @@ def toc_html(units, pages):
             out.append(f'<div class="tu"><span class="tu-no">+</span><span class="tu-t">{t}</span>'
                        f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages[k]}</span></div>')
         out.append('</div>')
-    out.append('<div class="toc-guide"><b>교재 구성</b><span>판서 표 → ✎ 필기 포인트 → ⟲ 한 문장 변형하기 → ⚡ 바로 구별하는 법 → STEP UP 심화 → CHECK-UP</span>'
+    out.append('<div class="toc-guide"><b>교재 구성</b><span>기준 문장 → 판서 표 → ✎ 필기 포인트 → ⟲ 한 문장 변형하기 → ⚡ 바로 구별하는 법 → STEP UP 심화 → CHECK-UP → 실전 TEST</span>'
                '<span>난이도 ★☆☆ 기초 · ★★☆ 핵심 · ★★★ 심화</span></div></div>')
     return page("".join(out), cls="toc-page")
 
@@ -291,3 +298,80 @@ def answers_html(units):
 def appendix_html(blocks):
     head = '<div class="ans-head"><span>APPENDIX</span><h1>부록</h1></div>'
     return page(head + render_blocks(blocks, 0), "#1E2433", "#F0F2F6", "unit appendix")
+
+
+# ---------- 실전 TEST ----------
+
+CIRCLED5 = "①②③④⑤"
+
+
+def test_total(test):
+    return sum(it["points"] for it in test["items"])
+
+
+def r_test_item(it, n):
+    tags = f'<span class="lv">{escape(it["level"])}</span>' + ('<span class="hot">고난도</span>' if it["hard"] else "")
+    kind = '<span class="wr-tag">서술형</span>' if it["k"] == "wr" else ""
+    html = [f'<div class="ti"><div class="ti-q"><span class="ti-n">{n}</span><div>{kind}{inline(it["prompt"])} '
+            f'{tags}<span class="pt">({it["points"]}점)</span></div></div>']
+    if it["passage"]:
+        html.append(f'<div class="ti-passage">{inline(it["passage"])}</div>')
+    if it["k"] == "mc":
+        row = " row" if max(len(o) for o in it["options"]) <= 8 else ""
+        html.append(f'<ol class="ti-opts{row}">' + "".join(
+            f'<li><span>{CIRCLED5[i]}</span>{inline(o)}</li>' for i, o in enumerate(it["options"])) + "</ol>")
+    else:
+        if it["conditions"]:
+            html.append('<div class="ti-cond"><b>&lt;조건&gt;</b>' + "".join(
+                f"<div>· {inline(c)}</div>" for c in it["conditions"]) + "</div>")
+        html.append('<div class="wline"></div>' * it["lines"])
+    if MODE["teacher"]:
+        ans = CIRCLED5[it["answer"] - 1] if it["k"] == "mc" else inline(it["answer"])
+        html.append(f'<div class="t-ans"><b>정답 {ans}</b> {inline(it["explain"])}</div>')
+    html.append("</div>")
+    return "".join(html)
+
+
+def test_html(test, label, sub):
+    items = test["items"]
+    n_mc = sum(1 for it in items if it["k"] == "mc")
+    meta = f'{len(items)}문항 · 객관식 {n_mc} · 서술형 {len(items) - n_mc}'
+    if test.get("time"):
+        meta += f' · 제한시간 {escape(test["time"])}'
+    body = "".join(r_test_item(it, i) for i, it in enumerate(items, 1))
+    return (f'<section class="test"><div class="test-head"><div><span class="test-label">{escape(label)}</span>'
+            f'<h2 class="test-title">{escape(test["title"])}</h2><div class="test-meta">{escape(sub)} · {meta}</div></div>'
+            f'<div class="test-score"><div>이름 <i></i></div><div>점수 <i></i> / {test_total(test)}</div></div></div>'
+            f'<div class="test-cols">{body}</div></section>')
+
+
+def test_page_html(test, label, sub, color="#1E2433", tint="#F0F2F6"):
+    return page(test_html(test, label, sub), color, tint, "unit test-page")
+
+
+def test_answers(test, title, color):
+    items = test["items"]
+    grid = "".join(f'<span><b>{i}</b> {CIRCLED5[it["answer"] - 1] if it["k"] == "mc" else "서술"}</span>'
+                   for i, it in enumerate(items, 1))
+    exps = "".join(
+        f'<div class="ans"><span class="qn">{i:02d}</span><div><b>'
+        f'{CIRCLED5[it["answer"] - 1] if it["k"] == "mc" else inline(it["answer"])}</b>'
+        f'<div class="exp">{inline(it["explain"])}</div></div></div>' for i, it in enumerate(items, 1))
+    return (f'<div class="ans-unit" style="--c:{color}"><h3>{escape(title)}</h3>'
+            f'<div class="ans-grid">{grid}</div>{exps}</div>')
+
+
+def booklet_html(units, part_tests, mocks):
+    """정답·해설 별책: CHECK-UP + 필기 빈칸 + 실전 TEST + 파트 종합 + 모의고사"""
+    out = ['<div class="answers"><div class="ans-head"><span>ANSWER BOOKLET</span><h1>정답 및 해설</h1></div><div class="ans-cols">']
+    base = answers_html(units).split('<div class="ans-cols">', 1)[1].rsplit("</div></div>", 1)[0]
+    out.append(base)
+    for u in units:
+        if u.get("test"):
+            out.append(test_answers(u["test"], f'실전 TEST · Unit {u["no"]:02d} {u["title"]}', PARTS[u["part"]][3]))
+    for pid, t in part_tests.items():
+        out.append(test_answers(t, f'{PARTS[pid][0]} 종합 TEST', PARTS[pid][3]))
+    for i, t in enumerate(mocks, 1):
+        out.append(test_answers(t, f'실전 모의고사 {i}회', "#1E2433"))
+    out.append("</div></div>")
+    return page("".join(out), cls="ans-page")

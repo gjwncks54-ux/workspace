@@ -111,6 +111,22 @@ def Q(prompt, answer, explain=None, options=None, lines=0):
             "options": options, "lines": lines}
 
 
+# ---------- 실전 TEST ----------
+# TEST = {"title": "...", "time": "25분", "items": [MC(...), WR(...), ...]}
+
+def MC(prompt, options, answer, explain, level="중", points=4, passage=None, hard=False):
+    """5지선다. answer: 1~5 정수. passage: 지문(ⓐ~ⓔ 표시는 ==ⓐ 표현== 처럼)"""
+    assert len(options) == 5 and 1 <= answer <= 5, prompt
+    return {"k": "mc", "prompt": prompt, "options": options, "answer": answer, "explain": explain,
+            "level": level, "points": points, "passage": passage, "hard": hard}
+
+
+def WR(prompt, answer, explain, level="중", points=6, lines=2, conditions=None, passage=None, hard=False):
+    """서술형. conditions: <조건> 목록"""
+    return {"k": "wr", "prompt": prompt, "answer": answer, "explain": explain, "level": level,
+            "points": points, "lines": lines, "conditions": conditions or [], "passage": passage, "hard": hard}
+
+
 # ---------- 인라인 마크업 ----------
 
 _TOKEN = re.compile(r"(\*\*.+?\*\*|==.+?==|~~.+?~~|\+\+.+?\+\+|\[\[.+?\]\]|\{\{.+?\}\})")

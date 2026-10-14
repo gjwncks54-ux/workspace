@@ -424,6 +424,62 @@ class Writer:
         set_font(r, 10, True, INK)
         add_inline(p, b["text"], self.color, 8.5, False, MUTE)
 
+    def test(self, test, label, sub, newpage=True):
+        if newpage:
+            self.doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+        p = self.para(after=2)
+        r = p.add_run(f" {label} ")
+        set_font(r, 9, True, "FFFFFF")
+        run_shade(r, self.color)
+        r = p.add_run(f"   {sub}")
+        set_font(r, 9, False, SUB)
+        total = sum(it["points"] for it in test["items"])
+        p = self.para(test["title"], 16, True, after=2)
+        p = self.para(f"이름 ____________    점수 ______ / {total}", 9, True, after=8)
+        para_border_bottom(p, INK, 18)
+        for n, it in enumerate(test["items"], 1):
+            p = self.para(before=8, after=2)
+            r = p.add_run(f"{n}. ")
+            set_font(r, 10.5, True, self.color)
+            if it["k"] == "wr":
+                r = p.add_run("[서술형] ")
+                set_font(r, 9, True, self.color)
+            add_inline(p, it["prompt"], self.color, 9.5)
+            r = p.add_run(f'  [{it["level"]}]' + (" [고난도]" if it["hard"] else "") + f' ({it["points"]}점)')
+            set_font(r, 8, False, MUTE)
+            p.paragraph_format.keep_with_next = True
+            if it["passage"]:
+                t = self.table(1, 1, [1])
+                c = t.cell(0, 0)
+                cell_shade(c, "FBFBFC")
+                e = (4, LINE)
+                cell_borders(c, top=e, bottom=e, left=e, right=e)
+                cell_margins(c, 100, 100, 140, 140)
+                add_inline(c.paragraphs[0], it["passage"], self.color, 9)
+            if it["k"] == "mc":
+                for i, o in enumerate(it["options"]):
+                    op = self.para(after=0)
+                    op.paragraph_format.left_indent = Mm(6)
+                    r = op.add_run("①②③④⑤"[i] + " ")
+                    set_font(r, 9.5, True, self.color)
+                    add_inline(op, o, self.color, 9.5)
+            else:
+                if it["conditions"]:
+                    cp = self.para(after=0)
+                    cp.paragraph_format.left_indent = Mm(6)
+                    add_inline(cp, "<조건> " + " / ".join(it["conditions"]), self.color, 8.5, False, SUB)
+                for _ in range(it["lines"]):
+                    lp = self.para(after=0)
+                    lp.paragraph_format.left_indent = Mm(6)
+                    lp.paragraph_format.space_before = Pt(10)
+                    para_border_bottom(lp, "B9C1CF")
+            if MODE["teacher"]:
+                ans = "①②③④⑤"[it["answer"] - 1] if it["k"] == "mc" else it["answer"]
+                ap = self.para(after=2)
+                ap.paragraph_format.left_indent = Mm(6)
+                add_inline(ap, f"정답 {ans}  ", self.color, 8.5, True, RED)
+                add_inline(ap, it["explain"], self.color, 8.5, False, SUB)
+
     # ---------- 섹션 ----------
     def new_section(self, head_left, head_right, color):
         sec = self.doc.add_section(WD_SECTION.NEW_PAGE)
@@ -501,7 +557,8 @@ def render_blocks(w, blocks, unit_no):
             d.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
 
-def build_docx(units, out_path: Path, appendix=None):
+def build_docx(units, out_path: Path, appendix=None, part_tests=None, mocks=None, with_answers=True):
+    part_tests, mocks = part_tests or {}, mocks or []
     w = Writer()
     d = w.doc
 
@@ -584,6 +641,16 @@ def build_docx(units, out_path: Path, appendix=None):
         w.box("목표", "학습 목표", [f"{i}. {g}" for i, g in enumerate(u["goals"], 1)], tint, tint, color)
 
         render_blocks(w, u["blocks"], u["no"])
+        if u.get("test"):
+            w.test(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}')
+        nxt = units[units.index(u) + 1] if units.index(u) + 1 < len(units) else None
+        if (nxt is None or nxt["part"] != u["part"]) and u["part"] in part_tests:
+            w.test(part_tests[u["part"]], f"{pno} 종합 TEST", pname)
+
+    w.color, w.tint = INK, "F0F2F6"
+    for k, t in enumerate(mocks, 1):
+        w.new_section(BOOK["series"], f"실전 모의고사 {k}회", INK)
+        w.test(t, f"실전 모의고사 {k}회", "전 범위", newpage=False)
 
     # 부록
     if appendix:
@@ -594,7 +661,11 @@ def build_docx(units, out_path: Path, appendix=None):
         para_border_bottom(p, INK, 18)
         render_blocks(w, appendix, 0)
 
-    # 정답
+    # 정답 (학생용은 별책으로 분리)
+    if not with_answers:
+        d.core_properties.title = BOOK["title"]
+        d.save(out_path)
+        return
     w.color = INK
     w.new_section(BOOK["series"], "정답 및 해설", INK)
     w.para("ANSWERS", 9, True, "2B59C3", after=0)
