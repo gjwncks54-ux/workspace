@@ -1,0 +1,101 @@
+"""PART 2 동사의 변신 종합 TEST (Unit 05~06 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+from textbook.blocks import MC, WR
+
+TEST = {
+    "title": "Unit 05~06 종합",
+    "time": "45분",
+    "items": [
+        MC("빈칸에 들어갈 말로 알맞은 것은?  The museum ______ in 1950.",
+           ["builds", "built", "was built", "has been built", "is building"],
+           3, "박물관은 '지어지는' 대상 + in 1950(과거) → was built", level="기본"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  I ______ in this town since I was ten.",
+           ["live", "lived", "am living", "have lived", "had lived"],
+           4, "since + 과거 시점 → 현재완료 계속", level="기본"),
+        MC("다음 문장을 수동태로 바르게 바꾼 것은?  They have cleaned the classroom.",
+           ["The classroom has cleaned.", "The classroom has been cleaned.", "The classroom was been cleaned.",
+            "The classroom is cleaned by them.", "The classroom have been cleaned."],
+           2, "현재완료 수동태 have/has been p.p. (주어 단수 → has)"),
+        MC("다음 중 어법상 틀린 것은?",
+           ["This car was belonged to my father.", "The letter was written in English.",
+            "The new bridge will be finished next year.", "Dinner is being prepared now.",
+            "The work had been done before he came."],
+           1, "belong은 자동사(소유 상태) → 수동태 불가: This car belonged to my father."),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  When I got to the theater, the movie ______.",
+           ["already starts", "has already started", "had already started", "already starting", "will have started"],
+           3, "과거 기준점(got to the theater)보다 이전 → had p.p."),
+        MC("빈칸에 공통으로 들어갈 말로 알맞은 것은?  The singer is known ___ many teens. / The letter was sent ___ me.",
+           ["by", "to", "for", "with", "at"],
+           2, "be known to(~에게 알려져 있다) / send는 간접목적어 앞에 to"),
+        MC("대화의 빈칸에 들어갈 말로 알맞은 것은?",
+           ["went", "gone", "been", "go", "going"],
+           3, "경험 '~에 가 본 적 있다' → have been to (have gone to는 '가 버렸다')",
+           passage="A: Have you ever ______ to Japan?\nB: Yes, I went there with my family last summer."),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           4, "한글은 '가르쳐지는' 대상 → is taught",
+           passage="Hangeul ==ⓐ was created== by King Sejong in 1443. Before that, Koreans ==ⓑ had used== Chinese "
+                   "characters. Since then, Hangeul ==ⓒ has been used== by millions of people. Today, it "
+                   "==ⓓ teaches== in many countries. Many scientists say that it ==ⓔ was designed== very "
+                   "scientifically."),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           3, "과거 기준점(축제)보다 이전부터 연습 → had practiced",
+           passage="I ==ⓐ have been== a member of the school orchestra for two years. Last month, our orchestra "
+                   "==ⓑ was invited== to a big music festival. We ==ⓒ have practiced== hard for weeks before the "
+                   "festival. On the day of the festival, the hall ==ⓓ was filled== with people. Our performance "
+                   "==ⓔ was loved== by the audience."),
+        MC("다음 글의 (A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+           ["was stolen – was waiting – was found", "stole – was waiting – found",
+            "was stolen – have waited – was found", "stole – have waited – found",
+            "was stolen – was waiting – found"],
+           1, "(A) 휴대폰은 '도난당한' 대상 (B) yesterday 진행 중이던 일 → 과거진행 (C) '발견된' 대상 → 수동",
+           level="상",
+           passage="My phone (A) [was stolen / stole] yesterday while I (B) [was waiting / have waited] for the "
+                   "bus. Fortunately, it (C) [was found / found] by a police officer this morning."),
+        MC("다음 중 어법상 옳은 문장의 개수는?",
+           ["1개", "2개", "3개", "4개", "5개"],
+           3, "옳은 것: ⓐ ⓒ ⓔ / ⓑ last night → was stolen ⓓ 조건 부사절 → If it is sunny",
+           level="상", hard=True,
+           passage="ⓐ The accident happened two days ago.\nⓑ My bike has been stolen last night.\n"
+                   "ⓒ She was made to wait for an hour.\nⓓ If it will be sunny tomorrow, we will go hiking.\n"
+                   "ⓔ The book is being read by many students these days."),
+        MC("다음 중 어법상 틀린 것은?",
+           ["The rumor turned out to be false.", "The room smells nice.", "This book sells well.",
+            "The bridge is being repaired.", "These shoes were fitted me perfectly."],
+           5, "fit(~에 맞다)은 상태를 나타내는 동사 → 수동태 불가: These shoes fitted me perfectly.",
+           level="상", hard=True),
+
+        WR("다음 문장을 수동태로 바꿔 쓰시오.  Many tourists visit this palace every year.",
+           "This palace is visited by many tourists every year.", "현재시제 수동태 is + p.p.",
+           level="기본", points=6, lines=1),
+        WR("두 문장을 현재완료를 사용하여 한 문장으로 바꿔 쓰시오.  Jisu lost her phone. She still doesn't have it.",
+           "Jisu has lost her phone.", "과거에 잃어버려 지금도 없음 → 현재완료 결과",
+           points=7, lines=1),
+        WR("다음 문장을 두 가지 수동태로 바꿔 쓰시오.  My grandmother told me an old story.",
+           "I was told an old story by my grandmother. / An old story was told to me by my grandmother.",
+           "4형식은 간접목적어·직접목적어 모두 주어 가능. 직접목적어가 주어면 tell → to",
+           points=6, lines=2),
+        WR("우리말과 같도록 <조건>에 맞게 영작하시오.  그 다리는 지금 수리되고 있다.",
+           "The bridge is being repaired now.", "진행 수동태 be being p.p.",
+           points=6, lines=1, conditions=["the bridge, repair, now를 활용할 것", "6단어로 쓸 것"]),
+        WR("다음 글의 밑줄 친 우리말을 <조건>에 맞게 영작하시오.",
+           "My room had already been cleaned by my mom.",
+           "과거 기준점(came back)보다 이전 + 방은 '청소되는' 대상 → had been p.p.",
+           points=7, lines=1, conditions=["room, clean, already, by my mom을 활용할 것", "과거완료 수동태로 쓸 것"],
+           passage="When I came back from the trip, I was surprised. ==내 방이 이미 엄마에 의해 청소되어 있었다.== "
+                   "Everything was neat and clean."),
+        WR("다음 문장에서 어법상 틀린 부분을 찾아 고치고, 그 이유를 쓰시오.  My cat was disappeared two days ago.",
+           "was disappeared → disappeared / disappear는 목적어를 갖지 않는 자동사이므로 수동태로 쓸 수 없다.",
+           "자동사(happen, appear, disappear, arrive) → 수동태 불가", level="상", points=7, lines=2),
+        WR("다음 글에서 어법상 틀린 부분 2개를 찾아 바르게 고쳐 쓰시오.",
+           "have built → have been built / is building → is being built",
+           "건물은 '지어지는' 대상 → 현재완료 수동 / 진행 수동",
+           level="상", hard=True, points=7, lines=2,
+           passage="My town has changed a lot. Ten years ago, there were only a few shops. Since then, many new "
+                   "buildings have built. A big shopping mall opened last year, and a new subway line is building "
+                   "now. I sometimes miss the old days when my town was quiet."),
+        WR("다음 문장을 <조건>에 맞게 바꿔 쓰시오.  People say that the old tree is 500 years old.",
+           "The old tree is said to be 500 years old.", "that절 주어를 문장 주어로 → be said to V",
+           level="상", points=6, lines=1, conditions=["The old tree로 시작할 것"]),
+    ],
+}

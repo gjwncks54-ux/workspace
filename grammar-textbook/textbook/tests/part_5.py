@@ -1,0 +1,110 @@
+"""PART 5 특수 구문 종합 TEST (Unit 14~15 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+from textbook.blocks import MC, WR
+
+TEST = {
+    "title": "Unit 14~15 종합",
+    "time": "45분",
+    "items": [
+        MC("빈칸에 들어갈 말로 알맞은 것은?  If I ______ a car, I would drive you home.",
+           ["have", "had", "will have", "have had", "having"],
+           2, "주절 would + 동원 → 가정법 과거 (현재 사실의 반대)", level="기본"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  Never ______ such a funny movie.",
+           ["I watched", "did I watched", "I have watched", "have I watched", "watched I"],
+           4, "부정어 도치 → 의문문 어순 (완료형은 have + S + p.p.)", level="기본"),
+        MC("대화의 빈칸에 들어갈 말로 알맞은 것은?",
+           ["So am I.", "So I am.", "Neither am I.", "So do I.", "Neither do I."],
+           1, "긍정문(be동사)에 동의 → So + be동사 + 주어",
+           level="기본", passage="A: I'm really tired today.\nB: ______ I didn't sleep well last night."),
+        MC("다음 중 어법상 틀린 것은?",
+           ["Had I known it, I would have helped you.", "Under the bed was a small box.", "I wish I had more free time.",
+            "Rarely does he eat breakfast.", "If I were you, I will tell her the truth."],
+           5, "가정법 과거 주절 → would + 동원: I would tell her the truth."),
+        MC("다음 문장과 의미가 같은 것은?  Were it not for the Internet, our lives would be very different.",
+           ["If it is not for the Internet, our lives will be very different.",
+            "If it were not for the Internet, our lives would be very different.",
+            "If it had not been for the Internet, our lives would have been very different.",
+            "With the Internet, our lives would be very different.",
+            "Without the Internet, our lives will be very different."],
+           2, "Were it not for = If it were not for = Without (현재 가정). ③은 과거 가정"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  On the wall ______ some pictures of my family.",
+           ["hang", "hangs", "hanging", "to hang", "has hung"],
+           1, "장소 도치 → 동사 뒤 진짜 주어 some pictures(복수) → hang"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  He talks as if he ______ in France, but he has never been there.",
+           ["lives", "has lived", "had lived", "will live", "living"],
+           3, "과거에 살았던 것처럼(실제로는 아님) → as if + had p.p."),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           2, "부정어 Rarely가 앞에 오면 의문문 어순 → does she complain",
+           passage="My grandmother lives in a quiet village. Behind her house ==ⓐ stands== a tall pine tree. Rarely "
+                   "==ⓑ she complains== about living alone. But I wish I ==ⓒ could visit== her more often. If I "
+                   "==ⓓ lived== closer, I would see her every weekend. Had I known she was sick last month, I "
+                   "==ⓔ would have visited== her."),
+        MC("다음 글의 (A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+           ["I realized – studied – is", "did I realize – had studied – are", "did I realize – studied – are",
+            "I realized – had studied – is", "did I realize – had studied – is"],
+           2, "(A) Only + 부사절 → 도치 (B) 주절 would have p.p. → had p.p. (C) 진짜 주어 many notes(복수) → are",
+           level="상",
+           passage="Only after I failed the test (A) [I realized / did I realize] how important studying was. If I "
+                   "(B) [studied / had studied] harder, I would have passed it. Now I study every day. In my "
+                   "notebook (C) [is / are] many notes from my classes."),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           4, "어제(과거) 하지 못한 일에 대한 소망 → I wish I had stayed",
+           level="상",
+           passage="Yesterday was the worst day of my life. No sooner ==ⓐ had I left== home than it began to rain. "
+                   "If I ==ⓑ had checked== the weather, I would have taken an umbrella. Little ==ⓒ did I know== that "
+                   "my bus would be late too. I wish I ==ⓓ stayed== at home yesterday. If I were a bird, I "
+                   "==ⓔ could fly== to school right now."),
+        MC("다음 중 어법상 옳은 문장의 개수는?",
+           ["1개", "2개", "3개", "4개", "5개"],
+           3, "옳은 것: ⓐ ⓒ(혼합가정법) ⓓ / ⓑ 대명사 주어는 도치 X → Here she comes ⓔ It's time + 과거형 → left",
+           level="상", hard=True,
+           passage="ⓐ Were I rich, I would buy a big house.\nⓑ Here comes she.\n"
+                   "ⓒ If I had taken your advice, I would be happier now.\nⓓ Not until yesterday did I hear the news.\n"
+                   "ⓔ It's time we leave for the airport."),
+        MC("다음 중 두 문장의 의미가 같지 않은 것은?",
+           ["If I were you, I'd stop. = Were I you, I'd stop.",
+            "Without your help, I would fail. = But for your help, I would fail.",
+            "I'm sorry I can't drive. = I wish I could drive.",
+            "He never cries. = Never does he cry.",
+            "As I didn't have time, I didn't call you. = If I had had time, I wouldn't have called you."],
+           5, "시간이 없어서 전화를 못 함 → If I had had time, I would have called you. (긍정·부정을 뒤집어야 함)",
+           level="상", hard=True),
+
+        WR("if를 생략하여 다음 문장을 다시 쓰시오.  If I were taller, I could reach the top shelf.",
+           "Were I taller, I could reach the top shelf.", "if 생략 → were를 주어 앞으로",
+           level="기본", points=6, lines=1),
+        WR("부정어를 문장 맨 앞으로 보내 다시 쓰시오.  She little knew that he was a spy.",
+           "Little did she know that he was a spy.", "부정어 도치 → did + S + 동사원형",
+           points=7, lines=1),
+        WR("다음 문장을 가정법 문장으로 바꿔 쓰시오.  As I didn't know you were in the hospital, I didn't visit you.",
+           "If I had known (that) you were in the hospital, I would have visited you.",
+           "과거 사실의 반대 → 가정법 과거완료 (긍정·부정을 뒤집는다)",
+           points=6, lines=2),
+        WR("I wish를 사용하여 같은 뜻의 문장으로 바꿔 쓰시오.  I'm sorry that I didn't study harder last year.",
+           "I wish I had studied harder last year.", "과거 사실에 대한 아쉬움 → I wish + had p.p.",
+           points=6, lines=1),
+        WR("다음 글의 밑줄 친 문장을 장소 표현으로 시작하는 문장으로 바꿔 쓰시오.",
+           "In the center of the garden is a small pond.", "장소 도치 → 장소 표현 + V + S",
+           points=7, lines=1,
+           passage="Welcome to our school garden! ==A small pond is in the center of the garden.== Many students "
+                   "come here to relax during lunchtime."),
+        WR("다음 문장에서 어법상 틀린 부분을 찾아 고치고, 그 이유를 쓰시오.  Only then I understood why she was angry.",
+           "I understood → did I understand / Only + 부사(구)가 문장 앞에 오면 주어와 동사가 도치되어 의문문 어순이 된다.",
+           "Only then + did + S + 동사원형", level="상", points=7, lines=2),
+        WR("다음 글에서 어법상 틀린 부분 2개를 찾아 바르게 고쳐 쓰시오.",
+           "would win → would have won / was → were",
+           "과거 경기의 사실과 반대 → would have p.p. / 장소 도치의 진짜 주어 many students(복수)",
+           level="상", hard=True, points=7, lines=2,
+           passage="Jinsu missed the final soccer game last week because he was sick. If he had played, our team "
+                   "would win the game. In the stands was many students cheering for us. Now he says, \"Had I been "
+                   "healthy, I would have scored a goal.\""),
+        WR("다음 글의 밑줄 친 우리말을 <조건>에 맞게 영작하시오.",
+           "If I had brought my phone this morning, I could call my mom now.",
+           "과거(this morning) 사실의 반대 → 현재(now)에 영향 → 혼합가정법",
+           level="상", points=6, lines=2,
+           conditions=["If로 시작할 것", "bring, my phone, this morning, could, call, now를 활용할 것"],
+           passage="I left my phone at home today, so I can't contact anyone. ==내가 오늘 아침에 휴대폰을 "
+                   "가져왔더라면, 지금 엄마에게 전화할 수 있을 텐데.=="),
+    ],
+}
