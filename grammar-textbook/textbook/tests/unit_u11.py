@@ -1,0 +1,107 @@
+"""Unit 13 분사구문 실전 TEST (모듈 u11 / ★★★ → 20문항, 객관식 12 / 서술형 8, 100점)"""
+from textbook.blocks import MC, WR
+
+TEST = {
+    "title": "분사구문",
+    "time": "40분",
+    "items": [
+        MC("다음 문장을 분사구문으로 바르게 바꾼 것은?  When she opened the box, she found a letter.",
+           ["Opened the box, she found a letter.", "Opening the box, she found a letter.",
+            "She opening the box, she found a letter.", "To open the box, she found a letter.",
+            "Open the box, she found a letter."],
+           2, "접속사·같은 주어 지우고 동사 → V-ing (그녀가 '연' 능동)", level="기본"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  ______ tired, I went to bed early.",
+           ["Feel", "Felt", "Feeling", "To feeling", "Feels"],
+           3, "Because I felt tired → Feeling tired (이유)", level="기본"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  ______ in simple English, the book is easy to read.",
+           ["Write", "Writing", "To write", "Written", "Wrote"],
+           4, "주절 주어 the book이 '쓰여진' 것 → p.p.", level="기본"),
+        MC("밑줄 친 분사구문과 의미가 같은 것은?  ==Walking down the street==, I met an old friend.",
+           ["While I was walking down the street", "If I walk down the street",
+            "Although I walked down the street", "Because I walk down the street",
+            "Unless I walked down the street"],
+           1, "길을 걷다가 만남 → 시간(while)", level="기본"),
+        MC("다음 중 어법상 틀린 것은?",
+           ["Turning left, you'll find the bank.", "Not knowing his number, I couldn't call him.",
+            "Seeing from the sky, the island looks like a heart.", "She sat on the bench, reading a book.",
+            "Having finished dinner, we went for a walk."],
+           3, "섬이 '보여지는' 것 → Seen from the sky"),
+        MC("다음 중 어법상 옳은 것은?",
+           ["Having not eaten breakfast, I'm hungry.", "Left alone, the baby started to cry.",
+            "Shocking by the news, she couldn't say a word.", "It was sunny, we went on a picnic.",
+            "He listened to music with his eyes closing."],
+           2, "① Not having eaten ③ 그녀가 충격을 받은 → Shocked ④ It being sunny ⑤ 눈이 감긴 → closed"),
+        MC("두 문장의 뜻이 같도록 할 때 빈칸에 알맞은 것은?  Because I had lost my key, I couldn't open the door. = ______ my key, I couldn't open the door.",
+           ["Losing", "Lost", "Being lost", "Having been lost", "Having lost"],
+           5, "열쇠를 잃은 것이 문을 못 연 것보다 먼저 + 능동 → Having lost"),
+        MC("밑줄 친 부분과 바꿔 쓸 수 있는 것은?  ==Because it was rainy==, we stayed inside all day.",
+           ["Being rainy", "It being rainy", "Raining", "It was raining", "Having rained"],
+           2, "부사절 주어 it ≠ 주절 주어 we → 주어를 남기는 독립분사구문 It being rainy"),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           4, "주절 주어 the old bridge가 '지어진' 것 → Built",
+           passage="==ⓐ Arriving== in Jeonju, we went straight to the Hanok Village. ==ⓑ Walking== through the narrow "
+                   "streets, we enjoyed the traditional houses. ==ⓒ Feeling== hungry, we ate bibimbap for lunch. "
+                   "Later we crossed an old bridge. ==ⓓ Building== more than 200 years ago, it still looks strong. "
+                   "==ⓔ Having spent== a wonderful day, we took the train back home."),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           1, "비가 오는 주체(it) ≠ 주절 주어 we → 주어를 남긴 독립분사구문 It raining heavily",
+           level="상",
+           passage="==ⓐ Raining== heavily, we stayed at home all day. My brother sat on the sofa, ==ⓑ playing== games. "
+                   "My mom was in the kitchen with the radio ==ⓒ turned on==. ==ⓓ Not having== anything to do, I "
+                   "decided to bake cookies. ==ⓔ Baked== in the oven for ten minutes, the cookies smelled sweet."),
+        MC("다음 중 어법상 옳은 문장의 개수는?",
+           ["1개", "2개", "3개", "4개", "5개"],
+           2, "옳은 것: ⓒ ⓓ / ⓐ 편지가 '쓰여진' 것 → Written ⓑ not은 맨 앞 → Not having seen "
+              "ⓔ 다리가 '꼰' 상태(수동) → with his legs crossed",
+           level="상", hard=True,
+           passage="ⓐ Writing in a hurry, the letter had many mistakes.\nⓑ Having not seen him before, I didn't "
+                   "know him.\nⓒ Generally speaking, boys are taller than girls.\nⓓ Born in Canada, he speaks "
+                   "English well.\nⓔ He sat there with his legs crossing."),
+        MC("다음 글의 (A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+           ["Surprised – Taking – exciting", "Surprising – Taken – excited", "Surprised – Taken – excited",
+            "Surprised – Taking – excited", "Surprising – Taking – exciting"],
+           4, "(A) 내가 '놀란' 것 → Surprised (B) 내가 사진을 '찍은' 능동 → Taking (C) 내가 신난 상태 → excited",
+           level="상", hard=True,
+           passage="(A) [Surprised / Surprising] by the beautiful view, I stopped walking. (B) [Taking / Taken] "
+                   "out my phone, I took some pictures of the mountains. I went back to the hotel, (C) [exciting / "
+                   "excited] to show them to my family."),
+
+        WR("다음 문장을 <조건>에 맞게 분사구문으로 바꿔 쓰시오.  When he broke the window, he ran away.",
+           "(1) Breaking the window, he ran away. (2) Having broken the window, he ran away.",
+           "접속사·같은 주어 삭제 → V-ing / 먼저 일어난 일을 강조 → having p.p.",
+           points=7, lines=2,
+           conditions=["(1) 현재분사로 시작할 것", "(2) 창문을 깬 일이 먼저임을 드러내는 완료형으로 쓸 것"]),
+        WR("다음 문장을 분사구문으로 바꿔 쓰시오.  Because I didn't have enough money, I couldn't buy the shoes.",
+           "Not having enough money, I couldn't buy the shoes.", "부정 → Not + 분사 (not은 맨 앞)",
+           points=6, lines=1),
+        WR("다음 문장을 분사구문으로 바꿔 쓰시오.  Although he lives next door, he rarely says hello to me.",
+           "Though living next door, he rarely says hello to me.",
+           "양보 의미를 살리려면 접속사를 남길 수 있다 (Living next door, ~도 문법상 가능하나 의미가 약해짐)",
+           points=6, lines=1),
+        WR("밑줄 친 분사구문을 접속사 because를 사용한 부사절로 바꿔 쓰시오.  ==Having read the book before==, I know the story.",
+           "Because I have read the book before, I know the story.",
+           "having p.p. → 주절(know, 현재)보다 이전 → 현재완료(또는 read 과거)",
+           points=6, lines=1),
+        WR("우리말과 같도록 <조건>에 맞게 영작하시오.  그는 TV를 켜 둔 채로 잠이 들었다.",
+           "He fell asleep with the TV turned on.", "with + O + p.p.: TV가 '켜진' 상태",
+           points=7, lines=1, conditions=["with를 사용할 것", "fall asleep, turn on을 활용할 것", "8단어로 쓸 것"]),
+        WR("다음 문장에서 어법상 틀린 부분을 찾아 고치고, 그 이유를 쓰시오.  Exciting about the trip, the children couldn't sleep.",
+           "Exciting → Excited / 주절 주어 the children이 흥분을 '느끼는' 쪽이므로 과거분사를 쓴다.",
+           "주절 주어를 넣어 보기: The children were excited", level="상", points=7, lines=2),
+        WR("다음 글에서 어법상 틀린 부분 2개를 찾아 바르게 고쳐 쓰시오.",
+           "Leaving → Left / Being sunny → It being sunny",
+           "개가 '남겨진' 것 → p.p. / 주어(it ≠ we)가 다르면 주어를 남긴다",
+           level="상", hard=True, points=7, lines=2,
+           passage="Our dog Max hates being alone. Leaving alone at home, he barks all day. So last Saturday, we "
+                   "took him to the park. Being sunny, we stayed there for hours. Running around on the grass, Max "
+                   "looked really happy."),
+        WR("다음 글의 밑줄 친 문장을 분사구문으로 바꿔 쓰시오.",
+           "Turning right at the corner, you will see the post office.",
+           "조건의 부사절(If ~) → 접속사·같은 주어 삭제 → Turning",
+           level="상", points=6, lines=1,
+           passage="A: Excuse me. Where is the post office?\nB: Go straight two blocks. ==If you turn right at the "
+                   "corner, you will see the post office.== It's next to the bank."),
+    ],
+}
