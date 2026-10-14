@@ -276,3 +276,12 @@ h2 + p { break-after: avoid; }
 .ans-grid span { min-width: 34px; }
 .ans-grid b { color: var(--c); }
 .ti-opts.row { display: flex; flex-wrap: wrap; gap: 2px 16px; }
+
+/* 목차 1쪽 맞춤 (단원 + 종합 TEST + 모의고사) */
+.toc-page .tu { padding: 1.5px 12px; }
+.toc-page .tu-t { font-size: 9.8pt; }
+.toc-page .toc-part { margin-bottom: 6px; }
+.toc-page .toc-head { margin-bottom: 10px; }
+.toc-page .tp-head { padding: 3px 12px; margin-bottom: 2px; }
+.toc-page .tu-test .tu-t { font-size: 8.8pt; color: var(--c); font-weight: 700; }
+.toc-page .toc-guide { margin-top: 8px; padding: 7px 12px; }
