@@ -1,0 +1,107 @@
+"""Unit 08 to부정사 실전 TEST (★★★ → 20문항, 객관식 12 / 서술형 8, 100점)"""
+from textbook.blocks import MC, WR
+
+TEST = {
+    "title": "to부정사",
+    "time": "40분",
+    "items": [
+        MC("밑줄 친 to부정사의 용법이 <보기>와 같은 것은?  <보기> I need a good way ==to lose== weight.",
+           ["My goal is ==to lose== weight.", "I decided ==to lose== weight.", "I walk to school ==to lose== weight.",
+            "She has a lot of homework ==to do== tonight.", "It is hard ==to lose== weight."],
+           4, "<보기>와 ④는 앞 명사를 꾸미는 형용사적 용법. ①②⑤ 명사적 ③ 부사적(목적)", level="기본"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  He promised ______ late again.",
+           ["not be", "to not being", "not to be", "not being", "being not"],
+           3, "promise + to V, 부정은 not to V", level="기본"),
+        MC("빈칸에 들어갈 말로 알맞은 것은?  He has no house to live ______.",
+           ["in", "at", "on", "with", "to"],
+           1, "live in a house → 형용사적 용법에서 전치사를 남긴다", level="기본"),
+        MC("우리말을 영어로 바르게 옮긴 것은?  나는 무엇을 해야 할지 몰랐다.",
+           ["I didn't know what doing.", "I didn't know what to do.", "I didn't know to do what.",
+            "I didn't know what do.", "I didn't know what I do."],
+           2, "의문사 + to V = 무엇을 ~할지", level="기본"),
+        MC("밑줄 친 to부정사의 용법이 나머지와 다른 하나는?",
+           ["I went to the library ==to borrow== some books.", "She saved money ==to buy== a new laptop.",
+            "He got up early ==to catch== the first bus.", "They practiced hard ==to win== the game.",
+            "We have nothing ==to eat== at home."],
+           5, "⑤는 nothing을 꾸미는 형용사적 용법. 나머지는 '~하기 위해' 부사적 용법"),
+        MC("다음 중 어법상 틀린 것은?",
+           ["I want something cold to drink.", "She is old enough to drive.",
+            "The box was too heavy for me to lift it.", "I agreed to help him.", "He refused to answer the question."],
+           3, "주어 The box = lift의 목적어 → it을 다시 쓰지 않는다"),
+        MC("다음 문장과 의미가 같은 것은?  The soup was so hot that I couldn't eat it.",
+           ["The soup was too hot for me to eat.", "The soup was too hot for me to eat it.",
+            "The soup was hot enough for me to eat.", "The soup was so hot for me to eat.",
+            "The soup was enough hot to eat."],
+           1, "so ~ that S can't V = too ~ to V. 주어 = eat의 목적어이므로 it 생략"),
+        MC("빈칸에 공통으로 들어갈 말로 알맞은 것은?  It is important ___ you to wear a helmet. / This book is easy ___ children to read.",
+           ["of", "for", "to", "with", "by"],
+           2, "to부정사의 의미상 주어 → for + 목적격 (성격 형용사일 때만 of)"),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           3, "tell + O + to V → told her to practice",
+           passage="Jisu wanted ==ⓐ to join== the school band. But she didn't know ==ⓑ how to play== any "
+                   "instrument. Her music teacher told her ==ⓒ practice== the drums every day. She was smart enough "
+                   "==ⓓ to learn== quickly. Now she is happy ==ⓔ to play== in the band."),
+        MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
+           ["ⓐ", "ⓑ", "ⓒ", "ⓓ", "ⓔ"],
+           4, "sit on a chair → a chair to sit on (전치사를 남긴다)",
+           level="상",
+           passage="My family moved to a new apartment last month. It is close enough ==ⓐ to walk== to my school. "
+                   "My new room has enough space ==ⓑ to put== a desk and a bed. Mom told me ==ⓒ to choose== a desk "
+                   "for myself. Yesterday, we went to a furniture store, and I found a comfortable chair "
+                   "==ⓓ to sit==. I can't wait ==ⓔ to study== in my new room."),
+        MC("다음 중 어법상 옳은 문장의 개수는?",
+           ["1개", "2개", "3개", "4개", "5개"],
+           2, "옳은 것: ⓐ ⓒ / ⓑ 성격 형용사 careless → of you ⓓ enough는 형용사 뒤 → brave enough "
+              "ⓔ 의문사 + to V → where to put",
+           level="상", hard=True,
+           passage="ⓐ He seems to have been sick last week.\nⓑ It was careless for you to leave the door open.\n"
+                   "ⓒ I have no pen to write with.\nⓓ She was enough brave to tell the truth.\n"
+                   "ⓔ I don't know where putting this box."),
+        MC("다음 글의 (A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+           ["too – to fall – to start", "too – falling – to start", "so – to fall – starting",
+            "so – falling – to start", "too – to fall – starting"],
+           1, "(A) too ~ to V (B) be ready + to V (C) decide는 to부정사만 목적어",
+           level="상", hard=True,
+           passage="Many teenagers are (A) [too / so] tired to focus in morning classes. Scientists say their "
+                   "bodies are not ready (B) [to fall / falling] asleep early at night. So some schools have "
+                   "decided (C) [to start / starting] classes later in the morning."),
+
+        WR("다음 문장의 to lose weight를 <조건>에 맞게 다른 용법으로 바꿔 쓰시오.  I walk to school to lose weight.",
+           "(1) My plan is to lose weight. (2) Walking to school is the best way to lose weight.",
+           "(1) 보어 자리 → 명사적 용법 (2) the best way를 꾸밈 → 형용사적 용법",
+           points=7, lines=2,
+           conditions=["(1) My plan을 주어로 하여 명사적 용법으로 쓸 것",
+                       "(2) Walking to school is the best way로 시작하여 형용사적 용법으로 쓸 것"]),
+        WR("다음 문장을 so ~ that 구문으로 바꿔 쓰시오.  This question is too difficult for me to answer.",
+           "This question is so difficult that I can't answer it.",
+           "too ~ to V = so ~ that S can't V. that절은 완전한 절이므로 목적어 it 필요",
+           points=6, lines=1),
+        WR("다음 문장을 enough를 사용하여 바꿔 쓰시오.  He is so tall that he can touch the ceiling.",
+           "He is tall enough to touch the ceiling.", "so ~ that S can V = 형용사 + enough to V",
+           points=6, lines=1),
+        WR("밑줄 친 부분을 '의문사 + to부정사'로 바꿔 문장을 다시 쓰시오.  I don't know ==how I should use== this machine.",
+           "I don't know how to use this machine.", "의문사 + S + should V = 의문사 + to V",
+           points=6, lines=1),
+        WR("우리말과 같도록 <조건>에 맞게 영작하시오.  나는 함께 이야기할 친구가 필요하다.",
+           "I need a friend to talk with.", "a friend를 꾸미는 형용사적 용법 + 전치사 with를 남긴다 (to talk to도 정답)",
+           points=7, lines=1, conditions=["need, friend, talk를 활용할 것", "to부정사를 사용할 것", "7단어로 쓸 것"]),
+        WR("다음 문장에서 어법상 틀린 부분을 찾아 고치고, 그 이유를 쓰시오.  Would you like hot something to drink?",
+           "hot something → something hot / -thing으로 끝나는 대명사는 형용사가 뒤에서 꾸민다.",
+           "-thing + 형용사 + to V", level="상", points=7, lines=2),
+        WR("다음 글에서 어법상 틀린 부분 2개를 찾아 바르게 고쳐 쓰시오.",
+           "enough calm → calm enough / nice for him → nice of him",
+           "enough는 형용사 뒤 / 성격 형용사 nice 뒤 의미상 주어 → of",
+           level="상", hard=True, points=7, lines=2,
+           passage="Last Sunday, my dad and I went fishing. We left home early in order to get a good spot. The "
+                   "water was enough calm to see the fish clearly. Dad showed me how to tie the line. I forgot to "
+                   "bring something to eat, but Dad had a lot of snacks to share. It was nice for him to bring them."),
+        WR("다음 글의 밑줄 친 우리말을 <조건>에 맞게 영작하시오.",
+           "He takes a train every week in order to visit her.",
+           "목적 → in order to V (He takes a train in order to visit her every week.도 정답)",
+           level="상", points=6, lines=1,
+           conditions=["in order to를 사용할 것", "take a train, every week, visit을 활용할 것"],
+           passage="Minsu's grandmother lives alone in a small village. ==그는 그녀를 방문하기 위해 매주 기차를 탄다.== "
+                   "She always cooks his favorite food for him."),
+    ],
+}
