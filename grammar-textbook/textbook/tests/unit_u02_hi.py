@@ -2,7 +2,7 @@
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "구와 절 / 문장성분 (고등)",
+    "title": "구와 절 / 문장성분",
     "time": "25분",
     "items": [
         MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",

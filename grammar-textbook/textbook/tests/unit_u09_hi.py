@@ -2,7 +2,7 @@
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "동명사 (고등)",
+    "title": "동명사",
     "time": "25분",
     "items": [
         MC("다음 글의 밑줄 친 ⓐ~ⓔ 중 어법상 틀린 것은?",
