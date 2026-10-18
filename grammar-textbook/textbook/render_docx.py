@@ -585,7 +585,8 @@ def build_docx(units, out_path: Path, appendix=None, part_tests=None, mocks=None
     w.para(BOOK["title"], 44, True, INK, after=2)
     w.para(BOOK["en"], 16, False, MUTE, after=10)
     w.para(BOOK["sub"], 12, True, SUB, after=6)
-    w.para("교사용 · 필기 정답 포함" if MODE["teacher"] else "학생용", 10, True, INK, after=80)
+    w.para((MODE.get("book", "") + " · " if MODE.get("book") else "") + ("교사용 · 정답 포함" if MODE["teacher"] else "학생용"),
+           10, True, INK, after=80)
     t = w.table(len(PARTS), 3, [18, 28, 54])
     for i, (pid, (pno, pname, pen, color, tint)) in enumerate(PARTS.items()):
         names = " · ".join(u["title"] for u in units if u["part"] == pid)
@@ -647,12 +648,14 @@ def build_docx(units, out_path: Path, appendix=None, part_tests=None, mocks=None
         r = p.add_run("\n" + u["en"])
         set_font(r, 10, False, MUTE)
         para_border_bottom(p, color, 20)
-        w.para(u["intro"], 9.5, color=SUB, before=6, after=6)
-        w.box("목표", "학습 목표", [f"{i}. {g}" for i, g in enumerate(u["goals"], 1)], tint, tint, color)
+        if u["intro"]:
+            w.para(u["intro"], 9.5, color=SUB, before=6, after=6)
+        if u["goals"]:
+            w.box("목표", "학습 목표", [f"{i}. {g}" for i, g in enumerate(u["goals"], 1)], tint, tint, color)
 
         render_blocks(w, u["blocks"], u["no"])
         if u.get("test"):
-            w.test(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}')
+            w.test(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}', newpage=bool(u["blocks"]))
         nxt = units[units.index(u) + 1] if units.index(u) + 1 < len(units) else None
         if (nxt is None or nxt["part"] != u["part"]) and u["part"] in part_tests:
             w.test(part_tests[u["part"]], f"{pno} 종합 TEST", pname)

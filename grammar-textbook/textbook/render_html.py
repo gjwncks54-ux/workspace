@@ -12,7 +12,7 @@ FONT_DIR = (ROOT / "assets" / "fonts").as_uri()
 
 CIRCLED = "①②③④⑤"
 CIRC_RE = re.compile("[\u24d0-\u24e9]")  # ⓐ~ⓩ: 본문 글꼴에 없어 CSS 원문자로 그린다
-MODE = {"teacher": False}  # 학생용/교사용
+MODE = {"teacher": False, "book": ""}  # 학생용/교사용, 개념편/문제편
 
 
 def blank_len(s):
@@ -214,12 +214,12 @@ def unit_html(u):
   <div class="op-top"><span class="part-chip">{pno} · {pname}</span><span class="level">난이도 {stars(u['level'])}</span></div>
   <div class="op-main"><div class="op-num"><small>UNIT</small>{u['no']:02d}</div>
     <div class="op-title"><h1>{escape(u['title'])}</h1><div class="en">{escape(u['en'])}</div></div></div>
-  <p class="intro">{inline(u['intro'])}</p>
-  <div class="goals"><div class="goals-title">학습 목표</div><ol>{goals}</ol></div>
+  {f'<p class="intro">{inline(u["intro"])}</p>' if u["intro"] else ""}
+  {f'<div class="goals"><div class="goals-title">학습 목표</div><ol>{goals}</ol></div>' if goals else ""}
 </header>"""
     test = ""
     if u.get("test"):
-        test = '<div class="pb"></div>' + test_html(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}')
+        test = ('<div class="pb"></div>' if u["blocks"] else "") + test_html(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}')
     return page(opener + render_blocks(u["blocks"], u["no"]) + test, color, tint, "unit")
 
 
@@ -235,11 +235,15 @@ def cover_html(units):
   <h1 class="cv-title">{BOOK['title']}</h1>
   <div class="cv-en">{BOOK['en']}</div>
   <div class="cv-sub">{BOOK['sub']}</div>
-  <div class="cv-ed">{'교사용 · 필기 정답 포함' if MODE['teacher'] else '학생용'}</div>
+  <div class="cv-ed">{MODE['book'] + ' · ' if MODE['book'] else ''}{'교사용 · 정답 포함' if MODE['teacher'] else '학생용'}</div>
   <div class="cv-parts">{''.join(parts)}</div>
   <div class="cv-foot"><span>개념 정리</span><span>예문 분석</span><span>흔한 실수</span><span>CHECK-UP</span><span>정답·해설</span></div>
 </div>"""
     return page(body, cls="cover-page")
+
+
+GUIDE = {True: "판서 표 → ✓ 필기 포인트 → 도식 → ↻ 한 문장 변형하기 → ▶ 바로 구별하는 법",
+         False: "CHECK-UP (기본·어법·바꿔 쓰기) → 실전 TEST → PART 종합 TEST → 실전 모의고사"}
 
 
 def toc_html(units, pages):
@@ -268,7 +272,7 @@ def toc_html(units, pages):
             out.append(f'<div class="tu"><span class="tu-no">+</span><span class="tu-t">{t}</span>'
                        f'<span class="tu-lv"></span><span class="dots"></span><span class="tu-pg">{pages[k]}</span></div>')
         out.append('</div>')
-    out.append('<div class="toc-guide"><b>교재 구성</b><span>기준 문장 → 판서 표 → ✓ 필기 포인트 → ↻ 한 문장 변형하기 → ▶ 바로 구별하는 법 → STEP UP 심화 → CHECK-UP → 실전 TEST</span>'
+    out.append('<div class="toc-guide"><b>교재 구성</b><span>' + GUIDE[MODE['book'] == '개념편'] + '</span>'
                '<span>난이도 ★☆☆ 기초 · ★★☆ 핵심 · ★★★ 심화</span></div></div>')
     return page("".join(out), cls="toc-page")
 
