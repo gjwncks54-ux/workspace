@@ -16,12 +16,19 @@ BLOCKS = [
         ],
         widths=[24, 14, 22, 40], caption="명사절 = 주어 · 목적어 · 보어 자리에 들어가는 절",
     ),
-    FIG(F.decision([
-        ("뒤 절이 불완전한가? (주어·목적어 빠짐)", "what (또는 의문사 who·what·which)", None),
-        ("확실한 내용인가?", "that", "불확실하면 ↓"),
-        ("'~인지 아닌지'인가?", "whether / if", "정보(누가·언제·어디·왜·어떻게)를 묻는다면 ↓"),
-        ("빈칸에 의문사 의미가 필요한가?", "의문사 + S + V", None),
-    ], "명사절 접속사 고르기")),
+    TABLE(
+        ["", "that (접)", "that (관)", "what (관)"],
+        [
+            ["**선행사**", "X", "**O**", "X"],
+            ["**완전한 절**", "**O**", "X", "X"],
+        ],
+        widths=[28, 24, 24, 24], center=[1, 2, 3], caption="that vs what 판별",
+    ),
+    EX([
+        ("I know **that** he is honest.  → 선행사 X + 완전 → that(접)", "나는 그가 정직하다는 것을 안다."),
+        ("This is the book **that** I bought.  → 선행사 O + 불완전 → that(관)", "이것이 내가 산 책이다."),
+        ("This is **what** I bought.  → 선행사 X + 불완전 → what", "이것이 내가 산 것이다."),
+    ]),
     PILGI([
         "명사절 접속사 = that / {{whether(if)}} / 의문사 / what",
         "that 뒤는 {{완전}}, what 뒤는 {{불완전}}",
