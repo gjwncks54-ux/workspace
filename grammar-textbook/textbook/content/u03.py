@@ -37,7 +37,7 @@ BLOCKS = [
             ["**2형식** S+V+C", "**감각동사** (feel, smell, taste, look, sound) / **be동사**, become, get / **remain**"],
             ["**3형식** S+V+O", "**모든 타동사** (love, buy, read, make, teach, need)"],
             ["**4형식** S+V+I.O+D.O", "**수여동사** → give, bring, lend, show, send, make, buy"],
-            ["**5형식** S+V+O+O.C", "어떤 V가 오느냐에 따라 O.C 형태가 바뀜 (Unit 04)"],
+            ["**5형식** S+V+O+O.C", "어떤 V가 오느냐에 따라 O.C 형태가 바뀜 (Unit 05)"],
         ],
         widths=[24, 76],
     ),

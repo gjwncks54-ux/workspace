@@ -1,8 +1,8 @@
-"""PART 5 특수 구문 종합 TEST (Unit 14~15 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+"""PART 5 특수 구문 종합 TEST (Unit 18~20 / 20문항, 객관식 12 / 서술형 8, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "Unit 14~15 종합",
+    "title": "Unit 18~20 종합",
     "time": "45분",
     "items": [
         MC("빈칸에 들어갈 말로 알맞은 것은?  If I ______ a car, I would drive you home.",

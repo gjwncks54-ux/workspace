@@ -11,7 +11,7 @@ INTRO = "기본형은 하나, **be + p.p.** 형식마다 '누가 주어로 올�
 
 BLOCKS = [
     ANCHOR("The teacher gave him a prize.", "선생님이 그에게 상을 주셨다.",
-           "4형식 하나로 수동태 두 가지 → Unit 4 사역 문장의 수동태까지 연결합니다."),
+           "4형식 하나로 수동태 두 가지 → Unit 5 사역 문장의 수동태까지 연결합니다."),
     FORMULA("기본형: be + p.p."),
     FIG(F.passive_arrow(), "3형식 수동태 만들기 (수업 판서)"),
     TABLE(
@@ -38,7 +38,7 @@ BLOCKS = [
         ("능동 5형식", "I made her clean the room.", None),
         ("수동", "**She was made to clean** the room.", "사역 동사원형 → to V"),
         ("지각", "Someone saw him enter. → **He was seen to enter**.", "지각동사도 to V"),
-    ], title="5형식 — Unit 4 기준 문장의 수동태"),
+    ], title="5형식 — Unit 5 기준 문장의 수동태"),
     LINK(4, "사역·지각동사 O.C의 동사원형은 수동태에서 to V."),
     TABLE(
         ["확장형", "형태", "예시"],
@@ -51,7 +51,7 @@ BLOCKS = [
         widths=[22, 30, 48],
     ),
     H("마네킹 + 옷: 수동태 옷까지 입히기"),
-    P("Unit 05의 조립법에 **수동태 옷(be V p.p.)** 을 마지막에 겹쳐 입힙니다. 순서는 항상 **완료 → 진행 → 수동**."),
+    P("Unit 06의 조립법에 **수동태 옷(be V p.p.)** 을 마지막에 겹쳐 입힙니다. 순서는 항상 **완료 → 진행 → 수동**."),
     FIG(F.stacks(
         F.stack("현재진행수동", ["Vs", "be V-ing", "be V p.p."], "be being V p.p.",
                 "The desk <b>is being moved</b>.", "그 책상은 옮겨지는 중이다."),

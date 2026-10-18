@@ -24,6 +24,10 @@ BLOCKS = [
         ],
         widths=[28, 24, 24, 24], center=[1, 2, 3], caption="that vs what 판별",
     ),
+    TIP("모양이 같으면 → 의미로 구분", [
+        "whether / if = 선행사 X + 완전 (that(접)과 같음) → **'~인지 아닌지'** 면 whether / if",
+        "의문사 what = 선행사 X + 불완전 (what(관)과 같음) → **'무엇'** 이면 의문사, **'~것'** 이면 관계사",
+    ]),
     EX([
         ("I know **that** he is honest.  → 선행사 X + 완전 → that(접)", "나는 그가 정직하다는 것을 안다."),
         ("This is the book **that** I bought.  → 선행사 O + 불완전 → that(관)", "이것이 내가 산 책이다."),

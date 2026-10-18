@@ -38,7 +38,7 @@ BLOCKS = [
         F.stack("미래완료", ["will", "have p.p."], "will have p.p.", "I <b>will have eaten</b> lunch by 1 p.m."),
         F.stack("현재완료진행", ["Vs", "have p.p.", "be V-ing"], "have been V-ing",
                 "It <b>has been raining</b> since morning."),
-    ), "수동태 옷(be V p.p.)까지 입히는 조립은 Unit 06에서 이어집니다."),
+    ), "수동태 옷(be V p.p.)까지 입히는 조립은 Unit 08에서 이어집니다."),
     PILGI([
         "현재완료 = 과거의 일이 {{현재}}까지 이어짐.  과거시제 = 과거에 {{끝난}} 일.",
         "현재완료 4용법: 완료 · {{경험}} · 결과 · {{계속}}",

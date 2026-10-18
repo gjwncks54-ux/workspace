@@ -1,8 +1,8 @@
-"""PART 3 준동사 종합 TEST (Unit 07~10 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+"""PART 3 준동사 종합 TEST (Unit 09~12 / 20문항, 객관식 12 / 서술형 8, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "Unit 07~10 종합",
+    "title": "Unit 09~12 종합",
     "time": "45분",
     "items": [
         MC("빈칸에 들어갈 말로 알맞은 것은?  I enjoy ______ to music in my free time.",

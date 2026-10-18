@@ -1,6 +1,6 @@
 """교재 빌드: python3 build.py            → 작성된 전체 단원
             python3 build.py 1 2 3      → 지정 단원만
-결과: dist/기초영어문법_{개념편,문제편}_{학생용,교사용} .pdf .docx + 기초영어문법_정답해설.pdf (별책)
+결과: dist/문법공식_{개념편,문제편}_{학생용,교사용} .pdf .docx + 문법공식_정답해설.pdf (별책)
 """
 import importlib
 import sys
@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 from textbook.meta import UNITS  # noqa: E402
+
+FILE = "문법공식"
 
 
 def load_units(only=None):
@@ -22,7 +24,8 @@ def load_units(only=None):
         except ModuleNotFoundError:
             continue
         units.append(dict(key=key, no=no, part=part, title=title, en=en, level=level,
-                          goals=m.GOALS, intro=m.INTRO, blocks=m.BLOCKS, test=load_test(f"unit_{key}")))
+                          goals=m.GOALS, intro=m.INTRO, blocks=m.BLOCKS, test=load_test(f"unit_{key}"),
+                          test_hi=load_test(f"unit_{key}_hi")))
     return units
 
 
@@ -39,7 +42,7 @@ def concept_units(units):
                 break
             if b["t"] not in KEEP_OUT:
                 core.append(b)
-        out.append({**u, "blocks": core, "test": None, "goals": [], "intro": ""})
+        out.append({**u, "blocks": core, "test": None, "test_hi": None, "goals": [], "intro": ""})
     return out
 
 
@@ -68,25 +71,30 @@ def main():
     from textbook.render_docx import build_docx
     from textbook.content.appendix import BLOCKS as appendix
     parts = {p: t for p in range(1, 6) if (t := load_test(f"part_{p}"))}
-    mocks = [t for k in (1, 2) if (t := load_test(f"mock_{k}"))]
+    mocks = [t for k in range(1, 7) if (t := load_test(f"mock_{k}"))]  # 3회~ = 고등
     if only:
         parts, mocks = {}, []
     from textbook.render_pdf import rasterize_figs
     render_docx.FIG_PATHS.update(rasterize_figs(units, dist / "_figs"))
-    books = {
-        "개념편": (concept_units(units), appendix, {}, []),
+    books = {  # 문제편 먼저 → 개념편 단원 첫 쪽에 문제편 쪽수 표시
         "문제편": (problem_units(units), None, parts, mocks),
+        "개념편": (concept_units(units), appendix, {}, []),
     }
+    xref = {}
     for book, (us, apx, pt, mk) in books.items():
         for ed, teacher in (("학생용", False), ("교사용", True)):
-            render_html.MODE.update(teacher=teacher, book=book)
-            render_docx.MODE.update(teacher=teacher, book=book)
-            name = f"기초영어문법_{book}_{ed}"
+            x = xref.get("학생용", {}) if book == "개념편" else {}  # 수업 기준 = 학생이 가진 문제편 쪽수
+            render_html.MODE.update(teacher=teacher, book=book, xref=x)
+            render_docx.MODE.update(teacher=teacher, book=book, xref=x)
+            name = f"{FILE}_{book}_{ed}"
             pages = build_pdf(us, dist / f"{name}.pdf", apx, pt, mk, with_answers=teacher)
             build_docx(us, dist / f"{name}.docx", apx, pt, mk, with_answers=teacher)
+            if book == "문제편":
+                xref[ed] = {u["key"]: pages[u["key"]] for u in us if u["key"] in pages}
             print(name, "완료, 시작 쪽:", pages)
+    render_html.MODE["xref"] = render_docx.MODE["xref"] = {}
     render_html.MODE["teacher"] = False
-    build_booklet(units, parts, mocks, dist / "기초영어문법_정답해설.pdf")
+    build_booklet(units, parts, mocks, dist / f"{FILE}_정답해설.pdf")
     print("정답 별책 완료")
 
 

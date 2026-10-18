@@ -353,3 +353,8 @@ h2 + p { break-after: avoid; }
 .pl-row.bad .pl-b { border-color: #D64545; background: #FFF5F5; }
 .pl-c { font-weight: 800; color: var(--sub); }
 .pl-note { font-size: 8.4pt; color: var(--sub); margin-top: 2px; }
+
+/* 개념편 → 문제편 쪽수 */
+.xref { display: inline-block; margin-right: 8px; padding: 1px 7px; border-radius: 10px; background: var(--tint);
+        color: var(--c); font-weight: 700; letter-spacing: 0; }
+.tu-x { display: block; font-size: 6.5pt; color: var(--mute, #8A93A6); font-weight: 500; }

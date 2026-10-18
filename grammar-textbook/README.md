@@ -1,9 +1,10 @@
-# 기초 영어 문법 (GRAMMAR CORE)
+# 문법 공식 (GRAMMAR FORMULA)
 
 중·고등 내신 대비 문법 교재. 한 원고에서 PDF(인쇄용)와 DOCX(수정용)를 함께 만듭니다.
 
-- 결과물: `dist/기초영어문법_개념편_{학생용,교사용}`, `dist/기초영어문법_문제편_{학생용,교사용}` (.pdf/.docx) + `기초영어문법_정답해설.pdf` (별책)
-- 개념편: 각 단원 원고에서 STEP UP 이전 핵심만 (기준 문장·단원 연결·학습 목표 제외). 문제편: CHECK-UP + 실전 TEST + PART 종합 + 모의고사
+- 결과물: `dist/문법공식_개념편_{학생용,교사용}`, `dist/문법공식_문제편_{학생용,교사용}` (.pdf/.docx) + `문법공식_정답해설.pdf` (별책)
+- 개념편: 각 단원 원고에서 STEP UP 이전 핵심만 (기준 문장·단원 연결·학습 목표 제외). 문제편: CHECK-UP + 실전 TEST + 고등 실전 TEST + PART 종합 + 모의고사(3회~ 고등)
+- 개념편 단원 첫 쪽·목차에 `▶ 문제편 p.N` 표시 (학생용 문제편 기준 쪽수, 빌드 때 자동 계산)
 - 원고: `textbook/content/uNN.py` (단원별), 단원 순서·난이도: `textbook/meta.py`
 - 디자인: `assets/style.css` (PDF), `textbook/render_docx.py` (Word)
 

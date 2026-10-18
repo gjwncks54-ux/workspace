@@ -1,8 +1,8 @@
-"""PART 1 문장의 뼈대 종합 TEST (Unit 01~04 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+"""PART 1 문장의 뼈대 종합 TEST (Unit 01~05 / 20문항, 객관식 12 / 서술형 8, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "Unit 01~04 종합",
+    "title": "Unit 01~05 종합",
     "time": "45분",
     "items": [
         MC("밑줄 친 fast의 품사가 나머지와 다른 하나는?",

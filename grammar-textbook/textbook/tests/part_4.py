@@ -1,8 +1,8 @@
-"""PART 4 문장의 확장 종합 TEST (Unit 11~13 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+"""PART 4 문장의 확장 종합 TEST (Unit 13~17 / 20문항, 객관식 12 / 서술형 8, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "Unit 11~13 종합",
+    "title": "Unit 13~17 종합",
     "time": "45분",
     "items": [
         MC("빈칸에 들어갈 말로 알맞은 것은?  This is the girl ______ won the race.",

@@ -27,7 +27,7 @@ BLOCKS = [
         ("When the window was broken by a stranger, we panicked.", "부사절 (주어가 다름)"),
         ("→ **The window being broken** by a stranger, we panicked.", "독립분사구문: 주어를 남긴다"),
     ], title="예시"),
-    FIG(F.participle_flow(), "V-ing / V p.p. 고르기 (Unit 04 흐름도와 같다)", width=110),
+    FIG(F.participle_flow(), "V-ing / V p.p. 고르기 (Unit 05 흐름도와 같다)", width=110),
     PILGI([
         "주의: 자동사·타동사·수동 여부에 따라 {{V-ing}} / {{p.p.}} 선택이 달라질 수 있습니다.",
         "주어가 다르면 주어를 {{지우지 않는다}} (독립분사구문).",

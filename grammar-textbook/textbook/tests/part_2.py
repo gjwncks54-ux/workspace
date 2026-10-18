@@ -1,8 +1,8 @@
-"""PART 2 동사의 변신 종합 TEST (Unit 05~06 / 20문항, 객관식 12 / 서술형 8, 100점)"""
+"""PART 2 동사의 변신 종합 TEST (Unit 06~08 / 20문항, 객관식 12 / 서술형 8, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {
-    "title": "Unit 05~06 종합",
+    "title": "Unit 06~08 종합",
     "time": "45분",
     "items": [
         MC("빈칸에 들어갈 말로 알맞은 것은?  The museum ______ in 1950.",

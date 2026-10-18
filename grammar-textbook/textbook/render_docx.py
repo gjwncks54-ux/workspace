@@ -11,6 +11,7 @@ from docx.shared import Mm, Pt, RGBColor
 
 from textbook.blocks import blanks, tokens
 from textbook.meta import BOOK, PARTS
+from textbook.render_html import mock_label, unit_tests
 
 FONT = "맑은 고딕"
 INK, SUB, MUTE = "1E2433", "5B6475", "8A93A6"
@@ -18,7 +19,7 @@ RED, GREEN, LINE = "D64545", "1F9254", "DCE1E9"
 TAG_COLOR = {"S": "2B59C3", "V": "C93A5A", "O": "0E8A7E", "I.O": "0E8A7E", "D.O": "2C9C6A",
              "C": "D9701A", "O.C": "D9701A", "M": "8A93A6"}
 CIRCLED = "①②③④⑤"
-MODE = {"teacher": False}
+MODE = {"teacher": False, "xref": {}}
 FIG_PATHS = {}  # build.py가 rasterize_figs 결과를 채움
 
 
@@ -647,6 +648,9 @@ def build_docx(units, out_path: Path, appendix=None, part_tests=None, mocks=None
             r.font.color.rgb = rgb(color if r.text.startswith("UNIT") else INK)
         r = p.add_run("\n" + u["en"])
         set_font(r, 10, False, MUTE)
+        if MODE["xref"].get(u["key"]):
+            r = p.add_run(f'    ▶ 문제편 p.{MODE["xref"][u["key"]]}')
+            set_font(r, 10, True, color)
         para_border_bottom(p, color, 20)
         if u["intro"]:
             w.para(u["intro"], 9.5, color=SUB, before=6, after=6)
@@ -654,16 +658,16 @@ def build_docx(units, out_path: Path, appendix=None, part_tests=None, mocks=None
             w.box("목표", "학습 목표", [f"{i}. {g}" for i, g in enumerate(u["goals"], 1)], tint, tint, color)
 
         render_blocks(w, u["blocks"], u["no"])
-        if u.get("test"):
-            w.test(u["test"], "실전 TEST", f'Unit {u["no"]:02d} {u["title"]}', newpage=bool(u["blocks"]))
+        for i, (name, t) in enumerate(unit_tests(u)):
+            w.test(t, name, f'Unit {u["no"]:02d} {u["title"]}', newpage=bool(u["blocks"]) or i > 0)
         nxt = units[units.index(u) + 1] if units.index(u) + 1 < len(units) else None
         if (nxt is None or nxt["part"] != u["part"]) and u["part"] in part_tests:
             w.test(part_tests[u["part"]], f"{pno} 종합 TEST", pname)
 
     w.color, w.tint = INK, "F0F2F6"
     for k, t in enumerate(mocks, 1):
-        w.new_section(BOOK["series"], f"실전 모의고사 {k}회", INK)
-        w.test(t, f"실전 모의고사 {k}회", "전 범위", newpage=False)
+        w.new_section(BOOK["series"], mock_label(k), INK)
+        w.test(t, mock_label(k), "전 범위", newpage=False)
 
     # 부록
     if appendix:

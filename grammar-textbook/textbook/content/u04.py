@@ -10,7 +10,7 @@ GOALS = [
 INTRO = "5형식 심화의 핵심은 **동사가 O.C의 모양을 정한다**는 것. 아래 표 한 장이 이 단원의 전부입니다."
 
 BLOCKS = [
-    ANCHOR("I made her clean the room.", "나는 그녀가 방을 청소하게 했다.", "사역 → have/get 바꿔 쓰기 → 수동태(Unit 6)까지 이어집니다."),
+    ANCHOR("I made her clean the room.", "나는 그녀가 방을 청소하게 했다.", "사역 → have/get 바꿔 쓰기 → 수동태(Unit 8)까지 이어집니다."),
     TABLE(
         ["유형", "주요 동사", "O.C 형태", "예문"],
         [
@@ -42,7 +42,7 @@ BLOCKS = [
     FIG(F.participle_flow(), "O.C 자리 분사 고르기: V-ing인가 V p.p.인가 (분사구문에서도 같은 흐름도를 쓴다)", width=110),
     CHAIN([
         ("사역 (능동)", "I made her **clean** the room.", None),
-        ("수동태", "She was made **to clean** the room.", "동사원형 → to V (Unit 6 5형식 수동태)"),
+        ("수동태", "She was made **to clean** the room.", "동사원형 → to V (Unit 8 5형식 수동태)"),
     ], title="I made her clean the room"),
     CHAIN([
         ("have + 동원", "I had **the man wash** my car.", None),

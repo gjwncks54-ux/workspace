@@ -129,8 +129,8 @@ def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None,
                     part_tests[u["part"]], f"{pno} 종합 TEST", pname, color, tint),
                     header(f'{BOOK["series"]} · {pno} {pname}', f"{pno} 종합 TEST", color))))
         for k, t in enumerate(mocks, 1):
-            sections.append((f"mock{k}", _pdf(pg, R.test_page_html(t, f"실전 모의고사 {k}회", "전 범위"),
-                                              header(BOOK["series"], f"실전 모의고사 {k}회", "#1E2433"))))
+            sections.append((f"mock{k}", _pdf(pg, R.test_page_html(t, R.mock_label(k), "전 범위"),
+                                              header(BOOK["series"], R.mock_label(k), "#1E2433"))))
         if appendix:
             sections.append(("appendix", _pdf(pg, R.appendix_html(appendix), header(BOOK["series"], "부록", "#1E2433"))))
         if with_answers:

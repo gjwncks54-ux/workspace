@@ -1,8 +1,8 @@
 BOOK = {
-    "title": "기초 영어 문법",
-    "en": "Essential English Grammar",
-    "sub": "수업용 필기 노트 · 중·고등 핵심 문법 15",
-    "series": "GRAMMAR CORE",
+    "title": "문법 공식",
+    "en": "Grammar Formula",
+    "sub": "외워서 바로 푸는 중·고등 핵심 문법 20",
+    "series": "GRAMMAR FORMULA",
 }
 
 # 파트: (번호, 이름, 영문, 색상, 연한 색상)
@@ -18,18 +18,23 @@ PARTS = {
 # (모듈명, 파트, 단원명, 영문, 난이도 1~3)
 UNITS = [
     ("u01", 1, "8품사", "Parts of Speech", 1),
+    ("u19", 1, "대명사", "Pronouns", 2),
     ("u02", 1, "구와 절 / 문장성분", "Phrases, Clauses & Sentence Elements", 1),
     ("u03", 1, "문장의 5형식 / 자동사·타동사", "Five Sentence Patterns", 2),
     ("u04", 1, "5형식 심화 / 사역·지각동사", "Pattern 5 in Depth", 3),
     ("u05", 2, "시제", "Tenses", 2),
+    ("u16", 2, "조동사", "Modal Verbs", 2),
     ("u06", 2, "수동태", "The Passive Voice", 3),
     ("u07", 3, "준동사 개관", "Overview of Verbals", 1),
     ("u08", 3, "to부정사", "To-infinitives", 3),
     ("u09", 3, "동명사", "Gerunds", 2),
     ("u10", 3, "분사", "Participles", 2),
     ("u12", 4, "관계사", "Relatives", 3),
+    ("u18", 4, "명사절 / 간접의문문", "Noun Clauses", 3),
+    ("u20", 4, "접속사 / 병렬", "Conjunctions & Parallelism", 2),
     ("u13", 4, "가주어·가목적어 / 강조구문", "Dummy It & Cleft Sentences", 2),
     ("u11", 4, "분사구문", "Participle Clauses", 3),
+    ("u17", 5, "비교", "Comparison", 2),
     ("u14", 5, "도치구문", "Inversion", 2),
     ("u15", 5, "가정법", "The Subjunctive Mood", 3),
 ]
