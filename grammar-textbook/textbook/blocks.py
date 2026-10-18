@@ -89,6 +89,11 @@ def TNOTE(title, lines):
     return {"t": "tnote", "title": title, "lines": lines}
 
 
+def FIG(html, caption=None, width=None):
+    """그림·도식 (HTML/SVG). PDF는 그대로, Word는 PNG로 변환해 삽입. width: Word 삽입 폭(mm)"""
+    return {"t": "fig", "html": html, "caption": caption, "width": width}
+
+
 def ANCHOR(sentence, ko, note=None):
     """단원 기준 문장: 이 문장 하나를 단원 끝까지 변형한다"""
     return {"t": "anchor", "s": sentence, "ko": ko, "note": note}

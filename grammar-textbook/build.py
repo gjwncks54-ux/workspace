@@ -49,6 +49,8 @@ def main():
     mocks = [t for k in (1, 2) if (t := load_test(f"mock_{k}"))]
     if only:
         parts, mocks = {}, []
+    from textbook.render_pdf import rasterize_figs
+    render_docx.FIG_PATHS.update(rasterize_figs(units, dist / "_figs"))
     for ed, teacher in (("학생용", False), ("교사용", True)):
         render_html.MODE["teacher"] = render_docx.MODE["teacher"] = teacher
         pages = build_pdf(units, dist / f"기초영어문법_{ed}.pdf", appendix, parts, mocks, with_answers=teacher)

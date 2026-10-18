@@ -216,3 +216,34 @@ def build_booklet(units, part_tests, mocks, out_path: Path):
     final.add_metadata({"/Title": f'{BOOK["title"]} - 정답 및 해설', "/Author": BOOK["series"]})
     with open(out_path, "wb") as f:
         final.write(f)
+
+
+def fig_key(html, color):
+    import hashlib
+    return hashlib.md5((html + color).encode()).hexdigest()[:16]
+
+
+def rasterize_figs(units, out_dir: Path):
+    """Word판용: FIG 블록을 PNG로 변환 → {key: path}"""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    jobs = {}
+    for u in units:
+        color, tint = PARTS[u["part"]][3], PARTS[u["part"]][4]
+        for b in u["blocks"]:
+            if b["t"] == "fig":
+                jobs[fig_key(b["html"], color)] = (b["html"], color, tint)
+    paths = {}
+    todo = {k: v for k, v in jobs.items() if not (out_dir / f"{k}.png").exists()}
+    if todo:
+        with sync_playwright() as pw:
+            br = pw.chromium.launch(executable_path=CHROMIUM)
+            pg = br.new_page(device_scale_factor=3, viewport={"width": 680, "height": 400})
+            for k, (html, color, tint) in todo.items():
+                pg.set_content(R.page(f'<div id="fx" style="width:640px;padding:4px">{html}</div>', color, tint, "unit"),
+                               wait_until="load")
+                pg.evaluate("document.fonts.ready")
+                pg.locator("#fx").screenshot(path=str(out_dir / f"{k}.png"), omit_background=False)
+            br.close()
+    for k in jobs:
+        paths[k] = out_dir / f"{k}.png"
+    return paths

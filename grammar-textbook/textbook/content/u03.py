@@ -1,4 +1,5 @@
 from textbook.blocks import *
+from textbook import figs as F
 
 GOALS = [
     "자동사와 타동사를 목적어 유무로 구별한다.",
@@ -29,6 +30,17 @@ BLOCKS = [
         ],
         widths=[28, 34, 38], caption="문장의 5형식",
     ),
+    TABLE(
+        ["형식", "대표 동사 (수업 판서)"],
+        [
+            ["**1형식** S+V", "**이동동사** → go / come / walk / run / jog / appear / disappear"],
+            ["**2형식** S+V+C", "**감각동사** (feel, smell, taste, look, sound) / **be동사**, become, get / **remain**"],
+            ["**3형식** S+V+O", "**모든 타동사** (love, buy, read, make, teach, need)"],
+            ["**4형식** S+V+I.O+D.O", "**수여동사** → give, bring, lend, show, send, make, buy"],
+            ["**5형식** S+V+O+O.C", "어떤 V가 오느냐에 따라 O.C 형태가 바뀜 (Unit 04)"],
+        ],
+        widths=[24, 76],
+    ),
     PILGI([
         "자동사는 목적어가 {{없고}}, 타동사는 목적어가 {{필요}}하다.",
         "2형식 감각동사(smell, look, taste…) 뒤에는 {{형용사}}. (부사 X)",
@@ -41,6 +53,7 @@ BLOCKS = [
         ("5형식", "I made **him sad**.", "him = sad → 목적어 + 목적격보어"),
         ("4→3 전환", "I made a cake **for** him.", "make는 for (give·show·tell은 to)"),
     ], title="make 하나로 3·4·5형식"),
+    FIG(F.dative_shift(), "4형식 → 3형식: 직접목적어(~을/를)를 앞으로, 간접목적어(~에게) 앞에 to / for / of"),
     QUICK([
         "목적어 뒤 단어가 목적어와 **같으면(=) 5형식**, **다르면(≠) 4형식**",
         "동사 뒤에 '~을/를'이 바로 붙으면 타동사, 전치사가 필요하면 자동사",

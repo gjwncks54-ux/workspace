@@ -1,4 +1,5 @@
 from textbook.blocks import *
+from textbook import figs as F
 
 GOALS = [
     "가정법 과거·과거완료·혼합가정법을 형태로 구별한다.",
@@ -10,6 +11,16 @@ INTRO = "가정법의 원리는 하나. **실제보다 한 시제 과거로.** �
 BLOCKS = [
     ANCHOR("If I were you, I wouldn't do that.", "내가 너라면 그렇게 하지 않을 텐데.", "If I were you → Were I you / If I had known → Had I known."),
     TABLE(
+        ["If의 종류", "조건절", "가정법", "명사절 (= whether)"],
+        [
+            ["**해석**", "만약 ~라면", "만약 ~라면", "~인지 아닌지"],
+            ["**시제**", "현재 (will X)", "과거, 대과거", "과거, 현재, 미래"],
+            ["**역할**", "부사절", "부사절", "명사절 (주어 X)"],
+            ["**실현 가능성**", "O", "X", "O"],
+        ],
+        widths=[19, 27, 27, 27], center=[1, 2, 3], caption="If의 종류 (수업 판서)",
+    ),
+    TABLE(
         ["형태", "의미"],
         [
             ["If + S + **Ved**, S + would/could + **동원**", "현재 사실과 반대인 가정"],
@@ -18,6 +29,7 @@ BLOCKS = [
         ],
         widths=[62, 38],
     ),
+    FIG(F.subjunctive_formulas(), "가정법 3종: 절마다 '실제로 가리키는 때'를 밑에 적어 보면 혼합가정법 = 과 + 현"),
     TABLE(
         ["without / if 생략 표현", "비고"],
         [

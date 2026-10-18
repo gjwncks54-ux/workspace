@@ -19,6 +19,9 @@ BLOCKS = [
         ],
         widths=[14, 42, 44],
     ),
+    FORMULA("It + be + 형 + for/of + 의.주 + to V", "→ '의.주'가 to V 하는 것이 '형용사'하다"),
+    FORMULA("It is/was + 강조대상 + that + 나머지", "→ '나머지'한 것은 바로 '강조대상'이다"),
+    FORMULA("make[made] / find[found] + it + 형 + to V", "가목적어: it은 해석하지 X"),
     PILGI([
         "가목적어 it은 해석하지 않고, 진짜 내용은 뒤의 {{to V}}가 담당합니다.",
         "의미상 주어: 보통 {{for}} + 목적격, 사람 성격 형용사(kind, nice…)는 {{of}} + 목적격",

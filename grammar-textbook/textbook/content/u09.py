@@ -1,4 +1,5 @@
 from textbook.blocks import *
+from textbook import figs as F
 
 GOALS = [
     "to V / V-ing에 따라 뜻이 바뀌는 동사 4개를 확실히 구별한다.",
@@ -9,6 +10,7 @@ INTRO = "동명사 단원의 핵심은 표 하나. **to V는 앞으로 할 일(�
 
 BLOCKS = [
     ANCHOR("I remember calling her last night.", "나는 어젯밤 그녀에게 전화했던 것을 기억한다.", "remember to call ↔ remember calling — to V와 V-ing를 바꾸면 시간이 바뀝니다."),
+    FIG(F.gerund_venn(), "to부정사 vs 동명사: 목적어로 무엇을 쓰는가 (교집합 = 둘 다 가능)"),
     TABLE(
         ["동사", "to V", "V-ing"],
         [

@@ -1,4 +1,5 @@
 from textbook.blocks import *
+from textbook import figs as F
 
 GOALS = [
     "현재·과거·미래와 완료 시제의 핵심 의미를 표로 정리한다.",
@@ -13,15 +14,31 @@ BLOCKS = [
     TABLE(
         ["시제", "핵심 의미", "필기 메모"],
         [
-            ["**현재**", "일상적 습관, 반복, 불변의 진리", "현재 시제는 가장 기본 의미부터 익힌다."],
+            ["**현재**", "일상적인 루틴, 불변의 진리", "현재 시제는 가장 기본 의미부터 익힌다."],
             ["**과거**", "과거의 일, 역사적 사실", "명확히 끝난 일을 표현한다."],
-            ["**미래**", "미래의 일, 의지, 확신", "will은 강한 확신·의지 표현으로도 쓰인다."],
+            ["**미래**", "미래의 일, 의지, 확신", "will = 100퍼센트의 굳건한 확신·의지"],
             ["**현재완료** have p.p.", "완료 / 경험 / 결과 / 계속", "yesterday, when I was young 같은 특정 과거시점 표현과 함께 쓰지 않음"],
             ["**과거완료** had p.p.", "과거 기준점보다 더 이전", "연결된 문장에 과거 기준점이 필요"],
             ["**미래완료** will have p.p.", "미래의 특정 시점까지 완료", "by / by the time / when 등과 잘 어울림"],
         ],
         widths=[22, 30, 48],
     ),
+    H("그림으로 보는 완료시제"),
+    FIG(F.timeline_present_perfect(),
+        "현재완료는 과거의 특정한 시점을 나타내는 말과 함께 쓰일 수 없다. (yesterday, when I was young, when I was 15) → 선이 끊기면 안 된다"),
+    FIG(F.timeline_past_perfect(), "과거완료는 연결된 문장에 꼭 과거형이 있어야 한다. (e2가 기준점)"),
+    FIG(F.timeline_future_perfect(), "미래완료는 특정한 미래 시점을 나타내는 말과 함께 쓰여야 한다. (by the time, when, by)"),
+    H("시제 조립: 마네킹 + 옷"),
+    P("시제(마네킹)에 완료·진행·수동(옷)을 **겹쳐 입히면** 어떤 복잡한 동사 형태도 만들 수 있습니다. 외우지 말고 조립하세요."),
+    FIG(F.mannequin_board()),
+    FIG(F.stacks(
+        F.stack("현재완료", ["Vs", "have p.p."], "have(has) p.p.", "I <b>have eaten</b> lunch."),
+        F.stack("과거완료진행", ["V-ed", "have p.p.", "be V-ing"], "had been V-ing",
+                "I <b>had been waiting</b> for an hour.", "나는 한 시간째 기다리고 있었다."),
+        F.stack("미래완료", ["will", "have p.p."], "will have p.p.", "I <b>will have eaten</b> lunch by 1 p.m."),
+        F.stack("현재완료진행", ["Vs", "have p.p.", "be V-ing"], "have been V-ing",
+                "It <b>has been raining</b> since morning."),
+    ), "수동태 옷(be V p.p.)까지 입히는 조립은 Unit 06에서 이어집니다."),
     PILGI([
         "현재완료 = 과거의 일이 {{현재}}까지 이어짐.  과거시제 = 과거에 {{끝난}} 일.",
         "현재완료 4용법: 완료 · {{경험}} · 결과 · {{계속}}",

@@ -27,17 +27,16 @@ BLOCKS = [
         widths=[36, 18, 46], center=[1],
     ),
     PILGI([
-        "분사 위치",
-        "- 꾸며주는 말이 짧으면 {{전치수식}}: a sleeping baby",
-        "- 꾸며주는 말이 길면 {{후치수식}}: a tree standing on the hill",
-        "감정 동사는 원래 '감정을 {{일으키다}}'라는 뜻 → 일으키면 -ing, 느끼면 p.p.",
+        "꾸며주는 말이 {{2단어}} 이상이면 후치수식을 한다.",
+        "- I have a tall tree. ({{전치수식}})",
+        "- I have a tree standing on the hill. ({{후치수식}})",
+        "감정 형용사: 감정을 만드는 대상 → {{-ing}} / 감정을 받는 대상 → {{V p.p.}} (주로 사람, 동물)",
     ]),
     CHAIN([
         ("전치수식", "a **sleeping** baby", "짧으면 명사 앞"),
         ("후치수식", "a baby **sleeping in the bed**", "길어지면 명사 뒤"),
         ("관계사절", "a baby **who is sleeping** in the bed", "후치수식 분사 = 관계대명사 + be 생략"),
     ], title="a sleeping baby → a baby sleeping in the bed"),
-    TNOTE("예문 교체 이유", ["분사 위치 예시의 a tall tree의 tall은 분사가 아니라 일반 형용사입니다. → a sleeping baby로 교체했습니다."]),
     CHAIN([
         ("p.p.", "a **broken** window", "창문이 깨진 (수동)"),
         ("p.p. 후치", "a window **broken by the kids**", None),

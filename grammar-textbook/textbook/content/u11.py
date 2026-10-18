@@ -1,4 +1,5 @@
 from textbook.blocks import *
+from textbook import figs as F
 
 GOALS = [
     "부사절을 분사구문으로 바꾸는 3단계를 익힌다.",
@@ -14,14 +15,19 @@ BLOCKS = [
         [
             ["**1**", "접속사를 지운다. (필수 아님)"],
             ["**2**", "주절의 주어와 부사절의 주어가 같으면 부사절의 주어를 지운다."],
-            ["**3**", "동사를 V-ing로 바꾼다. 필요하면 having p.p., being p.p.도 가능"],
+            ["**3**", "동사를 V-ing로 바꾼다. 필요하면 having p.p., being p.p.도 가능 (being, having been은 생략 가능)"],
         ],
         widths=[16, 84], center=[0],
     ),
     EX([
         ("When he broke the window, he ran away.", "부사절"),
         ("→ **Breaking** the window, he ran away.", "분사구문"),
+        ("If you don't come home now, you will be grounded.", "부사절 (조건)"),
+        ("→ **Not coming** home now, you will be grounded.", "부정은 Not + V-ing"),
+        ("When the window was broken by a stranger, we panicked.", "부사절 (주어가 다름)"),
+        ("→ **The window being broken** by a stranger, we panicked.", "독립분사구문: 주어를 남긴다"),
     ], title="예시"),
+    FIG(F.participle_flow(), "V-ing / V p.p. 고르기 (Unit 04 흐름도와 같다)", width=110),
     PILGI([
         "주의: 자동사·타동사·수동 여부에 따라 {{V-ing}} / {{p.p.}} 선택이 달라질 수 있습니다.",
         "주어가 다르면 주어를 {{지우지 않는다}} (독립분사구문).",

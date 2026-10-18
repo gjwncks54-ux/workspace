@@ -19,6 +19,7 @@ TAG_COLOR = {"S": "2B59C3", "V": "C93A5A", "O": "0E8A7E", "I.O": "0E8A7E", "D.O"
              "C": "D9701A", "O.C": "D9701A", "M": "8A93A6"}
 CIRCLED = "①②③④⑤"
 MODE = {"teacher": False}
+FIG_PATHS = {}  # build.py가 rasterize_figs 결과를 채움
 
 
 def rgb(h):
@@ -538,6 +539,15 @@ def render_blocks(w, blocks, unit_no):
             w.warn(b)
         elif t == "check":
             w.check(b, unit_no)
+        elif t == "fig":
+            from textbook.render_pdf import fig_key
+            path = FIG_PATHS.get(fig_key(b["html"], w.color))
+            if path and path.exists():
+                p = w.para(after=2)
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                p.add_run().add_picture(str(path), width=Mm(b["width"] or 160))
+            if b["caption"]:
+                w.para(b["caption"], 8.5, color=SUB, after=6, align=WD_ALIGN_PARAGRAPH.CENTER)
         elif t == "tnote":
             if MODE["teacher"]:
                 w.box("교사 메모", b["title"], b["lines"], "FFF5F5", "F4CACA", RED)

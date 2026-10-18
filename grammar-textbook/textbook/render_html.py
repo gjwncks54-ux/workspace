@@ -177,6 +177,9 @@ def render_blocks(blocks, unit_no):
             out.append(r_warn(b))
         elif t == "check":
             out.append(r_check(b, unit_no))
+        elif t == "fig":
+            cap = f'<figcaption>{inline(b["caption"])}</figcaption>' if b["caption"] else ""
+            out.append(f'<figure class="fig">{b["html"]}{cap}</figure>')
         elif t == "tnote":
             if MODE["teacher"]:
                 out.append(r_box("note tnote", "교사 메모", b["title"], b["lines"]))

@@ -1,4 +1,5 @@
 from textbook.blocks import *
+from textbook import figs as F
 
 GOALS = [
     "3·4·5형식 수동태 공식을 같은 문장으로 비교한다.",
@@ -12,6 +13,7 @@ BLOCKS = [
     ANCHOR("The teacher gave him a prize.", "선생님이 그에게 상을 주셨다.",
            "4형식 하나로 수동태 두 가지 → Unit 4 사역 문장의 수동태까지 연결합니다."),
     FORMULA("기본형: be + p.p."),
+    FIG(F.passive_arrow(), "3형식 수동태 만들기 (수업 판서)"),
     TABLE(
         ["유형", "변환 공식", "예문"],
         [
@@ -48,8 +50,20 @@ BLOCKS = [
         ],
         widths=[22, 30, 48],
     ),
+    H("마네킹 + 옷: 수동태 옷까지 입히기"),
+    P("Unit 05의 조립법에 **수동태 옷(be V p.p.)** 을 마지막에 겹쳐 입힙니다. 순서는 항상 **완료 → 진행 → 수동**."),
+    FIG(F.stacks(
+        F.stack("현재진행수동", ["Vs", "be V-ing", "be V p.p."], "be being V p.p.",
+                "The desk <b>is being moved</b>.", "그 책상은 옮겨지는 중이다."),
+        F.stack("과거완료수동", ["V-ed", "have p.p.", "be V p.p."], "had been V p.p.",
+                "The room <b>had been cleaned</b> before I arrived."),
+        F.stack("미래진행수동", ["will", "be V-ing", "be V p.p."], "will be being V p.p.",
+                "The machine <b>will be being checked</b> then."),
+        F.stack("미래완료진행수동", ["will", "have p.p.", "be V-ing", "be V p.p."], "will have been being V p.p.",
+                "The chair <b>will have been being moved</b> in 2 hours.", "그 의자는 2시간 뒤면 옮겨지는 중일 것이다. (조립 시연용)"),
+    )),
     PILGI([
-        "미래진행 수동(will be being p.p.), 미래완료진행 수동(will have been being p.p.)은 문법적으로는 가능하지만 실제 사용 빈도는 {{매우 낮습니다}}. → 시험 대비 X",
+        "미래완료진행수동 같은 형태는 문법적으로는 가능하지만 실제 사용 빈도는 {{매우 낮습니다}}. → 마네킹 + 옷 조립 연습용",
         "진행 수동 = be {{being}} p.p.  /  완료 수동 = have {{been}} p.p.",
         "4형식 D.O 주어일 때: give·show → {{to}} / make·buy → {{for}} / ask → {{of}}",
     ]),

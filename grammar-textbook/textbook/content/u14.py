@@ -8,32 +8,33 @@ GOALS = [
 INTRO = "도치는 **강조하고 싶은 말을 앞으로** 보내면서 주어와 동사 순서가 바뀌는 것. 장소면 S↔V, 부정어면 의문문 어순."
 
 BLOCKS = [
-    ANCHOR("Never does he study English.", "그는 결코 영어를 공부하지 않는다.", "He never studies English → 부정어를 앞으로 → 의문문 어순."),
+    ANCHOR("Never does Jake study English.", "Jake는 결코 영어를 공부하지 않는다.", "Jake never studies English → 부정어를 앞으로 → 의문문 어순."),
     TABLE(
         ["유형", "핵심 규칙", "예문"],
         [
             ["**장소부사구 / 전치사구 도치**", "장소 표현을 앞으로 보내고 S ↔ V, 단 주어가 대명사면 보통 도치하지 않음",
-             "In the car are the kids. / Here it comes."],
-            ["**부정어 도치**", "의문문 어순으로 바뀜", "Never does he study English."],
+             "In the car are the kids. / In the car they are."],
+            ["**부정어 도치** (한정어 only 포함)", "의문문 어순으로 바뀜", "Never does Jake study English."],
         ],
         widths=[24, 40, 36],
     ),
     PILGI([
         "부정어 예: never, not, little, few, rarely, scarcely",
-        "끊어 읽기 포인트: 긴 주어 뒤 / {{동사}} 뒤 / 목적어 뒤 / {{전치사}} 앞 / 수식어 앞",
+        "끊어 읽기: ① 긴 주어 뒤 ② {{동사}} 뒤 ③ 목적어 뒤 ④ ***{{전치사}} 앞 ⑤ ***수식어 앞 (관계사, to부정사 등)",
         "장소 도치 → 그냥 {{S ↔ V}}  /  부정어 도치 → {{의문문}} 어순 (do/does/did)",
     ]),
     CHAIN([
         ("원래", "The kids are in the car.", None),
         ("장소 도치", "**In the car are the kids.**", "S ↔ V"),
-        ("대명사 주어", "Here comes **the bus**. / Here **it comes**.", "대명사는 도치 X"),
+        ("대명사 주어", "They are in the car. → **In the car they are.**", "대명사는 도치 X"),
+        ("There / Here", "There is a box. / There **he is**. / Here **you are**. / Here are **the boys**.", "There·Here 도치도 같은 규칙"),
     ], title="In the car are the kids"),
     CHAIN([
-        ("원래", "He never studies English.", None),
-        ("부정어 도치", "**Never does he study** English.", "의문문처럼 does + S + 원형"),
-        ("과거", "Never **did he study** English.", None),
-        ("완료", "Never **has he studied** English.", "have/has를 앞으로"),
-    ], title="Never does he study English"),
+        ("원래", "Jake never studies English.", None),
+        ("부정어 도치", "**Never does Jake study** English.", "의문문처럼 does + S + 원형"),
+        ("과거", "Never **did Jake study** English.", None),
+        ("완료", "Never **has Jake studied** English.", "have/has를 앞으로"),
+    ], title="Never does Jake study English"),
     QUICK([
         "도치 문장은 **동사 뒤에서** 진짜 주어를 찾는다 → 동사 수일치 확인",
         "부정어 뒤에 일반동사가 그대로 있으면 틀린 것 → **do/does/did**",
