@@ -240,3 +240,63 @@ def subjunctive_formulas():
         out.append("</span></div>")
     out.append('<div class="sj-note">밑줄 아래 글자 = 실제로 가리키는 때 (현 = 현재, 과 = 과거)</div></div>')
     return "".join(out)
+
+
+# ---------- 판별 절차 (질문 → 예/아니오) : 명사절 등 ----------
+
+def decision(steps, title=None):
+    """steps: [(질문, 예일 때 답, 아니오일 때 메모 or None), ...] 마지막 단계까지 내려가며 판단"""
+    out = ['<div class="dc">']
+    if title:
+        out.append(f'<div class="dc-t">{title}</div>')
+    for i, (q, yes, no) in enumerate(steps, 1):
+        out.append(f'<div class="dc-row"><span class="dc-n">{i}</span><span class="dc-q">{q}</span>'
+                   f'<span class="dc-y">YES → <b>{yes}</b></span></div>')
+        if no:
+            out.append(f'<div class="dc-no">NO ↓ {no}</div>')
+    out.append("</div>")
+    return "".join(out)
+
+
+# ---------- 부정대명사 (대명사 단원) ----------
+
+def indefinite_pronouns():
+    def dot(x, y, filled, label=None):
+        f = f'style="fill:{C}"' if filled else f'fill="#fff" style="stroke:{C}" stroke-width="2"'
+        s = f'<circle cx="{x}" cy="{y}" r="11" {f}/>'
+        if label:
+            s += f'<text x="{x}" y="{y + 30}" font-size="11.5" font-weight="700" text-anchor="middle" fill="{INK}">{label}</text>'
+        return s
+    b = ""
+    rows = [
+        ("2개", [(True, "one"), (False, "the other")]),
+        ("3개", [(True, "one"), (True, "another"), (False, "the other")]),
+        ("여러 개 (불특정)", [(True, "some"), (True, ""), (False, "others"), (False, "")]),
+        ("정해진 전체", [(True, "some"), (True, ""), (False, "the others"), (False, "")]),
+    ]
+    y = 30
+    for name, dots in rows:
+        b += f'<text x="0" y="{y + 4}" font-size="12.5" font-weight="800" fill="{INK}">{name}</text>'
+        x = 170
+        for filled, lab in dots:
+            b += dot(x, y, filled, lab)
+            x += 90
+        y += 62
+    b += (f'<text x="560" y="40" font-size="11" fill="{SUB}">● 먼저 고른 것</text>'
+          f'<text x="560" y="58" font-size="11" fill="{SUB}">○ 나머지</text>'
+          f'<text x="560" y="88" font-size="11" fill="{SUB}">나머지 1개 = the other</text>'
+          f'<text x="560" y="106" font-size="11" fill="{SUB}">나머지 전부 = the others</text>')
+    return _svg(720, 250, b)
+
+
+# ---------- 병렬 (접속사 단원) ----------
+
+def parallel_board(rows):
+    """rows: [(ok(bool), A, 접속사, B), ...]"""
+    out = ['<div class="pl">']
+    for ok, a, cj, bb in rows:
+        mark = '<span class="pl-ok">O</span>' if ok else '<span class="pl-x">✗</span>'
+        out.append(f'<div class="pl-row {"" if ok else "bad"}">{mark}<span class="pl-a">{a}</span>'
+                   f'<span class="pl-c">{cj}</span><span class="pl-b">{bb}</span></div>')
+    out.append('<div class="pl-note">접속사 앞뒤 덩어리는 같은 모양 (동명사 ↔ 동명사, to V ↔ to V, 형용사 ↔ 형용사)</div></div>')
+    return "".join(out)

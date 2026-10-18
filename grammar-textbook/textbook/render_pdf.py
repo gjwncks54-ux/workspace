@@ -112,7 +112,7 @@ def number_pages(reader, start_index, first_no):
     return writer
 
 
-def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None, with_answers=True):
+def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None, with_answers=True, print_files=True):
     part_tests, mocks = part_tests or {}, mocks or []
     with sync_playwright() as pw:
         br = pw.chromium.launch(executable_path=CHROMIUM)
@@ -169,6 +169,8 @@ def build_pdf(units, out_path: Path, appendix=None, part_tests=None, mocks=None,
     with open(out_path, "wb") as f:
         final.write(f)
 
+    if not print_files:
+        return pages
     # ---- 인쇄소용: 본문(표지 제외) + 표지(도련 3mm) ----
     pdir = out_path.parent / "인쇄용"
     pdir.mkdir(exist_ok=True)

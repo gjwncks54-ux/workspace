@@ -332,3 +332,24 @@ h2 + p { break-after: avoid; }
 .sj-l { font-size: 9pt; font-weight: 800; color: var(--c); }
 .sj-plain { padding: 0 2px; }
 .sj-note { font-size: 8.4pt; color: var(--sub); }
+
+/* 판별 절차 */
+.dc { display: flex; flex-direction: column; gap: 4px; }
+.dc-t { font-weight: 800; color: var(--c); margin-bottom: 2px; }
+.dc-row { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 8px; border: 1.5px solid var(--c);
+  border-radius: 8px; padding: 6px 10px; background: var(--tint); }
+.dc-n { width: 20px; height: 20px; border-radius: 50%; background: var(--c); color: #fff; font-weight: 800; font-size: 9pt;
+  text-align: center; line-height: 20px; }
+.dc-q { font-weight: 700; }
+.dc-y { font-size: 9pt; color: var(--sub); }
+.dc-y b { color: var(--c); font-size: 10pt; }
+.dc-no { font-size: 8.4pt; color: var(--sub); padding-left: 36px; }
+/* 병렬 */
+.pl { display: flex; flex-direction: column; gap: 5px; }
+.pl-row { display: flex; align-items: center; gap: 8px; font-size: 10pt; }
+.pl-ok, .pl-x { width: 20px; height: 20px; border-radius: 50%; text-align: center; line-height: 20px; font-weight: 800; font-size: 9pt; color: #fff; background: #1F9254; }
+.pl-x { background: #D64545; }
+.pl-a, .pl-b { border: 1.5px solid var(--c); border-radius: 6px; padding: 1px 8px; background: var(--tint); font-weight: 600; }
+.pl-row.bad .pl-b { border-color: #D64545; background: #FFF5F5; }
+.pl-c { font-weight: 800; color: var(--sub); }
+.pl-note { font-size: 8.4pt; color: var(--sub); margin-top: 2px; }
