@@ -1,4 +1,4 @@
-"""Unit 06 수동태 실전 TEST (★★★ → 20문항, 객관식 12 / 서술형 8, 100점)"""
+"""Unit 08 수동태 실전 TEST (★★★ → 20문항, 객관식 12 / 서술형 8, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {

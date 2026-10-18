@@ -1,4 +1,4 @@
-"""Unit 10 분사 실전 TEST (★★ → 15문항, 객관식 9 / 서술형 6, 100점)"""
+"""Unit 12 분사 실전 TEST (★★ → 15문항, 객관식 9 / 서술형 6, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {

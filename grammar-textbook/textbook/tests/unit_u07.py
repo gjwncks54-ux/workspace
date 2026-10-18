@@ -1,4 +1,4 @@
-"""Unit 07 준동사 개관 실전 TEST (★ → 10문항, 객관식 6 / 서술형 4, 100점)"""
+"""Unit 09 준동사 개관 실전 TEST (★ → 10문항, 객관식 6 / 서술형 4, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {

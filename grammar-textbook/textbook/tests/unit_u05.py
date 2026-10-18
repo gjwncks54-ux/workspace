@@ -1,4 +1,4 @@
-"""Unit 05 시제 실전 TEST (★★ → 15문항, 객관식 9 / 서술형 6, 100점)"""
+"""Unit 06 시제 실전 TEST (★★ → 15문항, 객관식 9 / 서술형 6, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {

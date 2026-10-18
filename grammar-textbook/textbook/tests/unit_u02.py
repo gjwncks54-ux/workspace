@@ -1,4 +1,4 @@
-"""Unit 02 구와 절 / 문장성분 실전 TEST (★ → 10문항, 객관식 6 / 서술형 4, 100점)"""
+"""Unit 03 구와 절 / 문장성분 실전 TEST (★ → 10문항, 객관식 6 / 서술형 4, 100점)"""
 from textbook.blocks import MC, WR
 
 TEST = {
