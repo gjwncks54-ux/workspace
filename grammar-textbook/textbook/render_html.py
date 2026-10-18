@@ -255,7 +255,7 @@ def cover_html(units):
 
 
 GUIDE = {True: "판서 표 → ✓ 필기 포인트 → 도식 → ↻ 한 문장 변형하기 → ▶ 바로 구별하는 법",
-         False: "CHECK-UP (기본·어법·바꿔 쓰기) → 실전 TEST → PART 종합 TEST → 실전 모의고사"}
+         False: "CHECK-UP (기본·어법·바꿔 쓰기) → 실전 TEST → 고등 실전 TEST → PART 종합 TEST → 실전 모의고사 → 고등 실전 모의고사"}
 
 
 def toc_html(units, pages):
