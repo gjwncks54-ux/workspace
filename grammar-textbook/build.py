@@ -96,6 +96,9 @@ def main():
     render_html.MODE["teacher"] = False
     build_booklet(units, parts, mocks, dist / f"{FILE}_정답해설.pdf")
     print("정답 별책 완료")
+    if not only:
+        from textbook.bind import build_binding
+        print("제본용 완료:", build_binding(units, dist, FILE))
 
 
 if __name__ == "__main__":

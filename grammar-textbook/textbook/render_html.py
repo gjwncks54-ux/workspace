@@ -235,7 +235,7 @@ def unit_html(u):
     return page(opener + render_blocks(u["blocks"], u["no"]) + test, color, tint, "unit")
 
 
-def cover_html(units):
+def cover_html(units, ed=None):
     parts = []
     for pid, (pno, pname, pen, color, tint) in PARTS.items():
         names = " · ".join(escape(u["title"]) for u in units if u["part"] == pid)
@@ -247,7 +247,7 @@ def cover_html(units):
   <h1 class="cv-title">{BOOK['title']}</h1>
   <div class="cv-en">{BOOK['en']}</div>
   <div class="cv-sub">{BOOK['sub']}</div>
-  <div class="cv-ed">{MODE['book'] + ' · ' if MODE['book'] else ''}{'교사용 · 정답 포함' if MODE['teacher'] else '학생용'}</div>
+  <div class="cv-ed">{ed or ((MODE['book'] + ' · ' if MODE['book'] else '') + ('교사용 · 정답 포함' if MODE['teacher'] else '학생용'))}</div>
   <div class="cv-parts">{''.join(parts)}</div>
   <div class="cv-foot"><span>개념 정리</span><span>예문 분석</span><span>흔한 실수</span><span>CHECK-UP</span><span>정답·해설</span></div>
 </div>"""
