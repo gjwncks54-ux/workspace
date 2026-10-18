@@ -49,7 +49,7 @@ TEST = {
         WR("두 문장을 <조건>에 맞게 한 문장으로 바꿔 쓰시오.  His explanation was clear. His answer was polite.",
            "He explained clearly and answered politely.",
            "명사(explanation, answer) → 동사(explained, answered) / 형용사 → 부사",
-           points=13, lines=1, conditions=["He로 시작할 것", "explain, answer를 동사로 쓸 것", "5단어로 쓸 것"]),
+           points=13, lines=1, conditions=["He로 시작할 것", "explain, answer를 동사로 쓸 것", "6단어로 쓸 것"]),
         WR("다음 문장에서 어법상 틀린 부분 2개를 찾아 고치고, 그 이유를 쓰시오.  The soup smells wonderfully, but it tastes too saltily.",
            "wonderfully → wonderful / saltily → salty / smell, taste 같은 감각동사 뒤 보어 자리에는 형용사를 쓴다.",
            "감각동사 + 형용사 (부사 X)", points=13, lines=2),
