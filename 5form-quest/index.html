@@ -52,6 +52,8 @@
   .q { font-size: 30px; font-weight: 800; line-height: 1.45; text-align: center; padding: 26px 10px; }
   .q .tag { display: block; font-size: 16px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
   .q .sub { margin: 18px 0 0; font-size: 26px; color: var(--ink); }
+  .box { display: inline-block; margin: 5px 4px; padding: 0 12px; border: 3px solid #b6a6fb; border-radius: 12px; background: #faf8ff; }
+  .hud .quit.hint-on { background: #fff4c2; border-color: var(--gold); font-weight: 800; }
   .gap { display: inline-block; min-width: 90px; border-bottom: 4px solid var(--accent); color: var(--accent); }
   .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
   .opt { min-height: 76px; border-radius: 18px; border: 3px solid var(--line); background: #fff; font-size: 24px; font-weight: 800; }
@@ -127,65 +129,65 @@ const PLAYERS = ['🧒 학생', '🧑‍🏫 선생님'];
 // ── 문제 ────────────────────────────────────────────────────
 // [문장, 형식, 해설]
 const S1 = [
-  ['My little brother cried loudly.', 1, 'S + V. loudly는 꾸며 주는 말(M)이라 형식에 안 들어가요.'],
-  ['The cat is under the table.', 1, 'be동사가 "있다"라는 뜻이면 1형식! under the table은 수식어.'],
-  ['She walked to the park with her friend.', 1, 'to the park, with her friend 모두 수식어 → S + V.'],
-  ['The soup smells good.', 2, 'smell + 형용사(보어) → 2형식.'],
-  ['He got angry.', 2, 'get + 형용사 = "~해지다" → 2형식.'],
-  ['The leaves turned red.', 2, 'turn + 형용사 = "~로 변하다" → 2형식.'],
-  ['We played soccer after school.', 3, 'soccer가 목적어, after school은 수식어 → 3형식.'],
-  ['I want a glass of water.', 3, 'a glass of water가 목적어 → 3형식.'],
-  ['My dad bought me a new bike.', 4, 'me에게(I.O) + a new bike를(D.O) → 4형식.'],
-  ['The teacher showed us a map.', 4, 'us에게 + a map을 → 4형식.'],
-  ['Tom sent his grandma a letter.', 4, 'his grandma에게 + a letter를 → 4형식.'],
-  ['We call our dog Max.', 5, 'our dog = Max (목적어 = 목적격 보어) → 5형식.'],
-  ['The news made everyone sad.', 5, 'everyone이 sad한 상태 → 목적격 보어 → 5형식.'],
-  ['I keep my room clean.', 5, 'my room이 clean한 상태 → 5형식.'],
+  ['My little brother / cried / loudly.', 1, 'S + V. loudly는 꾸며 주는 말(M)이라 형식에 안 들어가요.'],
+  ['The cat / is / under the table.', 1, 'be동사가 "있다"라는 뜻이면 1형식! under the table은 수식어.'],
+  ['She / walked / to the park / with her friend.', 1, 'to the park, with her friend 모두 수식어 → S + V.'],
+  ['The soup / smells / good.', 2, 'smell + 형용사(보어) → 2형식.'],
+  ['He / got / angry.', 2, 'get + 형용사 = "~해지다" → 2형식.'],
+  ['The leaves / turned / red.', 2, 'turn + 형용사 = "~로 변하다" → 2형식.'],
+  ['We / played / soccer / after school.', 3, 'soccer가 목적어, after school은 수식어 → 3형식.'],
+  ['I / want / a glass of water.', 3, 'a glass of water가 목적어 → 3형식.'],
+  ['My dad / bought / me / a new bike.', 4, 'me에게(I.O) + a new bike를(D.O) → 4형식.'],
+  ['The teacher / showed / us / a map.', 4, 'us에게 + a map을 → 4형식.'],
+  ['Tom / sent / his grandma / a letter.', 4, 'his grandma에게 + a letter를 → 4형식.'],
+  ['We / call / our dog / Max.', 5, 'our dog = Max (목적어 = 목적격 보어) → 5형식.'],
+  ['The news / made / everyone / sad.', 5, 'everyone이 sad한 상태 → 목적격 보어 → 5형식.'],
+  ['I / keep / my room / clean.', 5, 'my room이 clean한 상태 → 5형식.'],
 ];
 // [4형식, 3형식, 정답, 해설]
 const S2 = [
-  ['Mina gave me a candy.', 'Mina gave a candy ___ me.', 'to', 'give → to (건네주는 동사)'],
-  ['Dad cooked us dinner.', 'Dad cooked dinner ___ us.', 'for', 'cook → for (만들어 주는 동사)'],
-  ['Can I ask you a question?', 'Can I ask a question ___ you?', 'of', 'ask → of (딱 외워 두기!)'],
-  ['She sent her friend a card.', 'She sent a card ___ her friend.', 'to', 'send → to'],
-  ['Grandma made me a sweater.', 'Grandma made a sweater ___ me.', 'for', 'make → for'],
-  ['Mr. Kim teaches us English.', 'Mr. Kim teaches English ___ us.', 'to', 'teach → to'],
-  ['He bought his sister a doll.', 'He bought a doll ___ his sister.', 'for', 'buy → for (사 주는 동사)'],
-  ['Show me your notebook.', 'Show your notebook ___ me.', 'to', 'show → to'],
-  ["I'll get you some water.", "I'll get some water ___ you.", 'for', 'get(가져다주다) → for'],
-  ['He lent me his pencil.', 'He lent his pencil ___ me.', 'to', 'lend → to'],
+  ['Mina / gave / me / a candy.', 'Mina / gave / a candy / ___ me.', 'to', 'give → to (건네주는 동사)'],
+  ['Dad / cooked / us / dinner.', 'Dad / cooked / dinner / ___ us.', 'for', 'cook → for (만들어 주는 동사)'],
+  ['Can I ask / you / a question?', 'Can I ask / a question / ___ you?', 'of', 'ask → of (딱 외워 두기!)'],
+  ['She / sent / her friend / a card.', 'She / sent / a card / ___ her friend.', 'to', 'send → to'],
+  ['Grandma / made / me / a sweater.', 'Grandma / made / a sweater / ___ me.', 'for', 'make → for'],
+  ['Mr. Kim / teaches / us / English.', 'Mr. Kim / teaches / English / ___ us.', 'to', 'teach → to'],
+  ['He / bought / his sister / a doll.', 'He / bought / a doll / ___ his sister.', 'for', 'buy → for (사 주는 동사)'],
+  ['Show / me / your notebook.', 'Show / your notebook / ___ me.', 'to', 'show → to'],
+  ["I'll get / you / some water.", "I'll get / some water / ___ you.", 'for', 'get(가져다주다) → for'],
+  ['He / lent / me / his pencil.', 'He / lent / his pencil / ___ me.', 'to', 'lend → to'],
 ];
 // [문장, 보기, 정답, 해설]
 const S3 = [
-  ['I saw my friend ___ the ball.', ['kick', 'to kick', 'kicked'], 'kick', '지각동사 see + 목적어 + 동사원형 (V-ing도 OK)'],
-  ['Mom made me ___ my room.', ['clean', 'to clean', 'cleaned'], 'clean', '사역동사 make + 목적어 + 동사원형'],
-  ['The doctor told me ___ my arm.', ['rest', 'to rest', 'rested'], 'to rest', 'tell + 목적어 + to V'],
-  ['My teacher let us ___ home early.', ['go', 'to go', 'went'], 'go', '사역동사 let + 목적어 + 동사원형'],
-  ['I heard someone ___ my name.', ['calling', 'to call', 'calls'], 'calling', '지각동사 hear + 목적어 + V-ing (동사원형도 OK)'],
-  ['My friend helped me ___ my bag.', ['carry', 'carrying', 'carried'], 'carry', 'help + 목적어 + 동사원형 / to V'],
-  ['I want you ___ me.', ['help', 'to help', 'helping'], 'to help', 'want + 목적어 + to V'],
-  ['Dad had his car ___.', ['wash', 'to wash', 'washed'], 'washed', '차는 "씻겨지는" 것 → have + 목적어 + p.p.'],
-  ['I got my brother ___ the dishes.', ['do', 'to do', 'done'], 'to do', 'get + 목적어 + to V (~하게 시키다)'],
-  ['The movie made me ___.', ['sad', 'sadly', 'sadness'], 'sad', '목적격 보어 자리 → 형용사 (me = sad한 상태)'],
-  ['Mom asked me ___ quiet.', ['be', 'to be', 'being'], 'to be', 'ask + 목적어 + to V'],
-  ['I felt the ground ___.', ['shake', 'to shake', 'shaken'], 'shake', '지각동사 feel + 목적어 + 동사원형'],
+  ['I / saw / my friend / ___ the ball.', ['kick', 'to kick', 'kicked'], 'kick', '지각동사 see + 목적어 + 동사원형 (V-ing도 OK)'],
+  ['Mom / made / me / ___ my room.', ['clean', 'to clean', 'cleaned'], 'clean', '사역동사 make + 목적어 + 동사원형'],
+  ['The doctor / told / me / ___ my arm.', ['rest', 'to rest', 'rested'], 'to rest', 'tell + 목적어 + to V'],
+  ['My teacher / let / us / ___ home early.', ['go', 'to go', 'went'], 'go', '사역동사 let + 목적어 + 동사원형'],
+  ['I / heard / someone / ___ my name.', ['calling', 'to call', 'calls'], 'calling', '지각동사 hear + 목적어 + V-ing (동사원형도 OK)'],
+  ['My friend / helped / me / ___ my bag.', ['carry', 'carrying', 'carried'], 'carry', 'help + 목적어 + 동사원형 / to V'],
+  ['I / want / you / ___ me.', ['help', 'to help', 'helping'], 'to help', 'want + 목적어 + to V'],
+  ['Dad / had / his car / ___.', ['wash', 'to wash', 'washed'], 'washed', '차는 "씻겨지는" 것 → have + 목적어 + p.p.'],
+  ['I / got / my brother / ___ the dishes.', ['do', 'to do', 'done'], 'to do', 'get + 목적어 + to V (~하게 시키다)'],
+  ['The movie / made / me / ___.', ['sad', 'sadly', 'sadness'], 'sad', '목적격 보어 자리 → 형용사 (me = sad한 상태)'],
+  ['Mom / asked / me / ___ quiet.', ['be', 'to be', 'being'], 'to be', 'ask + 목적어 + to V'],
+  ['I / felt / the ground / ___.', ['shake', 'to shake', 'shaken'], 'shake', '지각동사 feel + 목적어 + 동사원형'],
 ];
 // [문장, 맞는 문장?, 해설]
 const S4 = [
-  ['She looks happily.', false, '2형식 보어는 형용사 → She looks happy.'],
-  ['They made me happy.', true, '목적격 보어 = 형용사 happy ⭕'],
-  ['I gave to her a pencil.', false, '4형식은 to 없이 "사람 + 물건" → I gave her a pencil.'],
-  ['The pizza tastes great.', true, 'taste + 형용사 → 2형식 ⭕'],
-  ['He made me to clean the room.', false, '사역동사 make + 동사원형 → made me clean'],
-  ['I want you to come.', true, 'want + 목적어 + to V ⭕'],
-  ['I saw him to dance.', false, '지각동사 see + 동사원형/V-ing → saw him dance'],
-  ['She bought a gift for me.', true, 'buy는 3형식에서 for ⭕'],
-  ['He asked a favor to me.', false, 'ask는 of → asked a favor of me'],
-  ['The music makes me sleepy.', true, '목적격 보어 = 형용사 sleepy ⭕'],
-  ['I heard the baby crying.', true, '지각동사 + V-ing ⭕'],
-  ['This flower smells sweetly.', false, 'smell + 형용사 → smells sweet'],
-  ['Let me to go.', false, 'let + 동사원형 → Let me go.'],
-  ['I found the test easy.', true, 'the test = easy → 5형식 ⭕'],
+  ['She / looks / happily.', false, '2형식 보어는 형용사 → She looks happy.'],
+  ['They / made / me / happy.', true, '목적격 보어 = 형용사 happy ⭕'],
+  ['I / gave / to her / a pencil.', false, '4형식은 to 없이 "사람 + 물건" → I gave her a pencil.'],
+  ['The pizza / tastes / great.', true, 'taste + 형용사 → 2형식 ⭕'],
+  ['He / made / me / to clean the room.', false, '사역동사 make + 동사원형 → made me clean'],
+  ['I / want / you / to come.', true, 'want + 목적어 + to V ⭕'],
+  ['I / saw / him / to dance.', false, '지각동사 see + 동사원형/V-ing → saw him dance'],
+  ['She / bought / a gift / for me.', true, 'buy는 3형식에서 for ⭕'],
+  ['He / asked / a favor / to me.', false, 'ask는 of → asked a favor of me'],
+  ['The music / makes / me / sleepy.', true, '목적격 보어 = 형용사 sleepy ⭕'],
+  ['I / heard / the baby / crying.', true, '지각동사 + V-ing ⭕'],
+  ['This flower / smells / sweetly.', false, 'smell + 형용사 → smells sweet'],
+  ['Let / me / to go.', false, 'let + 동사원형 → Let me go.'],
+  ['I / found / the test / easy.', true, 'the test = easy → 5형식 ⭕'],
 ];
 // [우리말, 정답 문장, 함정 단어]
 const S5 = [
@@ -220,6 +222,7 @@ const STAGES = [
     qs: BOSS.map(([chunks, roles, f, exp]) => ({ kind: 'boss', chunks, roles, answer: f + '형식', exp })) },
 ];
 
+const plain = (s) => s.replace(/ \/ /g, ' ');
 const prep = (qs) => qs.map(q => ({ ...q, options: q.mix ? shuffle(q.options) : q.options }));
 const loadBest = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
 const starsOf = (r) => r.failed ? 0 : r.correct / r.total >= 0.9 ? 3 : r.correct / r.total >= 0.7 ? 2 : 1;
@@ -232,15 +235,21 @@ function Blanked({ text, fill }) {
   return <>{a}<span className="gap">{fill || ' '}</span>{b}</>;
 }
 
-function Choice({ q, done, onSubmit }) {
+// 힌트 켜면 덩어리마다 네모칸
+function Sent({ text, fill, hint }) {
+  if (!hint) return <Blanked text={plain(text)} fill={fill} />;
+  return text.split(' / ').map((c, i) => <span key={i} className="box"><Blanked text={c} fill={fill} /></span>);
+}
+
+function Choice({ q, done, onSubmit, hint }) {
   const [pick, setPick] = useState(null);
   const tap = (o) => { if (done) return; setPick(o); onSubmit(o === q.answer); };
   return (
     <>
       <div className="q">
         {q.tag && <span className="tag">{q.tag}</span>}
-        {q.sub ? q.q : <Blanked text={q.q} fill={done ? q.answer : ''} />}
-        {q.sub && <p className="sub"><span className="tag">3형식으로 바꾸면?</span><Blanked text={q.sub} fill={done ? q.answer : ''} /></p>}
+        <Sent text={q.q} fill={done ? q.answer : ''} hint={hint} />
+        {q.sub && <p className="sub"><span className="tag">3형식으로 바꾸면?</span><Sent text={q.sub} fill={done ? q.answer : ''} hint={hint} /></p>}
       </div>
       <div className="opts">
         {q.options.map(o => (
@@ -328,7 +337,7 @@ function Boss({ q, done, onSubmit }) {
 const VIEWS = { choice: Choice, build: Build, boss: Boss };
 
 // ── 게임 진행 ───────────────────────────────────────────────
-function Play({ stage, qs, vs, onEnd, onQuit }) {
+function Play({ stage, qs, vs, onEnd, onQuit, hint, onHint }) {
   const [idx, setIdx] = useState(0);
   const [hearts, setHearts] = useState(3);
   const [scores, setScores] = useState([0, 0]);
@@ -380,6 +389,7 @@ function Play({ stage, qs, vs, onEnd, onQuit }) {
             <span className="pill">{'❤️'.repeat(Math.max(hearts, 0))}{'🤍'.repeat(3 - Math.max(hearts, 0))}</span>
             <span className="pill">⭐ {scores[0]}{combo[0] >= 3 ? ` 🔥${combo[0]}` : ''}</span>
           </>}
+          {q.kind === 'choice' && <button className={'quit' + (hint ? ' hint-on' : '')} onClick={onHint}>💡 힌트 {hint ? 'ON' : 'OFF'}</button>}
           <button className="quit" onClick={() => { if (confirm('그만할까요?')) onQuit(); }}>✕</button>
         </div>
         <div className="bar"><i style={{ width: `${((idx + (fb ? 1 : 0)) / qs.length) * 100}%` }} /></div>
@@ -387,7 +397,7 @@ function Play({ stage, qs, vs, onEnd, onQuit }) {
       <main>
         {vs && <div style={{ textAlign: 'center', fontSize: 22, fontWeight: 900, marginBottom: 10 }}>{PLAYERS[p]} 차례!</div>}
         <div className={'card' + (fb ? (fb.ok ? ' pop' : ' shake') : '')}>
-          <View key={idx} q={q} done={!!fb} onSubmit={submit} />
+          <View key={idx} q={q} done={!!fb} onSubmit={submit} hint={hint} />
         </div>
       </main>
       {fb && (
@@ -422,7 +432,7 @@ function Result({ stage, res, vs, onRetryWrong, onRetry, onMap }) {
         {res.wrong.length > 0 && (
           <div className="wrong-list">
             <b>틀린 문제</b>
-            {res.wrong.map((q, i) => <div key={i}>{q.kind === 'build' ? q.ko : q.kind === 'boss' ? q.chunks.join(' / ') : q.sub || q.q} → <b>{q.answer}</b></div>)}
+            {res.wrong.map((q, i) => <div key={i}>{q.kind === 'build' ? q.ko : q.kind === 'boss' ? q.chunks.join(' / ') : plain(q.sub || q.q)} → <b>{q.answer}</b></div>)}
           </div>
         )}
       </div>
@@ -443,8 +453,10 @@ function App() {
   const [res, setRes] = useState(null);
   const [best, setBest] = useState(loadBest);
   const [run, setRun] = useState(0);
+  const [hint, setHint] = useState(() => { try { return localStorage.getItem(KEY + '-hint') === '1'; } catch (e) { return false; } });
 
   useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(best)); } catch (e) {} }, [best]);
+  useEffect(() => { try { localStorage.setItem(KEY + '-hint', hint ? '1' : '0'); } catch (e) {} }, [hint]);
   useEffect(() => { window.scrollTo(0, 0); }, [screen]);
 
   const start = (s, list) => {
@@ -491,7 +503,8 @@ function App() {
     </main>
   );
 
-  if (screen === 'play') return <Play key={run} stage={stage} qs={qs} vs={vs} onEnd={end} onQuit={() => setScreen('map')} />;
+  if (screen === 'play') return <Play key={run} stage={stage} qs={qs} vs={vs} onEnd={end} onQuit={() => setScreen('map')}
+    hint={hint} onHint={() => setHint(h => !h)} />;
 
   return <Result stage={stage} res={res} vs={vs}
     onRetryWrong={() => start(stage, res.wrong)} onRetry={() => start(stage)} onMap={() => setScreen('map')} />;
