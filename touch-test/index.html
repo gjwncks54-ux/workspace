@@ -17,7 +17,7 @@
   input { font: inherit; }
 
   .top { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); padding: 10px 16px; }
-  .top h1 { margin: 0 0 8px; font-size: 20px; }
+  .top h1 { margin: 0 0 8px; font-size: 20px; -webkit-touch-callout: none; }
   .nav { display: flex; gap: 6px; flex-wrap: wrap; }
   .nav button { min-width: 48px; height: 48px; border-radius: 12px; border: 2px solid var(--line); background: #fff; font-weight: 700; }
   .nav button.done { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
@@ -94,7 +94,7 @@
 <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
 <script type="text/babel" data-presets="react">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 const KEY = 'grammar-test-1';
 
 // ── 보기(오답 포함) ──────────────────────────────────────────
@@ -472,15 +472,16 @@ function summary(A) {
   ];
 }
 
-function Summary({ A, setName, reset }) {
+function Summary({ A, setName, reset, back }) {
   const S = summary(A);
   return (
     <>
       <div className="card">
-        <p className="qtitle">답안 확인</p>
+        <p className="qtitle">답안 확인 (선생님용)</p>
         <input className="name" placeholder="이름 (선생님이 입력)" value={A.name || ''} onChange={e => setName(e.target.value)} />
         <div className="btns noprint">
           <button onClick={() => window.print()}>🖨 인쇄 / PDF 저장</button>
+          <button onClick={back}>문제 화면으로</button>
           <button onClick={reset}>처음부터 다시</button>
         </div>
       </div>
@@ -503,32 +504,59 @@ function App() {
   useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(A)); } catch (e) {} }, [A]);
   useEffect(() => { window.scrollTo(0, 0); }, [step]);
 
-  const last = QS.length; // 요약 화면
+  const [teacher, setTeacher] = useState(false);
+  const last = QS.length - 1;
   const Q = QS[step];
-  const reset = () => { if (confirm('모든 답을 지울까요?')) { setA({}); setStep(0); } };
+  const reset = () => { if (confirm('모든 답을 지울까요?')) { setA({}); setStep(0); setTeacher(false); } };
+  const submit = () => { if (confirm('제출할까요? 제출하면 답을 고칠 수 없어요.')) setA(p => ({ ...p, submitted: true })); };
+
+  // 선생님용 답안 화면: 제목을 2초 꾹 누르기
+  const timer = useRef();
+  const pressStart = () => { timer.current = setTimeout(() => setTeacher(true), 2000); };
+  const pressEnd = () => clearTimeout(timer.current);
+  const title = <h1 onPointerDown={pressStart} onPointerUp={pressEnd} onPointerLeave={pressEnd}>Grammar Test 1</h1>;
+
+  if (teacher) return (
+    <>
+      <div className="top">{title}</div>
+      <main>
+        <Summary A={A} setName={name => setA(p => ({ ...p, name }))} reset={reset}
+          back={() => { setA(p => ({ ...p, submitted: false })); setTeacher(false); }} />
+      </main>
+    </>
+  );
+
+  if (A.submitted) return (
+    <>
+      <div className="top">{title}</div>
+      <main>
+        <div className="card" style={{ textAlign: 'center', padding: '48px 18px' }}>
+          <p className="qtitle" style={{ fontSize: 26 }}>제출 완료! 👏</p>
+          <p className="hint" style={{ fontSize: 19 }}>수고했어요. 선생님께 태블릿을 전해 주세요.</p>
+        </div>
+      </main>
+    </>
+  );
 
   return (
     <>
       <div className="top">
-        <h1>Grammar Test 1</h1>
+        {title}
         <div className="nav">
           {QS.map((_, i) => (
             <button key={i} className={(i === step ? 'cur ' : '') + (hasAny(A['q' + (i + 1)]) ? 'done' : '')}
               onClick={() => setStep(i)}>{i + 1}</button>
           ))}
-          <button className={step === last ? 'cur' : ''} onClick={() => setStep(last)}>✓ 확인</button>
         </div>
       </div>
       <main>
-        {step < last
-          ? <Q a={A['q' + (step + 1)]} set={v => setA(p => ({ ...p, ['q' + (step + 1)]: v }))} />
-          : <Summary A={A} setName={name => setA(p => ({ ...p, name }))} reset={reset} />}
+        <Q a={A['q' + (step + 1)]} set={v => setA(p => ({ ...p, ['q' + (step + 1)]: v }))} />
       </main>
       <div className="foot">
         <button disabled={step === 0} onClick={() => setStep(step - 1)}>◀ 이전</button>
-        <button className="primary" disabled={step === last} onClick={() => setStep(step + 1)}>
-          {step === last - 1 ? '답안 확인 ▶' : '다음 ▶'}
-        </button>
+        {step < last
+          ? <button className="primary" onClick={() => setStep(step + 1)}>다음 ▶</button>
+          : <button className="primary" onClick={submit}>제출 ✔</button>}
       </div>
     </>
   );
