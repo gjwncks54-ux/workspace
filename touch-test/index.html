@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Grammar Test 1</title>
+<style>
+  :root {
+    --bg: #f4f6fb; --card: #fff; --ink: #1d2433; --muted: #6b7280; --line: #d9dee8;
+    --accent: #2f6fed; --accent-soft: #e6eefe; --ok: #1f9d55; --ok-soft: #e3f6ec; --warn: #c2410c;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    font-size: 18px; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+  input { font: inherit; }
+
+  .top { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); padding: 10px 16px; }
+  .top h1 { margin: 0 0 8px; font-size: 20px; }
+  .nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav button { min-width: 48px; height: 48px; border-radius: 12px; border: 2px solid var(--line); background: #fff; font-weight: 700; }
+  .nav button.done { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .nav button.cur { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 16px 16px 120px; }
+  .card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .qtitle { font-size: 21px; font-weight: 700; line-height: 1.5; margin: 0 0 6px; }
+  .hint { color: var(--muted); font-size: 16px; margin: 0 0 12px; line-height: 1.5; }
+  .label { font-weight: 700; margin: 14px 0 8px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips.wide { flex-direction: column; }
+  .chip { min-height: 50px; padding: 10px 16px; border-radius: 14px; border: 2px solid var(--line); background: #fff; text-align: left; }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+  .chip:disabled { opacity: .35; }
+
+  .row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+  .row:first-of-type { border-top: 0; }
+  .row .k { font-weight: 700; }
+  .row .v { display: flex; flex-direction: column; gap: 8px; }
+  .slot { min-height: 52px; width: 100%; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--accent); background: var(--accent-soft); text-align: left; font-weight: 600; }
+  .slot.empty { border-style: dashed; border-color: var(--line); background: #fafbfd; color: var(--muted); font-weight: 400; }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+
+  .blanks { line-height: 2.2; font-size: 19px; }
+  .blank { display: inline-block; min-width: 90px; padding: 0 10px; border-bottom: 3px solid var(--accent); text-align: center; font-weight: 700; color: var(--accent); }
+
+  .builder { border: 2px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 8px; }
+  .built { min-height: 60px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px; margin-bottom: 10px; background: #fafbfd; border-radius: 10px; border: 2px dashed var(--line); }
+  .placed { min-height: 46px; padding: 8px 14px; border-radius: 10px; border: 2px solid var(--ok); background: var(--ok-soft); font-weight: 700; }
+  .btns { display: flex; gap: 8px; margin-top: 10px; }
+  .btns button { min-height: 48px; padding: 8px 16px; border-radius: 12px; border: 2px solid var(--line); background: #fff; }
+
+  .parse { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 4px; padding: 6px 0 4px; }
+  .chunk { display: flex; flex-direction: column; gap: 6px; max-width: 100%; }
+  .chunk-words { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px; border-radius: 10px; background: #f1f4fa; }
+  .pw { min-height: 48px; padding: 6px 8px; border: 0; background: transparent; border-radius: 8px; font-size: 20px; }
+  .pw:active { background: var(--accent-soft); }
+  .slash { font-size: 30px; font-weight: 800; color: var(--warn); padding: 6px 2px 0; }
+  .lab { min-height: 44px; border-radius: 10px; border: 2px dashed var(--line); background: #fff; color: var(--muted); font-size: 16px; }
+  .lab.on { border: 2px solid var(--accent); background: var(--accent); color: #fff; font-weight: 700; }
+
+  .foot { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--card); border-top: 1px solid var(--line); padding: 10px 16px; display: flex; gap: 10px; }
+  .foot button { flex: 1; height: 64px; border-radius: 16px; border: 2px solid var(--line); background: #fff; font-size: 20px; font-weight: 700; }
+  .foot button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .foot button:disabled { opacity: .35; }
+
+  .backdrop { position: fixed; inset: 0; z-index: 10; background: rgba(15,20,30,.45); display: flex; align-items: flex-end; justify-content: center; }
+  .sheet { width: 100%; max-width: 900px; max-height: 82vh; display: flex; flex-direction: column; background: var(--card); border-radius: 20px 20px 0 0; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .sheet-head b { font-size: 19px; }
+  .sheet-head .done { min-width: 110px; height: 52px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 700; }
+  .sheet-body { padding: 16px; overflow-y: auto; }
+
+  .sum h3 { margin: 0 0 8px; }
+  .sum .line { padding: 4px 0; line-height: 1.6; }
+  .sum .none { color: var(--warn); }
+  .name { width: 100%; height: 52px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--line); -webkit-user-select: text; user-select: text; }
+
+  @media print {
+    body { background: #fff; font-size: 13px; }
+    .top, .foot, .noprint { display: none !important; }
+    main { padding: 0; }
+    .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+const KEY = 'grammar-test-1';
+
+// ── 보기(오답 포함) ──────────────────────────────────────────
+const POS = ['명사', '동사', '전치사', '형용사', '관사', '대명사', '감탄사', '부사', '조동사', '접속사'];
+
+const Q1_POS = ['동명사', '명사', '전치사', '형용사', '관사', '대명사', '감탄사', 'to부정사', '부사', '조동사', '접속사', '동사', '분사', '관계사'];
+const Q1_DESC = [
+  '명사 앞에서 시간·장소·방향을 나타내는 말',
+  '사람·사물·개념의 이름을 나타내는 말',
+  '동작의 대상이 되는 말',
+  '주어의 동작이나 상태를 나타내는 말',
+  '명사만 꾸며 주는 말',
+  '단어와 단어, 문장과 문장을 이어 주는 말',
+  '명사를 대신해서 쓰는 말',
+  '동사 앞에서 가능·의무·추측의 의미를 더하는 말',
+  '명사를 꾸미거나 보충 설명하는 말',
+  '기쁨·놀람 같은 감정을 나타내는 말',
+  '주어나 목적어를 보충 설명하는 말',
+  '동사·형용사·다른 부사·문장 전체를 꾸며 주는 말',
+  '명사 앞에 붙어 정해진 것인지 아닌지를 나타내는 말',
+  '동사만 꾸며 주는 말',
+];
+
+const Q2_STRUCT = ['S + V + O', 'S + O + V', 'S + V', 'S + V + C + O', 'S + V + I.O + D.O', 'V + S + O',
+  'S + V + C', 'S + V + D.O + I.O', 'S + V + O + O.C', 'S + C + V', 'S + V + M + O', 'S + V + O + C + O'];
+const Q2_EX = [
+  'She looks happily.', 'I love music.', 'They call him Tom.', 'He explained me the problem.',
+  'Birds fly.', 'She gave me a pen.', 'He gave a pen to me.', 'The baby is sleep.',
+  'He became a doctor.', 'I found the movie boring.', 'They call Tom him.', 'The sun rises in the east.',
+  'My mom made me a cake.', 'I gave to him a book.', 'She looks happy.',
+];
+
+const Q5_POOL = ['자동사', '타동사', '조동사', '본동사', '규칙동사', '불규칙동사', '연결동사', '상태동사', '목적어', '보어', '주어', '수식어'];
+
+const Q6_SETS = [
+  { ko: '나는 그에게 책을 주었다.',
+    tiles: ['gave', 'him', 'a', 'to', 'I', 'book', 'for', 'me', 'his', 'the', 'give', 'he', 'of', 'books', 'given', 'my', '.'] },
+  { ko: 'Jane은 Mike를 위해 케이크를 만들었다.',
+    tiles: ['made', 'Jane', 'cake', 'for', 'a', 'Mike', 'to', 'make', 'the', "Mike's", 'him', 'of', 'cakes', 'with', 'making', '.'] },
+];
+
+const Q7_ROWS = ['지각동사', '사역동사', '준사역동사'];
+const Q7_VERBS = ['want', 'see', 'make', 'expect', 'help', 'tell', 'watch', 'have', 'order', 'hear', 'let', 'allow',
+  'feel', 'get', 'advise', 'notice', 'force', 'smell', 'keep', 'ask', 'cause', 'listen to', 'persuade',
+  'look at', 'encourage', 'find', 'enable', 'become'];
+
+const Q8_ROWS = [
+  { id: 'r1', k: '1) want / ask / tell / allow' },
+  { id: 'r2', k: '2) 지각동사' },
+  { id: 'r3', k: '3) 사역동사' },
+  { id: 'r4', k: '4-1) 준사역동사', verb: true },
+  { id: 'r5', k: '4-2) 준사역동사', verb: true },
+];
+const Q8_FORMS = ['V-ed (과거형)', 'to V (to부정사)', '형용사', 'being p.p.', '동사원형', 'to V-ing', 'that절',
+  'p.p. (과거분사)', 'for + 목적격', 'V-ing (현재분사)', 'to have p.p.', '부사'];
+const Q8_VERBS = ['have', 'help', 'see', 'let', 'want', 'get', 'make', 'keep'];
+
+const Q9_SENT = [
+  'The highest lake with islands is Orba Co in Tibet.',
+  'In some communities, music and performance have successfully transformed whole neighborhoods as profoundly as The Guggenheim Museum did in Bilbao.',
+  'Baseball, like traditional life, proceeds according to the rhythm of nature, specifically the rotation of the Earth.',
+  'The students wrote a more positive description when the recipient liked the person.',
+];
+const ROLES = ['S 주어', 'V 동사', 'O 목적어', 'I.O 간접목적어', 'D.O 직접목적어', 'C 보어', 'O.C 목적격보어', 'M 수식어'];
+const FORMS = ['1형식', '2형식', '3형식', '4형식', '5형식'];
+
+// ── 공통 ────────────────────────────────────────────────────
+const hasAny = (x) => Array.isArray(x) ? x.length > 0
+  : x && typeof x === 'object' ? Object.values(x).some(hasAny) : !!x;
+const joinWords = (ws = []) => ws.join(' ').replace(/ \./g, '.');
+const chunksOf = (n, cuts) => {
+  const out = []; let s = 0;
+  [...cuts].sort((a, b) => a - b).forEach(c => { out.push([s, c]); s = c + 1; });
+  out.push([s, n - 1]);
+  return out;
+};
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+}
+
+function Chips({ options, value, onChange, multi, max, wide }) {
+  const sel = multi ? (value || []) : value;
+  const tap = (o) => {
+    if (multi) {
+      if (sel.includes(o)) onChange(sel.filter(x => x !== o));
+      else if (!max || sel.length < max) onChange([...sel, o]);
+    } else onChange(sel === o ? '' : o);
+  };
+  return (
+    <div className={'chips' + (wide ? ' wide' : '')}>
+      {options.map(o => {
+        const on = multi ? sel.includes(o) : sel === o;
+        return <button key={o} className={'chip' + (on ? ' on' : '')} onClick={() => tap(o)}>{o}</button>;
+      })}
+    </div>
+  );
+}
+
+function Sheet({ title, onClose, children }) {
+  return (
+    <div className="backdrop" onClick={onClose}>
+      <div className="sheet" onClick={e => e.stopPropagation()}>
+        <div className="sheet-head"><b>{title}</b><button className="done" onClick={onClose}>완료</button></div>
+        <div className="sheet-body">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+// 탭하면 보기 창이 뜨는 칸
+function Picker({ title, options, value, onChange, multi, max, wide, placeholder = '탭해서 고르기' }) {
+  const [open, setOpen] = useState(false);
+  const empty = !hasAny(value);
+  return (
+    <>
+      <button className={'slot' + (empty ? ' empty' : '')} onClick={() => setOpen(true)}>
+        {empty ? placeholder : (multi ? value.join(', ') : value)}
+      </button>
+      {open && (
+        <Sheet title={title} onClose={() => setOpen(false)}>
+          <Chips options={options} value={value} multi={multi} max={max} wide={wide}
+            onChange={v => { onChange(v); if (!multi) setOpen(false); }} />
+        </Sheet>
+      )}
+    </>
+  );
+}
+
+// 단어 타일을 탭해서 문장 만들기
+function Builder({ tiles, value = [], onChange }) {
+  return (
+    <div className="builder">
+      <div className="built">
+        {value.length
+          ? value.map((w, i) => <button key={i} className="placed" onClick={() => onChange(value.filter((_, j) => j !== i))}>{w}</button>)
+          : <span className="hint" style={{ margin: 0 }}>아래 단어를 순서대로 탭하세요</span>}
+      </div>
+      <div className="chips">
+        {tiles.map(t => <button key={t} className="chip" onClick={() => onChange([...value, t])}>{t}</button>)}
+      </div>
+      <div className="btns">
+        <button onClick={() => onChange(value.slice(0, -1))}>⌫ 하나 지우기</button>
+        <button onClick={() => onChange([])}>전체 지우기</button>
+      </div>
+    </div>
+  );
+}
+
+// 끊어읽기 + 성분 표시
+function Parser({ text, value, onChange }) {
+  const words = text.split(' ');
+  const v = { cuts: [], labels: {}, form: '', ...value };
+  const [labelAt, setLabelAt] = useState(null);
+  const chunks = chunksOf(words.length, v.cuts);
+
+  const toggle = (i) => {
+    if (i === words.length - 1) return;
+    const cuts = v.cuts.includes(i) ? v.cuts.filter(x => x !== i) : [...v.cuts, i];
+    const starts = chunksOf(words.length, cuts).map(c => String(c[0]));
+    const labels = Object.fromEntries(Object.entries(v.labels).filter(([k]) => starts.includes(k)));
+    onChange({ ...v, cuts, labels });
+  };
+  const setLabel = (s, role) => {
+    const labels = { ...v.labels };
+    if (role) labels[s] = role; else delete labels[s];
+    onChange({ ...v, labels });
+    setLabelAt(null);
+  };
+
+  return (
+    <div>
+      <div className="parse">
+        {chunks.map(([s, e], ci) => (
+          <React.Fragment key={s}>
+            {ci > 0 && <span className="slash">/</span>}
+            <div className="chunk">
+              <div className="chunk-words">
+                {words.slice(s, e + 1).map((w, k) => <button key={k} className="pw" onClick={() => toggle(s + k)}>{w}</button>)}
+              </div>
+              <button className={'lab' + (v.labels[s] ? ' on' : '')} onClick={() => setLabelAt(s)}>{v.labels[s] || '＋ 성분'}</button>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="label">문장의 형식</div>
+      <Chips options={FORMS} value={v.form} onChange={form => onChange({ ...v, form })} />
+      {labelAt !== null && (
+        <Sheet title={'"' + words.slice(labelAt, chunks.find(c => c[0] === labelAt)[1] + 1).join(' ') + '"'} onClose={() => setLabelAt(null)}>
+          <Chips options={ROLES} value={v.labels[labelAt] || ''} onChange={r => setLabel(labelAt, r)} />
+          <div className="btns"><button onClick={() => setLabel(labelAt, '')}>성분 지우기</button></div>
+        </Sheet>
+      )}
+    </div>
+  );
+}
+
+// ── 문항 ────────────────────────────────────────────────────
+function Q1({ a = {}, set }) {
+  const pos = a.pos || [], desc = a.desc || {};
+  return (
+    <div className="card">
+      <p className="qtitle">1. 영어의 모든 품사에 대해 쓰고 간략히 설명하라. (전치사, 감탄사, 접속사 제외)</p>
+      <p className="hint">① 품사를 모두 고르세요. ② 고른 품사마다 설명을 고르세요.</p>
+      <Chips options={Q1_POS} value={pos} multi onChange={p => set({ ...a, pos: p })} />
+      {pos.length > 0 && <div className="label">설명</div>}
+      {pos.map(p => (
+        <div className="row" key={p}>
+          <div className="k">{p}</div>
+          <Picker title={p + ' 설명'} options={Q1_DESC} wide value={desc[p] || ''}
+            onChange={d => set({ ...a, desc: { ...desc, [p]: d } })} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q2({ a = {}, set }) {
+  const st = a.struct || {}, ex = a.ex || {};
+  return (
+    <div className="card">
+      <p className="qtitle">2. 문장의 5형식을 서술하고 각 형식에 맞는 예문을 만들어라.</p>
+      {[1, 2, 3, 4, 5].map(n => (
+        <div className="row" key={n}>
+          <div className="k">{n}형식</div>
+          <div className="v">
+            <Picker title={n + '형식 구조'} options={Q2_STRUCT} value={st[n] || ''} placeholder="구조 고르기"
+              onChange={v => set({ ...a, struct: { ...st, [n]: v } })} />
+            <Picker title={n + '형식 예문'} options={Q2_EX} wide value={ex[n] || ''} placeholder="예문 고르기"
+              onChange={v => set({ ...a, ex: { ...ex, [n]: v } })} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q3({ a = {}, set }) {
+  return (
+    <div className="card">
+      <p className="qtitle">3. 아래 문장에서의 역할을 수행할 수 있는 품사를 모두 써라.</p>
+      {['주어', '동사', '목적어', '보어'].map(r => (
+        <div key={r}>
+          <div className="label">{r}</div>
+          <Chips options={POS} value={a[r] || []} multi onChange={v => set({ ...a, [r]: v })} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q4({ a = [], set }) {
+  return (
+    <div className="card">
+      <p className="qtitle">4. 보어의 역할을 할 수 있는 단어를 3가지 쓰시오.</p>
+      <p className="hint">3개까지 고를 수 있어요. ({a.length}/3)</p>
+      <Chips options={POS} value={a} multi max={3} onChange={set} />
+    </div>
+  );
+}
+
+function Q5({ a = {}, set }) {
+  const b = (k) => <span className="blank">{a[k] || `(${k})`}</span>;
+  return (
+    <div className="card">
+      <p className="qtitle">5. 빈칸에 알맞은 말을 쓰시오.</p>
+      <p className="blanks">동사는 크게 {b('A')} 와 {b('B')} 로 구분할 수 있으며 {b('A')} 와 {b('B')} 는 {b('C')} 의 유무 차이이다.</p>
+      {['A', 'B', 'C'].map(k => (
+        <div className="row" key={k}>
+          <div className="k">{k}</div>
+          <Picker title={'빈칸 ' + k} options={Q5_POOL} value={a[k] || ''} onChange={v => set({ ...a, [k]: v })} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q6({ a = {}, set }) {
+  return (
+    <div className="card">
+      <p className="qtitle">6. 아래 문장을 3형식과 4형식으로 영작하시오.</p>
+      <p className="hint">단어를 순서대로 탭하세요. 위에 놓인 단어를 탭하면 빠져요. (같은 단어 여러 번 사용 가능)</p>
+      {Q6_SETS.map((s, i) => (
+        <div key={i}>
+          <div className="label" style={{ fontSize: 20 }}>{i + 1}. {s.ko}</div>
+          {[3, 4].map(f => {
+            const k = `s${i + 1}_${f}`;
+            return (
+              <div key={k}>
+                <div className="label">{f}형식</div>
+                <Builder tiles={s.tiles} value={a[k]} onChange={v => set({ ...a, [k]: v })} />
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q7({ a = {}, set }) {
+  return (
+    <div className="card">
+      <p className="qtitle">7. 다음 동사의 유형에 해당하는 동사들을 모두(혹은 3개 이상) 쓰시오.</p>
+      {Q7_ROWS.map((r, i) => (
+        <div className="row" key={r}>
+          <div className="k">{i + 1}) {r}</div>
+          <Picker title={r} options={Q7_VERBS} multi value={a[r] || []} onChange={v => set({ ...a, [r]: v })} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q8({ a = {}, set }) {
+  return (
+    <div className="card">
+      <p className="qtitle">8. 아래 동사의 유형이 문장의 본동사로 쓰일 때, 목적격 보어의 형태를 모두 쓰시오.</p>
+      {Q8_ROWS.map(r => (
+        <div className="row" key={r.id}>
+          <div className="k">{r.k}</div>
+          <div className="v">
+            {r.verb && <Picker title={r.k + ' 동사'} options={Q8_VERBS} value={a[r.id + 'v'] || ''} placeholder="동사 고르기"
+              onChange={v => set({ ...a, [r.id + 'v']: v })} />}
+            <Picker title={r.k + ' 목적격 보어'} options={Q8_FORMS} multi value={a[r.id] || []} placeholder="형태 고르기"
+              onChange={v => set({ ...a, [r.id]: v })} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Q9({ a = [], set }) {
+  return (
+    <>
+      <div className="card">
+        <p className="qtitle">9. 아래의 문장을 끊어읽기 하여 문장에서의 역할(주어/동사/목적어/보어)을 찾아 쓰고 문장의 형식을 구분하라.</p>
+        <p className="hint">• 단어를 탭하면 그 뒤에 <b style={{ color: 'var(--warn)' }}>/</b> 가 생겨요. 다시 탭하면 없어져요.<br />• 덩어리 아래 <b>＋ 성분</b>을 탭해서 역할을 고르세요.</p>
+      </div>
+      {Q9_SENT.map((t, i) => (
+        <div className="card" key={i}>
+          <div className="label" style={{ marginTop: 0 }}>{i + 1}.</div>
+          <Parser text={t} value={a[i]} onChange={v => { const n = [...a]; n[i] = v; set(n); }} />
+        </div>
+      ))}
+    </>
+  );
+}
+
+const QS = [Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9];
+
+// ── 답안 요약 (인쇄용) ──────────────────────────────────────
+function summary(A) {
+  const d = (x) => (x && x.length ? (Array.isArray(x) ? x.join(', ') : x) : null);
+  const a1 = A.q1 || {}, a2 = A.q2 || {}, a3 = A.q3 || {}, a5 = A.q5 || {}, a6 = A.q6 || {}, a7 = A.q7 || {}, a8 = A.q8 || {};
+  return [
+    (a1.pos || []).map(p => [p, d((a1.desc || {})[p])]),
+    [1, 2, 3, 4, 5].map(n => [n + '형식', d((a2.struct || {})[n]) && d((a2.ex || {})[n])
+      ? `${a2.struct[n]}  |  ${a2.ex[n]}` : [d((a2.struct || {})[n]), d((a2.ex || {})[n])].filter(Boolean).join('  |  ') || null]),
+    ['주어', '동사', '목적어', '보어'].map(r => [r, d(a3[r])]),
+    [['답', d(A.q4)]],
+    ['A', 'B', 'C'].map(k => [k, d(a5[k])]),
+    ['s1_3', 's1_4', 's2_3', 's2_4'].map(k => [`${k[1]}. ${k[3]}형식`, a6[k] && a6[k].length ? joinWords(a6[k]) : null]),
+    Q7_ROWS.map(r => [r, d(a7[r])]),
+    Q8_ROWS.map(r => [r.k + (r.verb && a8[r.id + 'v'] ? ` (${a8[r.id + 'v']})` : ''), d(a8[r.id])]),
+    Q9_SENT.map((t, i) => {
+      const v = (A.q9 || [])[i];
+      if (!v) return [i + 1 + '.', null];
+      const w = t.split(' ');
+      const parts = chunksOf(w.length, v.cuts || []).map(([s, e]) =>
+        w.slice(s, e + 1).join(' ') + ((v.labels || {})[s] ? ` [${v.labels[s].split(' ')[0]}]` : ''));
+      return [i + 1 + '.', parts.join(' / ') + `  →  ${v.form || '형식 미선택'}`];
+    }),
+  ];
+}
+
+function Summary({ A, setName, reset }) {
+  const S = summary(A);
+  return (
+    <>
+      <div className="card">
+        <p className="qtitle">답안 확인</p>
+        <input className="name" placeholder="이름 (선생님이 입력)" value={A.name || ''} onChange={e => setName(e.target.value)} />
+        <div className="btns noprint">
+          <button onClick={() => window.print()}>🖨 인쇄 / PDF 저장</button>
+          <button onClick={reset}>처음부터 다시</button>
+        </div>
+      </div>
+      {S.map((lines, i) => (
+        <div className="card sum" key={i}>
+          <h3>{i + 1}번</h3>
+          {lines.length === 0 && <div className="line none">미응답</div>}
+          {lines.map(([k, v], j) => (
+            <div className="line" key={j}><b>{k}</b> : {v || <span className="none">미응답</span>}</div>
+          ))}
+        </div>
+      ))}
+    </>
+  );
+}
+
+function App() {
+  const [A, setA] = useState(load);
+  const [step, setStep] = useState(0);
+  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(A)); } catch (e) {} }, [A]);
+  useEffect(() => { window.scrollTo(0, 0); }, [step]);
+
+  const last = QS.length; // 요약 화면
+  const Q = QS[step];
+  const reset = () => { if (confirm('모든 답을 지울까요?')) { setA({}); setStep(0); } };
+
+  return (
+    <>
+      <div className="top">
+        <h1>Grammar Test 1</h1>
+        <div className="nav">
+          {QS.map((_, i) => (
+            <button key={i} className={(i === step ? 'cur ' : '') + (hasAny(A['q' + (i + 1)]) ? 'done' : '')}
+              onClick={() => setStep(i)}>{i + 1}</button>
+          ))}
+          <button className={step === last ? 'cur' : ''} onClick={() => setStep(last)}>✓ 확인</button>
+        </div>
+      </div>
+      <main>
+        {step < last
+          ? <Q a={A['q' + (step + 1)]} set={v => setA(p => ({ ...p, ['q' + (step + 1)]: v }))} />
+          : <Summary A={A} setName={name => setA(p => ({ ...p, name }))} reset={reset} />}
+      </main>
+      <div className="foot">
+        <button disabled={step === 0} onClick={() => setStep(step - 1)}>◀ 이전</button>
+        <button className="primary" disabled={step === last} onClick={() => setStep(step + 1)}>
+          {step === last - 1 ? '답안 확인 ▶' : '다음 ▶'}
+        </button>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
