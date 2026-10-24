@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>5형식 퀘스트</title>
+<style>
+  :root {
+    --bg: #f3f1fb; --card: #fff; --ink: #1f2140; --muted: #6b6f8a; --line: #dcd8ee;
+    --accent: #6c4cf0; --accent-soft: #ece7ff; --ok: #16a34a; --ok-soft: #dcfce7; --bad: #dc2626; --bad-soft: #fee2e2;
+    --gold: #f5b301;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", -apple-system, sans-serif;
+    font-size: 19px; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+  button:disabled { cursor: default; }
+  main { max-width: 960px; margin: 0 auto; padding: 16px 16px 200px; }
+
+  .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(60,40,140,.08); }
+  .big-title { font-size: 40px; font-weight: 900; text-align: center; margin: 40px 0 6px; }
+  .sub { text-align: center; color: var(--muted); margin: 0 0 30px; }
+  .btn { min-height: 64px; padding: 12px 22px; border-radius: 18px; border: 2px solid var(--line); background: #fff; font-weight: 800; font-size: 20px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mode { padding: 30px 16px; border-radius: 24px; border: 3px solid var(--line); background: #fff; font-size: 24px; font-weight: 900; }
+  .mode small { display: block; margin-top: 8px; font-size: 16px; font-weight: 500; color: var(--muted); }
+  .mode .emo { font-size: 52px; display: block; margin-bottom: 6px; }
+
+  .map { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .stage { text-align: left; padding: 18px; border-radius: 22px; border: 3px solid var(--line); background: #fff; min-height: 130px; }
+  .stage.boss { border-color: var(--gold); background: #fffaeb; }
+  .stage .emo { font-size: 36px; }
+  .stage b { display: block; font-size: 22px; margin: 4px 0; }
+  .stage span { color: var(--muted); font-size: 16px; }
+  .stars { font-size: 22px; margin-top: 6px; letter-spacing: 2px; }
+
+  .hud { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); padding: 10px 16px; }
+  .hud-in { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .hud .name { font-weight: 900; font-size: 20px; }
+  .hud .grow { flex: 1; }
+  .hud .quit { min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--line); background: #fff; }
+  .bar { height: 10px; background: var(--accent-soft); border-radius: 99px; overflow: hidden; margin-top: 8px; max-width: 960px; margin-left: auto; margin-right: auto; }
+  .bar i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+  .pill { padding: 6px 12px; border-radius: 99px; background: var(--accent-soft); font-weight: 800; }
+  .pill.turn { background: var(--accent); color: #fff; }
+
+  .q { font-size: 30px; font-weight: 800; line-height: 1.45; text-align: center; padding: 26px 10px; }
+  .q .tag { display: block; font-size: 16px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .q .sub { margin: 18px 0 0; font-size: 26px; color: var(--ink); }
+  .gap { display: inline-block; min-width: 90px; border-bottom: 4px solid var(--accent); color: var(--accent); }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .opt { min-height: 76px; border-radius: 18px; border: 3px solid var(--line); background: #fff; font-size: 24px; font-weight: 800; }
+  .opt.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .opt.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+
+  .placed-area { min-height: 84px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px; border: 3px dashed var(--line); border-radius: 16px; background: #faf9ff; margin-bottom: 14px; }
+  .placed-area .hint { color: var(--muted); }
+  .tile { min-height: 58px; padding: 8px 18px; border-radius: 14px; border: 3px solid var(--line); background: #fff; font-size: 22px; font-weight: 700; }
+  .tile.in { border-color: var(--accent); background: var(--accent-soft); }
+  .tiles { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ko { text-align: center; font-size: 24px; font-weight: 800; padding: 10px 0 18px; }
+
+  .chunks { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 10px 0 18px; }
+  .ch { display: flex; flex-direction: column; align-items: stretch; gap: 6px; min-width: 90px; padding: 10px 12px; border-radius: 16px; border: 3px solid var(--line); background: #fff; }
+  .ch.sel { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .ch .w { font-size: 22px; font-weight: 700; }
+  .ch .r { min-height: 34px; border-radius: 10px; background: #f1f0f7; color: var(--muted); font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0 8px; }
+  .ch .r.on { background: var(--accent); color: #fff; }
+  .ch.right { border-color: var(--ok); } .ch.right .r { background: var(--ok); color: #fff; }
+  .ch.wrong { border-color: var(--bad); } .ch.wrong .r { background: var(--bad); color: #fff; }
+  .ch .fix { font-size: 15px; color: var(--ok); font-weight: 800; text-align: center; }
+  .palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .palette button { min-height: 64px; border-radius: 14px; border: 3px solid var(--line); background: #fff; font-weight: 900; font-size: 20px; line-height: 1.1; }
+  .palette button small { display: block; font-size: 14px; font-weight: 600; color: var(--muted); }
+  .label { font-weight: 800; margin: 18px 0 8px; }
+  .forms { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .forms button { min-height: 60px; border-radius: 14px; border: 3px solid var(--line); background: #fff; font-weight: 800; }
+  .forms button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .forms button.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .forms button.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+  .check { width: 100%; margin-top: 16px; }
+
+  .fb { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; padding: 16px; border-top: 4px solid; animation: up .2s ease-out; }
+  .fb.ok { background: var(--ok-soft); border-color: var(--ok); }
+  .fb.no { background: var(--bad-soft); border-color: var(--bad); }
+  .fb-in { max-width: 960px; margin: 0 auto; display: flex; gap: 14px; align-items: center; }
+  .fb-text { flex: 1; }
+  .fb-text b { font-size: 26px; display: block; }
+  .fb-text p { margin: 6px 0 0; font-size: 19px; line-height: 1.45; }
+  .fb .btn { min-width: 170px; }
+  @media (max-width: 640px) { .fb-in { flex-direction: column; align-items: stretch; } .modes { grid-template-columns: 1fr; } .palette { grid-template-columns: repeat(2, 1fr); } }
+
+  .pop { animation: pop .35s ease-out; }
+  .shake { animation: shake .4s; }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-10px); } 40%,80% { transform: translateX(10px); } }
+  @keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  .result { text-align: center; padding: 30px 20px; }
+  .result .emo { font-size: 72px; }
+  .result h2 { font-size: 34px; margin: 10px 0; }
+  .result .stars { font-size: 46px; }
+  .wrong-list { text-align: left; margin-top: 18px; }
+  .wrong-list div { padding: 8px 0; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+const KEY = 'five-form-quest';
+const shuffle = (a) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const FORMS = ['1형식', '2형식', '3형식', '4형식', '5형식'];
+const ROLES = [['S', '주어'], ['V', '동사'], ['O', '목적어'], ['I.O', '간접목적어'], ['D.O', '직접목적어'], ['C', '보어'], ['O.C', '목적격보어'], ['M', '수식어']];
+const PLAYERS = ['🧒 학생', '🧑‍🏫 선생님'];
+
+// ── 문제 ────────────────────────────────────────────────────
+// [문장, 형식, 해설]
+const S1 = [
+  ['My little brother cried loudly.', 1, 'S + V. loudly는 꾸며 주는 말(M)이라 형식에 안 들어가요.'],
+  ['The cat is under the table.', 1, 'be동사가 "있다"라는 뜻이면 1형식! under the table은 수식어.'],
+  ['She walked to the park with her friend.', 1, 'to the park, with her friend 모두 수식어 → S + V.'],
+  ['The soup smells good.', 2, 'smell + 형용사(보어) → 2형식.'],
+  ['He got angry.', 2, 'get + 형용사 = "~해지다" → 2형식.'],
+  ['The leaves turned red.', 2, 'turn + 형용사 = "~로 변하다" → 2형식.'],
+  ['We played soccer after school.', 3, 'soccer가 목적어, after school은 수식어 → 3형식.'],
+  ['I want a glass of water.', 3, 'a glass of water가 목적어 → 3형식.'],
+  ['My dad bought me a new bike.', 4, 'me에게(I.O) + a new bike를(D.O) → 4형식.'],
+  ['The teacher showed us a map.', 4, 'us에게 + a map을 → 4형식.'],
+  ['Tom sent his grandma a letter.', 4, 'his grandma에게 + a letter를 → 4형식.'],
+  ['We call our dog Max.', 5, 'our dog = Max (목적어 = 목적격 보어) → 5형식.'],
+  ['The news made everyone sad.', 5, 'everyone이 sad한 상태 → 목적격 보어 → 5형식.'],
+  ['I keep my room clean.', 5, 'my room이 clean한 상태 → 5형식.'],
+];
+// [4형식, 3형식, 정답, 해설]
+const S2 = [
+  ['Mina gave me a candy.', 'Mina gave a candy ___ me.', 'to', 'give → to (건네주는 동사)'],
+  ['Dad cooked us dinner.', 'Dad cooked dinner ___ us.', 'for', 'cook → for (만들어 주는 동사)'],
+  ['Can I ask you a question?', 'Can I ask a question ___ you?', 'of', 'ask → of (딱 외워 두기!)'],
+  ['She sent her friend a card.', 'She sent a card ___ her friend.', 'to', 'send → to'],
+  ['Grandma made me a sweater.', 'Grandma made a sweater ___ me.', 'for', 'make → for'],
+  ['Mr. Kim teaches us English.', 'Mr. Kim teaches English ___ us.', 'to', 'teach → to'],
+  ['He bought his sister a doll.', 'He bought a doll ___ his sister.', 'for', 'buy → for (사 주는 동사)'],
+  ['Show me your notebook.', 'Show your notebook ___ me.', 'to', 'show → to'],
+  ["I'll get you some water.", "I'll get some water ___ you.", 'for', 'get(가져다주다) → for'],
+  ['He lent me his pencil.', 'He lent his pencil ___ me.', 'to', 'lend → to'],
+];
+// [문장, 보기, 정답, 해설]
+const S3 = [
+  ['I saw my friend ___ the ball.', ['kick', 'to kick', 'kicked'], 'kick', '지각동사 see + 목적어 + 동사원형 (V-ing도 OK)'],
+  ['Mom made me ___ my room.', ['clean', 'to clean', 'cleaned'], 'clean', '사역동사 make + 목적어 + 동사원형'],
+  ['The doctor told me ___ my arm.', ['rest', 'to rest', 'rested'], 'to rest', 'tell + 목적어 + to V'],
+  ['My teacher let us ___ home early.', ['go', 'to go', 'went'], 'go', '사역동사 let + 목적어 + 동사원형'],
+  ['I heard someone ___ my name.', ['calling', 'to call', 'calls'], 'calling', '지각동사 hear + 목적어 + V-ing (동사원형도 OK)'],
+  ['My friend helped me ___ my bag.', ['carry', 'carrying', 'carried'], 'carry', 'help + 목적어 + 동사원형 / to V'],
+  ['I want you ___ me.', ['help', 'to help', 'helping'], 'to help', 'want + 목적어 + to V'],
+  ['Dad had his car ___.', ['wash', 'to wash', 'washed'], 'washed', '차는 "씻겨지는" 것 → have + 목적어 + p.p.'],
+  ['I got my brother ___ the dishes.', ['do', 'to do', 'done'], 'to do', 'get + 목적어 + to V (~하게 시키다)'],
+  ['The movie made me ___.', ['sad', 'sadly', 'sadness'], 'sad', '목적격 보어 자리 → 형용사 (me = sad한 상태)'],
+  ['Mom asked me ___ quiet.', ['be', 'to be', 'being'], 'to be', 'ask + 목적어 + to V'],
+  ['I felt the ground ___.', ['shake', 'to shake', 'shaken'], 'shake', '지각동사 feel + 목적어 + 동사원형'],
+];
+// [문장, 맞는 문장?, 해설]
+const S4 = [
+  ['She looks happily.', false, '2형식 보어는 형용사 → She looks happy.'],
+  ['They made me happy.', true, '목적격 보어 = 형용사 happy ⭕'],
+  ['I gave to her a pencil.', false, '4형식은 to 없이 "사람 + 물건" → I gave her a pencil.'],
+  ['The pizza tastes great.', true, 'taste + 형용사 → 2형식 ⭕'],
+  ['He made me to clean the room.', false, '사역동사 make + 동사원형 → made me clean'],
+  ['I want you to come.', true, 'want + 목적어 + to V ⭕'],
+  ['I saw him to dance.', false, '지각동사 see + 동사원형/V-ing → saw him dance'],
+  ['She bought a gift for me.', true, 'buy는 3형식에서 for ⭕'],
+  ['He asked a favor to me.', false, 'ask는 of → asked a favor of me'],
+  ['The music makes me sleepy.', true, '목적격 보어 = 형용사 sleepy ⭕'],
+  ['I heard the baby crying.', true, '지각동사 + V-ing ⭕'],
+  ['This flower smells sweetly.', false, 'smell + 형용사 → smells sweet'],
+  ['Let me to go.', false, 'let + 동사원형 → Let me go.'],
+  ['I found the test easy.', true, 'the test = easy → 5형식 ⭕'],
+];
+// [우리말, 정답 문장, 함정 단어]
+const S5 = [
+  ['의사 선생님이 나에게 깁스를 하게 했다.', 'The doctor made me wear a cast.', ['to', 'wore']],
+  ['친구가 내 가방 드는 것을 도와줬다.', 'My friend helped me carry my bag.', ['carried', 'for']],
+  ['엄마는 내가 축구하는 걸 허락하지 않으셨다.', "Mom didn't let me play soccer.", ['to', 'played']],
+  ['깁스 때문에 내 팔이 무겁다. (깁스가 내 팔을 무겁게 만든다)', 'The cast makes my arm heavy.', ['heavily', 'to']],
+  ['반 친구들이 나에게 카드를 줬다.', 'My classmates gave me a card.', ['to', 'for']],
+  ['네가 내 깁스에 사인해 주면 좋겠어.', 'I want you to sign my cast.', ['signing', 'for']],
+  ['선생님이 우리에게 재밌는 영상을 보여주셨다.', 'The teacher showed us a funny video.', ['to', 'showing']],
+];
+// 보스: 덩어리, 성분, 형식, 해설
+const BOSS = [
+  [['Many people', 'around the world', 'consider', 'soccer', 'the most exciting sport'], ['S', 'M', 'V', 'O', 'O.C'], 5, 'soccer = the most exciting sport → 목적격 보어 → 5형식'],
+  [['The kind nurse', 'in the hospital', 'brought', 'me', 'a warm blanket'], ['S', 'M', 'V', 'I.O', 'D.O'], 4, 'me에게 + a warm blanket을 → 4형식'],
+  [['The old bridge', 'over the river', 'looks', 'dangerous', 'at night'], ['S', 'M', 'V', 'C', 'M'], 2, 'look + 형용사 dangerous(보어) → 2형식'],
+  [['My classmates', 'wrote', 'funny messages', 'on my cast'], ['S', 'V', 'O', 'M'], 3, 'funny messages가 목적어, on my cast는 수식어 → 3형식'],
+];
+
+const STAGES = [
+  { id: 's1', emo: '🗂️', name: '형식 분류', desc: '몇 형식인지 골라요', n: 10,
+    qs: S1.map(([q, f, exp]) => ({ kind: 'choice', q, options: FORMS, answer: f + '형식', exp })) },
+  { id: 's2', emo: '🎯', name: 'to · for · of', desc: '4형식 → 3형식 바꾸기', n: 8,
+    qs: S2.map(([q, sub, answer, exp]) => ({ kind: 'choice', tag: '4형식', q, sub, options: ['to', 'for', 'of'], answer, exp })) },
+  { id: 's3', emo: '🧩', name: '목적격 보어', desc: '빈칸에 알맞은 형태', n: 10,
+    qs: S3.map(([q, options, answer, exp]) => ({ kind: 'choice', q, options, answer, exp, mix: true })) },
+  { id: 's4', emo: '⭕', name: '어법 O / X', desc: '맞는 문장일까?', n: 10,
+    qs: S4.map(([q, ok, exp]) => ({ kind: 'choice', q, options: ['⭕ 맞아요', '❌ 틀려요'], answer: ok ? '⭕ 맞아요' : '❌ 틀려요', exp })) },
+  { id: 's5', emo: '🔨', name: '문장 조립', desc: '단어를 순서대로 탭', n: 5,
+    qs: S5.map(([ko, s, extra]) => ({ kind: 'build', ko, words: s.replace(/\.$/, '').split(' '), extra, answer: s })) },
+  { id: 'boss', emo: '👑', name: '보스: 끊어읽기', desc: '성분 + 형식 찾기', n: 4, boss: true,
+    qs: BOSS.map(([chunks, roles, f, exp]) => ({ kind: 'boss', chunks, roles, answer: f + '형식', exp })) },
+];
+
+const prep = (qs) => qs.map(q => ({ ...q, options: q.mix ? shuffle(q.options) : q.options }));
+const loadBest = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+const starsOf = (r) => r.failed ? 0 : r.correct / r.total >= 0.9 ? 3 : r.correct / r.total >= 0.7 ? 2 : 1;
+const starText = (n) => '⭐'.repeat(n) + '☆'.repeat(3 - n);
+
+// ── 문제 유형별 화면 ────────────────────────────────────────
+function Blanked({ text, fill }) {
+  const [a, b] = text.split('___');
+  if (b === undefined) return text;
+  return <>{a}<span className="gap">{fill || ' '}</span>{b}</>;
+}
+
+function Choice({ q, done, onSubmit }) {
+  const [pick, setPick] = useState(null);
+  const tap = (o) => { if (done) return; setPick(o); onSubmit(o === q.answer); };
+  return (
+    <>
+      <div className="q">
+        {q.tag && <span className="tag">{q.tag}</span>}
+        {q.sub ? q.q : <Blanked text={q.q} fill={done ? q.answer : ''} />}
+        {q.sub && <p className="sub"><span className="tag">3형식으로 바꾸면?</span><Blanked text={q.sub} fill={done ? q.answer : ''} /></p>}
+      </div>
+      <div className="opts">
+        {q.options.map(o => (
+          <button key={o} disabled={done}
+            className={'opt' + (done && o === q.answer ? ' right' : '') + (done && o === pick && o !== q.answer ? ' wrong' : '')}
+            onClick={() => tap(o)}>{o}</button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function Build({ q, done, onSubmit }) {
+  const [tiles] = useState(() => shuffle([...q.words, ...q.extra].map((w, id) => ({ id, w }))));
+  const [placed, setPlaced] = useState([]);
+  const word = (id) => tiles.find(t => t.id === id).w;
+  const check = () => onSubmit(placed.map(word).join(' ') === q.words.join(' '));
+  return (
+    <>
+      <div className="ko">{q.ko}</div>
+      <div className="placed-area">
+        {placed.length
+          ? placed.map(id => <button key={id} className="tile in" disabled={done} onClick={() => setPlaced(placed.filter(x => x !== id))}>{word(id)}</button>)
+          : <span className="hint">단어를 순서대로 탭하세요 (마침표는 자동)</span>}
+        {placed.length > 0 && <b style={{ fontSize: 26 }}>.</b>}
+      </div>
+      <div className="tiles">
+        {tiles.filter(t => !placed.includes(t.id)).map(t => (
+          <button key={t.id} className="tile" disabled={done} onClick={() => setPlaced([...placed, t.id])}>{t.w}</button>
+        ))}
+      </div>
+      {!done && (
+        <div className="btn-row" style={{ marginTop: 16 }}>
+          <button className="btn" onClick={() => setPlaced(placed.slice(0, -1))}>⌫ 하나 빼기</button>
+          <button className="btn primary" disabled={!placed.length} onClick={check}>확인!</button>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Boss({ q, done, onSubmit }) {
+  const [roles, setRoles] = useState(q.chunks.map(() => ''));
+  const [sel, setSel] = useState(0);
+  const [form, setForm] = useState('');
+  const assign = (r) => {
+    const n = [...roles]; n[sel] = r; setRoles(n);
+    const next = n.findIndex(x => !x);
+    if (next >= 0) setSel(next);
+  };
+  const ready = roles.every(Boolean) && form;
+  const check = () => onSubmit(roles.every((r, i) => r === q.roles[i]) && form === q.answer);
+  return (
+    <>
+      <p className="hint" style={{ textAlign: 'center', color: 'var(--muted)', margin: '0 0 4px' }}>덩어리를 탭하고 → 아래에서 성분을 고르세요</p>
+      <div className="chunks">
+        {q.chunks.map((c, i) => {
+          const st = done ? (roles[i] === q.roles[i] ? ' right' : ' wrong') : (i === sel ? ' sel' : '');
+          return (
+            <button key={i} className={'ch' + st} disabled={done} onClick={() => setSel(i)}>
+              <span className="w">{c}</span>
+              <span className={'r' + (roles[i] ? ' on' : '')}>{roles[i] || '?'}</span>
+              {done && roles[i] !== q.roles[i] && <span className="fix">정답 {q.roles[i]}</span>}
+            </button>
+          );
+        })}
+      </div>
+      {!done && (
+        <div className="palette">
+          {ROLES.map(([r, ko]) => <button key={r} onClick={() => assign(r)}>{r}<small>{ko}</small></button>)}
+        </div>
+      )}
+      <div className="label">문장의 형식</div>
+      <div className="forms">
+        {FORMS.map(f => {
+          const cls = done ? (f === q.answer ? 'right' : f === form ? 'wrong' : '') : (f === form ? 'on' : '');
+          return <button key={f} className={cls} disabled={done} onClick={() => setForm(f)}>{f}</button>;
+        })}
+      </div>
+      {!done && <button className="btn primary check" disabled={!ready} onClick={check}>확인!</button>}
+    </>
+  );
+}
+
+const VIEWS = { choice: Choice, build: Build, boss: Boss };
+
+// ── 게임 진행 ───────────────────────────────────────────────
+function Play({ stage, qs, vs, onEnd, onQuit }) {
+  const [idx, setIdx] = useState(0);
+  const [hearts, setHearts] = useState(3);
+  const [scores, setScores] = useState([0, 0]);
+  const [combo, setCombo] = useState([0, 0]);
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState([]);
+  const [fb, setFb] = useState(null);
+  const p = vs ? idx % 2 : 0;
+  const q = qs[idx];
+  const View = VIEWS[q.kind];
+
+  useEffect(() => { window.scrollTo(0, 0); }, [idx]);
+
+  const submit = (ok) => {
+    if (fb) return;
+    const c = [...combo];
+    if (ok) {
+      c[p] += 1;
+      const gain = 10 + (c[p] >= 3 ? 5 : 0);
+      setScores(s => s.map((v, i) => i === p ? v + gain : v));
+      setCorrect(x => x + 1);
+      setFb({ ok, gain, streak: c[p] });
+    } else {
+      c[p] = 0;
+      if (!vs) setHearts(h => h - 1);
+      setWrong(w => [...w, q]);
+      setFb({ ok });
+    }
+    setCombo(c);
+  };
+
+  const out = !vs && hearts <= 0;
+  const last = idx + 1 >= qs.length;
+  const next = () => {
+    if (out || last) onEnd({ scores, correct, total: qs.length, wrong, failed: out });
+    else { setIdx(idx + 1); setFb(null); }
+  };
+
+  return (
+    <>
+      <div className="hud">
+        <div className="hud-in">
+          <span className="name">{stage.emo} {stage.name}</span>
+          <span className="pill">{idx + 1} / {qs.length}</span>
+          <span className="grow" />
+          {vs ? PLAYERS.map((n, i) => (
+            <span key={i} className={'pill' + (i === p ? ' turn' : '')}>{n} {scores[i]}{combo[i] >= 3 ? ' 🔥' : ''}</span>
+          )) : <>
+            <span className="pill">{'❤️'.repeat(Math.max(hearts, 0))}{'🤍'.repeat(3 - Math.max(hearts, 0))}</span>
+            <span className="pill">⭐ {scores[0]}{combo[0] >= 3 ? ` 🔥${combo[0]}` : ''}</span>
+          </>}
+          <button className="quit" onClick={() => { if (confirm('그만할까요?')) onQuit(); }}>✕</button>
+        </div>
+        <div className="bar"><i style={{ width: `${((idx + (fb ? 1 : 0)) / qs.length) * 100}%` }} /></div>
+      </div>
+      <main>
+        {vs && <div style={{ textAlign: 'center', fontSize: 22, fontWeight: 900, marginBottom: 10 }}>{PLAYERS[p]} 차례!</div>}
+        <div className={'card' + (fb ? (fb.ok ? ' pop' : ' shake') : '')}>
+          <View key={idx} q={q} done={!!fb} onSubmit={submit} />
+        </div>
+      </main>
+      {fb && (
+        <div className={'fb ' + (fb.ok ? 'ok' : 'no')}>
+          <div className="fb-in">
+            <div className="fb-text">
+              <b>{fb.ok ? `🎉 정답! +${fb.gain}${fb.streak >= 3 ? `  🔥${fb.streak}연속!` : ''}` : (out ? '💔 하트가 다 떨어졌어요' : '😢 아쉬워요!')}</b>
+              {!fb.ok && q.kind !== 'boss' && <p>정답: <b style={{ display: 'inline', fontSize: 19 }}>{q.answer}</b></p>}
+              <p>{q.exp || ''}</p>
+            </div>
+            <button className="btn primary" onClick={next}>{out || last ? '결과 보기' : '다음 ▶'}</button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Result({ stage, res, vs, onRetryWrong, onRetry, onMap }) {
+  const stars = starsOf(res);
+  const winner = res.scores[0] === res.scores[1] ? null : res.scores[0] > res.scores[1] ? 0 : 1;
+  return (
+    <main>
+      <div className="card result">
+        <div className="emo">{res.failed ? '💔' : vs ? '🏆' : stars === 3 ? '🎉' : '👍'}</div>
+        <h2>{res.failed ? '다시 도전!' : vs ? (winner === null ? '무승부!' : `${PLAYERS[winner]} 승리!`) : `${stage.name} 클리어!`}</h2>
+        <div className="stars">{starText(stars)}</div>
+        <p style={{ fontSize: 22 }}>
+          {res.correct} / {res.total} 정답 &nbsp;·&nbsp;
+          {vs ? PLAYERS.map((n, i) => `${n} ${res.scores[i]}점`).join('  vs  ') : `${res.scores[0]}점`}
+        </p>
+        {res.wrong.length > 0 && (
+          <div className="wrong-list">
+            <b>틀린 문제</b>
+            {res.wrong.map((q, i) => <div key={i}>{q.kind === 'build' ? q.ko : q.kind === 'boss' ? q.chunks.join(' / ') : q.sub || q.q} → <b>{q.answer}</b></div>)}
+          </div>
+        )}
+      </div>
+      <div className="btn-row">
+        {res.wrong.length > 0 && <button className="btn primary" onClick={onRetryWrong}>틀린 문제 다시</button>}
+        <button className="btn" onClick={onRetry}>처음부터 다시</button>
+        <button className="btn" onClick={onMap}>스테이지 목록</button>
+      </div>
+    </main>
+  );
+}
+
+function App() {
+  const [screen, setScreen] = useState('home');
+  const [vs, setVs] = useState(false);
+  const [stage, setStage] = useState(null);
+  const [qs, setQs] = useState([]);
+  const [res, setRes] = useState(null);
+  const [best, setBest] = useState(loadBest);
+  const [run, setRun] = useState(0);
+
+  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(best)); } catch (e) {} }, [best]);
+  useEffect(() => { window.scrollTo(0, 0); }, [screen]);
+
+  const start = (s, list) => {
+    setStage(s); setQs(prep(list || shuffle(s.qs).slice(0, s.n)));
+    setRun(r => r + 1); setScreen('play');
+  };
+  const end = (r) => {
+    setRes(r);
+    if (!vs) setBest(b => ({ ...b, [stage.id]: Math.max(b[stage.id] || 0, starsOf(r)) }));
+    setScreen('result');
+  };
+
+  if (screen === 'home') return (
+    <main>
+      <div className="big-title">⚔️ 5형식 퀘스트</div>
+      <p className="sub">탭 한 번으로 5형식 마스터!</p>
+      <div className="modes">
+        <button className="mode" onClick={() => { setVs(false); setScreen('map'); }}>
+          <span className="emo">🧒</span>혼자 하기<small>하트 3개로 스테이지 클리어</small>
+        </button>
+        <button className="mode" onClick={() => { setVs(true); setScreen('map'); }}>
+          <span className="emo">🧒 🆚 🧑‍🏫</span>선생님과 대결<small>한 문제씩 번갈아 풀기</small>
+        </button>
+      </div>
+    </main>
+  );
+
+  if (screen === 'map') return (
+    <main>
+      <div className="btn-row" style={{ marginBottom: 16, alignItems: 'center' }}>
+        <button className="btn" style={{ flex: 'none' }} onClick={() => setScreen('home')}>◀ 처음</button>
+        <b style={{ fontSize: 24 }}>{vs ? '🧒 🆚 🧑‍🏫 대결 모드' : '🧒 혼자 하기'}</b>
+      </div>
+      <div className="map">
+        {STAGES.map((s, i) => (
+          <button key={s.id} className={'stage' + (s.boss ? ' boss' : '')} onClick={() => start(s)}>
+            <div className="emo">{s.emo}</div>
+            <b>{s.boss ? '' : `${i + 1}. `}{s.name}</b>
+            <span>{s.desc} · {s.n}문제</span>
+            {!vs && <div className="stars">{starText(best[s.id] || 0)}</div>}
+          </button>
+        ))}
+      </div>
+    </main>
+  );
+
+  if (screen === 'play') return <Play key={run} stage={stage} qs={qs} vs={vs} onEnd={end} onQuit={() => setScreen('map')} />;
+
+  return <Result stage={stage} res={res} vs={vs}
+    onRetryWrong={() => start(stage, res.wrong)} onRetry={() => start(stage)} onMap={() => setScreen('map')} />;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
