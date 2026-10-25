@@ -215,7 +215,7 @@ const BOSS = [
   [['My classmates', 'wrote', 'funny messages', 'on my cast'], ['S', 'V', 'O', 'M'], 3, 'funny messages가 목적어, on my cast는 수식어 → 3형식'],
 ];
 
-// ── 시제 (교재 Unit 06) — 단원별 3개 퀘스트 ─────────────────
+// ── 시제 (교재 Unit 06) — 개념별 문제 묶음 → 스테이지마다 합쳐서 출제 ─────────────────
 // [[ ]] = 힌트 켜면 형광펜 칠할 단서,  {{ⓐ …}} = 보스 지문에서 탭할 곳
 const OX = ['⭕ 맞아요', '❌ 틀려요'];
 const clueQs = (rows, options) => rows.map(([q, answer, exp]) => ({ kind: 'choice', tag: '이 단서와 어울리는 시제는?', q, options, answer, exp }));
@@ -308,20 +308,6 @@ const B_FILL = [
   ['We ___ friends [[since]] we were five.', ['were', 'have been', 'are', 'will be'], 'have been', 'since + 시점 → 현재완료 (계속)'],
   ['I ___ him [[when I was ten]].', ['met', 'have met', 'meet', 'am meeting'], 'met', 'when I was ten = 특정 과거 시점 → 과거시제'],
 ];
-const B_USE = [
-  ['I have [[just]] finished my homework.', '완료', 'just(방금) → 완료'],
-  ['She has [[already]] eaten breakfast.', '완료', 'already(이미) → 완료'],
-  ['Have you finished your project [[yet]]?', '완료', 'yet(벌써/아직) → 완료'],
-  ['I have been to Jeju [[twice]].', '경험', '~ times(몇 번) → 경험'],
-  ['Have you [[ever]] eaten Thai food?', '경험', 'ever(~해 본 적) → 경험'],
-  ['He has [[never]] seen snow.', '경험', 'never(한 번도 ~않은) → 경험'],
-  ['We have lived here [[for ten years]].', '계속', 'for + 기간 → 계속'],
-  ['She has been absent [[since Monday]].', '계속', 'since + 시점 → 계속'],
-  ['[[How long]] have you known him?', '계속', 'how long(얼마나 오래) → 계속'],
-  ['I have [[lost]] my umbrella.', '결과', '잃어버려서 지금 없다 → 결과'],
-  ['Dad has [[gone to]] Busan.', '결과', '가 버려서 지금 여기 없다 → 결과 (have been to는 경험!)'],
-  ['Mina has [[left]] her bag on the bus.', '결과', '놓고 내려서 지금 없다 → 결과'],
-];
 const B_OX = [
   ['I have met him [[last Sunday]].', false, 'last Sunday = 명백한 과거 → I met him last Sunday.'],
   ['She has taught English [[for 20 years]].', true, 'for + 기간 → 현재완료 계속 ⭕'],
@@ -405,19 +391,17 @@ const C_BOSS = [
     'ⓒ', ['will have saved', 'had saved', 'saves'], 'will have saved', 'by + 미래 시점 → 미래완료 will have saved'],
 ];
 
-const tenseStages = (p, clueOpts, d) => [
-  { id: p + '1', emo: '🔎', name: '단서 → 시제', desc: '시간 표현 보고 시제 고르기', n: 10, qs: clueQs(d.clue, clueOpts) },
-  { id: p + '2', emo: '⏰', name: '알맞은 시제', desc: '빈칸에 맞는 동사 형태', n: 8, qs: fillQs(d.fill) },
-  ...(d.use ? [{ id: p + 'u', emo: '🧭', name: '현재완료 4용법', desc: '완료 · 경험 · 계속 · 결과', n: 10,
-    qs: d.use.map(([q, answer, exp]) => ({ kind: 'choice', q, options: ['완료', '경험', '계속', '결과'], answer, exp })) }] : []),
-  { id: p + '3', emo: '⭕', name: '어법 O / X', desc: '맞는 문장일까?', n: 8, qs: oxQs(d.ox) },
-  { id: p + '4', emo: '🧥', name: '시제 조립', desc: '단어 타일로 문장 만들기', n: 5, qs: buildQs(d.build) },
-  { id: p + 'b', emo: '👑', name: '보스: 지문 어법', desc: '틀린 곳 찾아 고치기', n: 3, boss: true, qs: passQs(d.boss) },
-];
+// 같은 문장이 두 번 나오지 않게
+const uniq = (qs) => qs.filter((q, i) => qs.findIndex(x => (x.q || x.ko || x.text) === (q.q || q.ko || q.text)) === i);
 
-const TENSE_A = tenseStages('ta', ['현재', '과거', '미래', '진행형'], { clue: A_CLUE, fill: A_FILL, ox: A_OX, build: A_BUILD, boss: A_BOSS });
-const TENSE_B = tenseStages('tb', ['과거', '현재완료'], { clue: B_CLUE, fill: B_FILL, use: B_USE, ox: B_OX, build: B_BUILD, boss: B_BOSS });
-const TENSE_C = tenseStages('tc', ['현재완료', '과거완료', '미래완료'], { clue: C_CLUE, fill: C_FILL, ox: C_OX, build: C_BUILD, boss: C_BOSS });
+const TENSE_STAGES = [
+  { id: 'tm1', emo: '🔎', name: '단서 → 시제', desc: '시간 표현 보고 시제 고르기', n: 12,
+    qs: uniq([...clueQs(A_CLUE, ['현재', '과거', '미래', '진행형']), ...clueQs(B_CLUE, ['과거', '현재완료']), ...clueQs(C_CLUE, ['현재완료', '과거완료', '미래완료'])]) },
+  { id: 'tm2', emo: '⏰', name: '알맞은 시제', desc: '빈칸에 맞는 동사 형태', n: 10, qs: uniq(fillQs([...A_FILL, ...B_FILL, ...C_FILL])) },
+  { id: 'tm3', emo: '⭕', name: '어법 O / X', desc: '맞는 문장일까?', n: 10, qs: uniq(oxQs([...A_OX, ...B_OX, ...C_OX])) },
+  { id: 'tm4', emo: '🧥', name: '시제 조립', desc: '단어 타일로 문장 만들기', n: 6, qs: uniq(buildQs([...A_BUILD, ...B_BUILD, ...C_BUILD])) },
+  { id: 'tmb', emo: '👑', name: '보스: 지문 어법', desc: '틀린 곳 찾아 고치기', n: 4, boss: true, qs: passQs([...A_BOSS, ...B_BOSS, ...C_BOSS]) },
+];
 
 const FORM5_STAGES = [
   { id: 's1', emo: '🗂️', name: '형식 분류', desc: '몇 형식인지 골라요', n: 10,
@@ -436,9 +420,7 @@ const FORM5_STAGES = [
 
 const QUESTS = [
   { id: 'form5', emo: '⚔️', name: '5형식 퀘스트', desc: '문장의 형식 · 목적격 보어', stages: FORM5_STAGES },
-  { id: 'tenseA', emo: '⏰', name: '기본 시제', desc: '현재 · 과거 · 미래 · 진행형', stages: TENSE_A },
-  { id: 'tenseB', emo: '🧭', name: '현재완료', desc: 'have p.p. · 4용법 · for / since', stages: TENSE_B },
-  { id: 'tenseC', emo: '⏳', name: '과거완료 · 미래완료', desc: 'had p.p. · will have p.p. · 기준점', stages: TENSE_C },
+  { id: 'tense', emo: '⏳', name: '시제 퀘스트', desc: '현재 · 과거 · 미래 · 진행 · 완료 시제', stages: TENSE_STAGES },
 ];
 
 const plain = (s) => s.replace(/ \/ /g, ' ').replace(/\[\[|\]\]/g, '');
