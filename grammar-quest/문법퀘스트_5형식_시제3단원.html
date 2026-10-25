@@ -215,40 +215,100 @@ const BOSS = [
   [['My classmates', 'wrote', 'funny messages', 'on my cast'], ['S', 'V', 'O', 'M'], 3, 'funny messages가 목적어, on my cast는 수식어 → 3형식'],
 ];
 
-// ── 시제 (교재 Unit 06) ─────────────────────────────────────
-// [단서, 시제, 해설]
-const T1 = [
+// ── 시제 (교재 Unit 06) — 단원별 3개 퀘스트 ─────────────────
+// [[ ]] = 힌트 켜면 형광펜 칠할 단서,  {{ⓐ …}} = 보스 지문에서 탭할 곳
+const OX = ['⭕ 맞아요', '❌ 틀려요'];
+const clueQs = (rows, options) => rows.map(([q, answer, exp]) => ({ kind: 'choice', tag: '이 단서와 어울리는 시제는?', q, options, answer, exp }));
+const fillQs = (rows) => rows.map(([q, options, answer, exp]) => ({ kind: 'choice', q, options, answer, exp, mix: true }));
+const oxQs = (rows) => rows.map(([q, ok, exp]) => ({ kind: 'choice', q, options: OX, answer: ok ? OX[0] : OX[1], exp }));
+const buildQs = (rows) => rows.map(([ko, s, extra]) => ({ kind: 'build', ko, words: s.replace(/\.$/, '').split(' '), extra, answer: s }));
+const passQs = (rows) => rows.map(([text, wrong, fixes, fix, exp]) => ({ kind: 'passage', text, wrong, fixes, fix, answer: `${wrong} → ${fix}`, exp }));
+
+// ① 기본 시제: 현재 · 과거 · 미래 · 진행형
+const A_CLUE = [
+  ['every morning', '현재', '매일 반복되는 루틴 → 현재시제'],
+  ['always / usually', '현재', '습관·반복 → 현재시제'],
+  ['The sun rises in the east. (불변의 진리)', '현재', '불변의 진리 → 항상 현재시제'],
+  ['yesterday', '과거', '명백한 과거 시점 → 과거시제'],
+  ['two hours ago', '과거', 'ago = 명백한 과거 → 과거시제'],
+  ['last night', '과거', 'last ~ = 명백한 과거 → 과거시제'],
+  ['in 1443 (역사적 사실)', '과거', '역사적 사실 → 과거시제'],
+  ['tomorrow', '미래', '다가올 일 → will'],
+  ['next week', '미래', 'next ~ → will'],
+  ['right now / at the moment', '진행형', '지금 이 순간 하는 중 → be V-ing'],
+  ['Look! / Listen!', '진행형', '눈앞에서 벌어지는 중 → be V-ing'],
+  ['when you called (그때 ~하던 중)', '진행형', '과거 그 순간 하던 중 → 과거진행 was V-ing'],
+];
+const A_FILL = [
+  ['I ___ my grandma [[last weekend]].', ['visit', 'visited', 'will visit', 'am visiting'], 'visited', 'last weekend = 명백한 과거 → 과거시제'],
+  ['Water ___ at [[0°C]].', ['froze', 'freezes', 'freezing', 'frozen'], 'freezes', '불변의 진리 → 항상 현재시제'],
+  ['I will call you [[when I ___ home]].', ['get', 'will get', 'got', 'getting'], 'get', '시간 부사절(when ~)은 현재가 미래를 대신'],
+  ['My sister ___ to school by bus [[every day]].', ['goes', 'went', 'will go', 'going'], 'goes', '매일 반복되는 루틴 → 현재시제'],
+  ['I ___ a shower [[when you called]], so I couldn\'t answer.', ['took', 'was taking', 'take', 'am taking'], 'was taking', '전화 온 그때 하고 있던 중 → 과거진행'],
+  ['[[Look!]] The baby ___ now.', ['sleeps', 'slept', 'is sleeping', 'will sleep'], 'is sleeping', '지금 하는 중 → 현재진행'],
+  ['I ___ you [[tomorrow]].', ['call', 'called', 'will call', 'was calling'], 'will call', 'tomorrow → 미래 will'],
+  ['King Sejong ___ Hangeul [[in 1443]].', ['creates', 'created', 'will create', 'is creating'], 'created', '역사적 사실 → 과거시제'],
+  ['[[If]] it ___ tomorrow, we will stay home.', ['snows', 'will snow', 'snowed', 'snowing'], 'snows', '조건 부사절(if ~)은 현재가 미래를 대신'],
+  ['The sun ___ in the east.', ['rose', 'rises', 'will rise', 'rising'], 'rises', '불변의 진리 → 항상 현재시제'],
+  ['I ___ this song. It\'s my favorite.', ['like', 'am liking', 'liked', 'liking'], 'like', 'like는 상태동사 → 진행형 X'],
+  ['He ___ to London [[two years ago]].', ['moves', 'moved', 'will move', 'is moving'], 'moved', 'ago = 명백한 과거 → 과거시제'],
+];
+const A_OX = [
+  ['I am [[liking]] this song.', false, 'like는 상태동사 → 진행형 X → I like this song.'],
+  ['Are you [[knowing]] her name?', false, 'know는 상태동사 → Do you know her name?'],
+  ['[[If]] it will rain tomorrow, the game will be canceled.', false, '조건 부사절은 현재가 미래 대신 → If it rains tomorrow'],
+  ["I'll text you [[as soon as]] I will get there.", false, '시간 부사절은 현재가 미래 대신 → as soon as I get there'],
+  ['My teacher said that [[the moon goes around the earth]].', true, '불변의 진리 → 항상 현재 ⭕'],
+  ['I watched a movie [[last night]].', true, 'last night → 과거시제 ⭕'],
+  ['She is [[having]] a new phone.', false, '소유의 have는 진행형 X → She has a new phone.'],
+  ['He was reading a book [[when I came in]].', true, '그때 하던 중 → 과거진행 ⭕'],
+  ['Columbus discovers America [[in 1492]].', false, '역사적 사실 → 과거 → discovered'],
+  ['Call me [[when]] you arrive.', true, '시간 부사절 → 현재가 미래 대신 ⭕'],
+  ['I will visit my uncle [[next week]].', true, 'next week → will ⭕'],
+];
+const A_BUILD = [
+  ['나는 매일 아침 우유를 마신다. (현재)', 'I drink milk every morning.', ['drank', 'am']],
+  ['내일 비가 오면, 나는 집에 있을 것이다. (조건 부사절)', 'If it rains tomorrow, I will stay home.', ['will', 'rained']],
+  ['네가 전화했을 때 나는 샤워하고 있었다. (과거진행)', 'I was taking a shower when you called.', ['took', 'am']],
+  ['세종대왕은 1443년에 한글을 만들었다. (역사적 사실)', 'King Sejong created Hangeul in 1443.', ['creates', 'has']],
+  ['나는 그 답을 안다. (상태동사)', 'I know the answer.', ['am', 'knowing']],
+  ['봐! 아기가 웃고 있어. (현재진행)', 'Look! The baby is smiling.', ['smiles', 'was']],
+];
+const A_BOSS = [
+  ['Every morning, my dad {{ⓐ drinks}} coffee. [[Yesterday]], he {{ⓑ drinks}} tea instead. He {{ⓒ was reading}} the news when I {{ⓓ came}} downstairs. Tomorrow he {{ⓔ will buy}} more coffee.',
+    'ⓑ', ['drank', 'is drinking', 'will drink'], 'drank', 'yesterday = 명백한 과거 → drank'],
+  ['Look! It {{ⓐ is snowing}} outside. I {{ⓑ love}} snow. [[If]] it {{ⓒ will snow}} all day, we {{ⓓ will make}} a snowman. Last year, we {{ⓔ made}} a big one.',
+    'ⓒ', ['snows', 'snowed', 'snowing'], 'snows', '조건 부사절(if ~)은 현재가 미래 대신 → snows'],
+  ['Yesterday our teacher {{ⓐ taught}} us about space. She {{ⓑ said}} that the earth {{ⓒ moved}} around the sun. I {{ⓓ was}} so interested. Now I {{ⓔ want}} to be a scientist.',
+    'ⓒ', ['moves', 'is moved', 'moving'], 'moves', '불변의 진리 → 항상 현재 → moves'],
+];
+
+// ② 현재완료: have p.p.
+const B_CLUE = [
   ['yesterday', '과거', '명백한 과거 시점 → 과거시제 (현재완료 X)'],
   ['two hours ago', '과거', 'ago = 명백한 과거 → 과거시제'],
   ['last summer', '과거', 'last ~ = 명백한 과거 → 과거시제'],
   ['in 2015', '과거', 'in + 지난 연도 = 명백한 과거 → 과거시제'],
   ['When did you ~? (언제 ~했니?)', '과거', 'When 의문문은 특정 시점을 물음 → 과거시제 (현재완료 X)'],
+  ['when I was young', '과거', '특정 과거 시점 → 과거시제 (현재완료 X)'],
   ['for three years (지금까지)', '현재완료', 'for + 기간, 지금까지 계속 → 현재완료'],
   ['since 2020', '현재완료', 'since + 시점 → 현재완료 (계속)'],
   ['ever / never (~해 본 적)', '현재완료', '경험 → 현재완료'],
-  ['When I arrived, … already (이미 ~했었다)', '과거완료', '과거 기준점(arrived)보다 더 이전 → had p.p.'],
-  ['Before she called, … (이미 ~했었다)', '과거완료', '과거 기준점(called)보다 더 이전 → had p.p.'],
-  ['By next week, …', '미래완료', 'by + 미래 시점 → will have p.p.'],
-  ['By the time you come back, …', '미래완료', 'by the time + 미래 기준점 → will have p.p.'],
+  ['just / already (방금 · 이미)', '현재완료', '완료 → 현재완료'],
+  ['How long ~? (지금까지 얼마나)', '현재완료', '지금까지의 기간 → 현재완료 (계속)'],
+  ['~ times (몇 번 해 봤다)', '현재완료', '횟수 → 현재완료 (경험)'],
 ];
-// [문장, 보기, 정답, 해설]  [[ ]] = 힌트 때 형광펜 칠할 단서
-const T2 = [
-  ['I ___ my grandma [[last weekend]].', ['visited', 'have visited', 'had visited', 'will have visited'], 'visited', 'last weekend = 명백한 과거 → 과거시제'],
-  ['She ___ in this town [[since 2019]].', ['lived', 'has lived', 'had lived', 'will live'], 'has lived', 'since + 시점 → 현재완료 (계속)'],
-  ['We ___ each other [[for five years]].', ['knew', 'have known', 'are knowing', 'will know'], 'have known', 'for + 기간, 지금까지 → 현재완료. know는 상태동사라 진행형 X'],
-  ['[[When we arrived at the park]], the parade ___.', ['ended', 'has ended', 'had already ended', 'will end'], 'had already ended', '기준점 arrived(과거)보다 먼저 끝남 → had p.p.'],
-  ['[[By next Friday]], I ___ this book.', ['finish', 'finished', 'have finished', 'will have finished'], 'will have finished', 'by + 미래 시점 → 미래완료'],
-  ['Water ___ at [[0°C]].', ['froze', 'freezes', 'has frozen', 'will have frozen'], 'freezes', '불변의 진리 → 항상 현재시제'],
-  ['I will call you [[when I ___ home]].', ['get', 'will get', 'got', 'have gotten'], 'get', '시간 부사절(when ~)은 현재가 미래를 대신'],
-  ['He ___ to London [[two years ago]].', ['moved', 'has moved', 'had moved', 'will have moved'], 'moved', 'ago = 명백한 과거 → 과거시제'],
+const B_FILL = [
+  ['She ___ in this town [[since 2019]].', ['lived', 'has lived', 'lives', 'is living'], 'has lived', 'since + 시점 → 현재완료 (계속)'],
+  ['We ___ each other [[for five years]], and we are still friends.', ['knew', 'have known', 'are knowing', 'know'], 'have known', 'for + 기간, 지금까지 → 현재완료. know는 상태동사라 진행형 X'],
+  ['He ___ to London [[two years ago]].', ['moved', 'has moved', 'moves', 'is moving'], 'moved', 'ago = 명백한 과거 → 과거시제'],
   ['[[Have]] you [[ever]] ___ a koala?', ['see', 'saw', 'seen', 'seeing'], 'seen', 'Have + p.p. → 현재완료 (경험)'],
-  ['My sister ___ to school by bus [[every day]].', ['goes', 'went', 'has gone', 'is going'], 'goes', '매일 반복되는 루틴 → 현재시제'],
-  ['It ___ [[since this morning]], so the ground is wet.', ['rained', 'has been raining', 'had rained', 'will rain'], 'has been raining', '아침부터 지금까지 계속 진행 → 현재완료진행'],
-  ['[[By the time]] you come back, I ___ the cleaning.', ['finish', 'finished', 'had finished', 'will have finished'], 'will have finished', 'by the time + 미래 기준점 → 미래완료'],
-  ['I ___ a shower [[when you called]], so I couldn\'t answer.', ['took', 'was taking', 'have taken', 'will take'], 'was taking', '전화 온 그때 하고 있던 중 → 과거진행'],
+  ['It ___ [[since this morning]], so the ground is wet.', ['rained', 'has been raining', 'rains', 'is raining'], 'has been raining', '아침부터 지금까지 계속 진행 → 현재완료진행'],
+  ['She ___ to Japan [[three times]].', ['has been', 'has gone', 'goes', 'is going'], 'has been', '경험 → have been to (have gone to는 결과!)'],
+  ['We ___ friends [[since]] we were five.', ['were', 'have been', 'are', 'will be'], 'have been', 'since + 시점 → 현재완료 (계속)'],
+  ['I ___ him [[when I was ten]].', ['met', 'have met', 'meet', 'am meeting'], 'met', 'when I was ten = 특정 과거 시점 → 과거시제'],
 ];
-// [문장, 용법, 해설]
-const T3 = [
+const B_USE = [
   ['I have [[just]] finished my homework.', '완료', 'just(방금) → 완료'],
   ['She has [[already]] eaten breakfast.', '완료', 'already(이미) → 완료'],
   ['Have you finished your project [[yet]]?', '완료', 'yet(벌써/아직) → 완료'],
@@ -262,58 +322,102 @@ const T3 = [
   ['Dad has [[gone to]] Busan.', '결과', '가 버려서 지금 여기 없다 → 결과 (have been to는 경험!)'],
   ['Mina has [[left]] her bag on the bus.', '결과', '놓고 내려서 지금 없다 → 결과'],
 ];
-// [문장, 맞는 문장?, 해설]
-const T4 = [
+const B_OX = [
   ['I have met him [[last Sunday]].', false, 'last Sunday = 명백한 과거 → I met him last Sunday.'],
   ['She has taught English [[for 20 years]].', true, 'for + 기간 → 현재완료 계속 ⭕'],
   ['[[When]] have you bought this bag?', false, 'When은 특정 시점 → When did you buy this bag?'],
-  ['[[If]] it will rain tomorrow, the game will be canceled.', false, '조건 부사절은 현재가 미래 대신 → If it rains tomorrow'],
-  ['My teacher said that [[the moon goes around the earth]].', true, '불변의 진리 → 항상 현재 ⭕'],
-  ['I am [[liking]] this song.', false, 'like는 상태동사 → 진행형 X → I like this song.'],
-  ['[[When I woke up]], my mom had already made breakfast.', true, '기준점 woke up보다 이전 → had p.p. ⭕'],
-  ['[[By next year]], I will have learned English for five years.', true, 'by + 미래 시점 → 미래완료 ⭕'],
   ['He has lived in Japan [[when he was a child]].', false, '특정 과거 시점 → He lived in Japan when he was a child.'],
   ['It has been snowing [[since last night]].', true, 'since + 시점, 지금도 진행 중 → 현재완료진행 ⭕'],
   ['She has gone to Paris [[three times]].', false, '경험은 have been to → She has been to Paris three times.'],
-  ["I'll text you [[as soon as]] I will get there.", false, '시간 부사절은 현재가 미래 대신 → as soon as I get there'],
-  ['The class had already started [[when I came in]].', true, '기준점 came in보다 이전 → had p.p. ⭕'],
-  ['Are you [[knowing]] her name?', false, 'know는 상태동사 → Do you know her name?'],
+  ['I have [[just]] finished my lunch.', true, 'just → 현재완료 (완료) ⭕'],
+  ['Have you [[ever]] seen a rainbow?', true, 'ever → 현재완료 (경험) ⭕'],
+  ['She has lived here [[since three years]].', false, '기간 앞에는 for → for three years'],
+  ['I have known him [[for 2010]].', false, '시점 앞에는 since → since 2010'],
+  ["He has been to London, [[so he isn't here now]].", false, '가 버려서 지금 없음 → He has gone to London.'],
 ];
-// 시제 조립 (마네킹 + 옷): [우리말, 정답 문장, 함정 단어]
-const T5 = [
-  ['나는 방금 점심을 먹었다. (현재완료)', 'I have just eaten lunch.', ['ate', 'had']],
+const B_BUILD = [
+  ['나는 방금 점심을 먹었다. (현재완료 완료)', 'I have just eaten lunch.', ['ate', 'had']],
+  ['나는 제주도에 두 번 가 본 적이 있다. (현재완료 경험)', 'I have been to Jeju twice.', ['gone', 'went']],
+  ['우리는 10년째 여기 살고 있다. (현재완료 계속)', 'We have lived here for ten years.', ['since', 'live']],
+  ['그는 부산에 가 버렸다. (현재완료 결과)', 'He has gone to Busan.', ['been', 'went']],
+  ['아침부터 계속 비가 오고 있다. (현재완료진행)', 'It has been raining since morning.', ['for', 'rained']],
+];
+const B_BOSS = [
+  ['[[Last summer]], my family {{ⓐ went}} to Gangneung. We {{ⓑ stayed}} there for three days. I {{ⓒ have swum}} in the sea every day during the trip. Since then, I {{ⓓ have wanted}} to go back. I {{ⓔ will visit}} there again next year.',
+    'ⓒ', ['swam', 'had swum', 'swim'], 'swam', '지난여름 여행 = 이미 끝난 과거 → swam'],
+  ['Junho {{ⓐ has played}} soccer for six years. He {{ⓑ joined}} the school team in 2023. [[Last week]], he {{ⓒ has scored}} two goals in a big game. Before the game, he {{ⓓ had practiced}} every day. Now he {{ⓔ is}} the team\'s star.',
+    'ⓒ', ['scored', 'had scored', 'scores'], 'scored', 'last week = 명백한 과거 → scored'],
+  ['Minji {{ⓐ has studied}} English since she was seven. She {{ⓑ has visited}} London [[last year]]. She {{ⓒ has never forgotten}} that trip. She {{ⓓ has kept}} a diary in English for two years. She {{ⓔ wants}} to go back someday.',
+    'ⓑ', ['visited', 'had visited', 'visits'], 'visited', 'last year = 명백한 과거 → visited'],
+];
+
+// ③ 과거완료 · 미래완료: 기준점 찾기
+const C_CLUE = [
+  ['When I arrived, … already (이미 ~했었다)', '과거완료', '과거 기준점(arrived)보다 더 이전 → had p.p.'],
+  ['Before she called, … (이미 ~했었다)', '과거완료', '과거 기준점(called)보다 더 이전 → had p.p.'],
+  ['By the time I got there (과거), …', '과거완료', 'by the time + 과거 기준점 → had p.p.'],
+  ['by last Friday', '과거완료', 'by + 과거 시점 → had p.p.'],
+  ['When he called yesterday, … already', '과거완료', '과거 기준점(called)보다 더 이전 → had p.p.'],
+  ['By next week, …', '미래완료', 'by + 미래 시점 → will have p.p.'],
+  ['By the time you come back, …', '미래완료', 'by the time + 미래 기준점 → will have p.p.'],
+  ['by 2030', '미래완료', 'by + 미래 시점 → will have p.p.'],
+  ['by tomorrow', '미래완료', 'by + 미래 시점 → will have p.p.'],
+  ['since 2020 (지금까지)', '현재완료', '기준점이 지금 → have p.p.'],
+  ['for three years (지금까지)', '현재완료', '기준점이 지금 → have p.p.'],
+  ['just / already (지금 기준)', '현재완료', '기준점이 지금 → have p.p.'],
+];
+const C_FILL = [
+  ['[[When we arrived at the park]], the parade ___.', ['ended', 'has ended', 'had already ended', 'will end'], 'had already ended', '기준점 arrived(과거)보다 먼저 끝남 → had p.p.'],
+  ['[[By next Friday]], I ___ this book.', ['finish', 'finished', 'have finished', 'will have finished'], 'will have finished', 'by + 미래 시점 → 미래완료'],
+  ['[[By the time]] you come back, I ___ the cleaning.', ['finish', 'finished', 'had finished', 'will have finished'], 'will have finished', 'by the time + 미래 기준점 → 미래완료'],
+  ['[[When I got to the store]], it ___.', ['closed', 'has closed', 'had already closed', 'will close'], 'had already closed', '기준점 got(과거)보다 먼저 닫음 → had p.p.'],
+  ['She was tired because she ___ [[all day]].', ['works', 'has worked', 'had been working', 'will work'], 'had been working', '과거(was tired)보다 이전부터 계속 → 과거완료진행'],
+  ['[[By 2030]], I ___ from university.', ['graduate', 'graduated', 'had graduated', 'will have graduated'], 'will have graduated', 'by + 미래 시점 → 미래완료'],
+  ['He lost the pen that I ___ him [[the day before]].', ['give', 'have given', 'had given', 'will give'], 'had given', '잃어버린 것(과거)보다 먼저 줌 → had p.p.'],
+  ['[[By the time]] Mom came home, we ___ the house.', ['clean', 'have cleaned', 'had cleaned', 'will have cleaned'], 'had cleaned', 'by the time + 과거 기준점 → had p.p.'],
+  ['[[By the end of this year]], I ___ 100 books.', ['read', 'have read', 'had read', 'will have read'], 'will have read', 'by + 미래 시점 → 미래완료'],
+];
+const C_OX = [
+  ['[[When I woke up]], my mom had already made breakfast.', true, '기준점 woke up보다 이전 → had p.p. ⭕'],
+  ['[[By next year]], I will have learned English for five years.', true, 'by + 미래 시점 → 미래완료 ⭕'],
+  ['The class had already started [[when I came in]].', true, '기준점 came in보다 이전 → had p.p. ⭕'],
+  ['[[When I arrived]], the movie has already started.', false, '기준점 arrived(과거)보다 이전 → had already started'],
+  ['[[By tomorrow]], he had finished the work.', false, 'by + 미래 시점 → will have finished'],
+  ['[[By the time we got there]], the show had ended.', true, 'by the time + 과거 기준점 → had p.p. ⭕'],
+  ['I will have finished my homework [[by last night]].', false, 'by + 과거 시점 → had finished'],
+  ['He had been sleeping for ten hours [[when I woke him up]].', true, '과거 기준점까지 계속 → 과거완료진행 ⭕'],
+  ['[[When he called me]], I have already gone to bed.', false, '기준점 called(과거)보다 이전 → had already gone'],
+  ['I [[lost]] the watch that my dad has given me.', false, '잃어버린 것(과거)보다 먼저 받음 → had given'],
+];
+const C_BUILD = [
   ['그녀가 전화했을 때, 나는 이미 점심을 먹었었다. (과거완료)', 'When she called, I had already eaten lunch.', ['have', 'ate']],
   ['정오까지 나는 점심을 다 먹었을 것이다. (미래완료)', 'I will have eaten lunch by noon.', ['had', 'ate']],
   ['나는 한 시간째 기다리고 있었다. (과거완료진행)', 'I had been waiting for an hour.', ['have', 'waited']],
-  ['아침부터 계속 비가 오고 있다. (현재완료진행)', 'It has been raining since morning.', ['for', 'rained']],
-  ['나는 제주도에 두 번 가 본 적이 있다. (현재완료 경험)', 'I have been to Jeju twice.', ['gone', 'went']],
+  ['내가 집에 왔을 때, 엄마는 이미 저녁을 만드셨었다. (과거완료)', 'When I came home, Mom had already made dinner.', ['has', 'make']],
+  ['다음 주까지 나는 이 책을 다 읽었을 것이다. (미래완료)', 'I will have read this book by next week.', ['had', 'reading']],
 ];
-// 보스: 지문 속 틀린 곳 찾기 → 고치기.  {{ⓐ …}} = 탭할 곳
-const T6 = [
-  ['[[Last summer]], my family {{ⓐ went}} to Gangneung. We {{ⓑ stayed}} there for three days. I {{ⓒ have swum}} in the sea every day during the trip. Since then, I {{ⓓ have wanted}} to go back. I {{ⓔ will visit}} there again next year.',
-    'ⓒ', ['swam', 'had swum', 'swim'], 'swam', '지난여름 여행 = 이미 끝난 과거 → swam'],
+const C_BOSS = [
   ['[[When I got home yesterday]], my dog {{ⓐ had already eaten}} all the cookies. I {{ⓑ was}} so upset. But he {{ⓒ looked}} so cute that I {{ⓓ forgave}} him. [[By next month]], he {{ⓔ will live}} with us for two years.',
     'ⓔ', ['will have lived', 'has lived', 'lived'], 'will have lived', 'by + 미래 시점까지 계속 → 미래완료'],
-  ['My science teacher told us that light {{ⓐ travels}} faster than sound. I {{ⓑ have been}} interested in science since I was eight. Tomorrow I will start my project [[if]] my partner {{ⓒ will come}}. We {{ⓓ have already chosen}} a topic. I {{ⓔ know}} it will be fun.',
-    'ⓒ', ['comes', 'came', 'has come'], 'comes', '조건 부사절(if ~)은 현재가 미래 대신 → comes'],
-  ['Junho {{ⓐ has played}} soccer for six years. He {{ⓑ joined}} the school team in 2023. [[Last week]], he {{ⓒ has scored}} two goals in a big game. Before the game, he {{ⓓ had practiced}} every day. Now he {{ⓔ is}} the team\'s star.',
-    'ⓒ', ['scored', 'had scored', 'scores'], 'scored', 'last week = 명백한 과거 → scored'],
+  ['Last Saturday, I {{ⓐ went}} to a concert. [[When I arrived]], the first song {{ⓑ has already finished}}. I {{ⓒ was}} sad, but the rest {{ⓓ was}} amazing. I {{ⓔ will remember}} it forever.',
+    'ⓑ', ['had already finished', 'already finishes', 'will have finished'], 'had already finished', '기준점 arrived(과거)보다 이전 → had already finished'],
+  ['My brother {{ⓐ is}} saving money for a bike. He {{ⓑ has saved}} $50 so far. [[By next month]], he {{ⓒ will save}} $100. Then he {{ⓓ will buy}} the bike he {{ⓔ has wanted}} for a long time.',
+    'ⓒ', ['will have saved', 'had saved', 'saves'], 'will have saved', 'by + 미래 시점 → 미래완료 will have saved'],
 ];
 
-const TENSE_STAGES = [
-  { id: 't1', emo: '🔎', name: '단서 → 시제', desc: '시간 표현 보고 시제 고르기', n: 10,
-    qs: T1.map(([q, answer, exp]) => ({ kind: 'choice', tag: '이 단서와 어울리는 시제는?', q, options: ['과거', '현재완료', '과거완료', '미래완료'], answer, exp })) },
-  { id: 't2', emo: '⏰', name: '알맞은 시제', desc: '빈칸에 맞는 동사 형태', n: 10,
-    qs: T2.map(([q, options, answer, exp]) => ({ kind: 'choice', q, options, answer, exp, mix: true })) },
-  { id: 't3', emo: '🧭', name: '현재완료 4용법', desc: '완료 · 경험 · 계속 · 결과', n: 10,
-    qs: T3.map(([q, answer, exp]) => ({ kind: 'choice', q, options: ['완료', '경험', '계속', '결과'], answer, exp })) },
-  { id: 't4', emo: '⭕', name: '어법 O / X', desc: '맞는 문장일까?', n: 10,
-    qs: T4.map(([q, ok, exp]) => ({ kind: 'choice', q, options: ['⭕ 맞아요', '❌ 틀려요'], answer: ok ? '⭕ 맞아요' : '❌ 틀려요', exp })) },
-  { id: 't5', emo: '🧥', name: '시제 조립', desc: '마네킹 + 옷 입히기', n: 5,
-    qs: T5.map(([ko, s, extra]) => ({ kind: 'build', ko, words: s.replace(/\.$/, '').split(' '), extra, answer: s })) },
-  { id: 'tboss', emo: '👑', name: '보스: 지문 어법', desc: '틀린 곳 찾아 고치기', n: 4, boss: true,
-    qs: T6.map(([text, wrong, fixes, fix, exp]) => ({ kind: 'passage', text, wrong, fixes, fix, answer: `${wrong} → ${fix}`, exp })) },
+const tenseStages = (p, clueOpts, d) => [
+  { id: p + '1', emo: '🔎', name: '단서 → 시제', desc: '시간 표현 보고 시제 고르기', n: 10, qs: clueQs(d.clue, clueOpts) },
+  { id: p + '2', emo: '⏰', name: '알맞은 시제', desc: '빈칸에 맞는 동사 형태', n: 8, qs: fillQs(d.fill) },
+  ...(d.use ? [{ id: p + 'u', emo: '🧭', name: '현재완료 4용법', desc: '완료 · 경험 · 계속 · 결과', n: 10,
+    qs: d.use.map(([q, answer, exp]) => ({ kind: 'choice', q, options: ['완료', '경험', '계속', '결과'], answer, exp })) }] : []),
+  { id: p + '3', emo: '⭕', name: '어법 O / X', desc: '맞는 문장일까?', n: 8, qs: oxQs(d.ox) },
+  { id: p + '4', emo: '🧥', name: '시제 조립', desc: '단어 타일로 문장 만들기', n: 5, qs: buildQs(d.build) },
+  { id: p + 'b', emo: '👑', name: '보스: 지문 어법', desc: '틀린 곳 찾아 고치기', n: 3, boss: true, qs: passQs(d.boss) },
 ];
+
+const TENSE_A = tenseStages('ta', ['현재', '과거', '미래', '진행형'], { clue: A_CLUE, fill: A_FILL, ox: A_OX, build: A_BUILD, boss: A_BOSS });
+const TENSE_B = tenseStages('tb', ['과거', '현재완료'], { clue: B_CLUE, fill: B_FILL, use: B_USE, ox: B_OX, build: B_BUILD, boss: B_BOSS });
+const TENSE_C = tenseStages('tc', ['현재완료', '과거완료', '미래완료'], { clue: C_CLUE, fill: C_FILL, ox: C_OX, build: C_BUILD, boss: C_BOSS });
 
 const FORM5_STAGES = [
   { id: 's1', emo: '🗂️', name: '형식 분류', desc: '몇 형식인지 골라요', n: 10,
@@ -332,7 +436,9 @@ const FORM5_STAGES = [
 
 const QUESTS = [
   { id: 'form5', emo: '⚔️', name: '5형식 퀘스트', desc: '문장의 형식 · 목적격 보어', stages: FORM5_STAGES },
-  { id: 'tense', emo: '⏳', name: '시제 퀘스트', desc: 'Unit 06 시제 · 완료 시제', stages: TENSE_STAGES },
+  { id: 'tenseA', emo: '⏰', name: '기본 시제', desc: '현재 · 과거 · 미래 · 진행형', stages: TENSE_A },
+  { id: 'tenseB', emo: '🧭', name: '현재완료', desc: 'have p.p. · 4용법 · for / since', stages: TENSE_B },
+  { id: 'tenseC', emo: '⏳', name: '과거완료 · 미래완료', desc: 'had p.p. · will have p.p. · 기준점', stages: TENSE_C },
 ];
 
 const plain = (s) => s.replace(/ \/ /g, ' ').replace(/\[\[|\]\]/g, '');
@@ -633,9 +739,14 @@ function App() {
         {QUESTS.map(qu => (
           <button key={qu.id} className="mode" onClick={() => { setQuest(qu); setScreen('mode'); }}>
             <span className="emo">{qu.emo}</span>{qu.name}<small>{qu.desc}</small>
+            <small>⭐ {qu.stages.reduce((n, s) => n + (best[s.id] || 0), 0)} / {qu.stages.length * 3}</small>
           </button>
         ))}
       </div>
+      <button className="btn" style={{ marginTop: 24, width: '100%', color: 'var(--bad)' }}
+        onClick={() => { if (confirm('별 기록을 모두 지우고 처음 상태로 돌릴까요?')) { setBest({}); setHint(false); } }}>
+        🔄 기록 초기화
+      </button>
     </main>
   );
 
